@@ -46,9 +46,7 @@ export async function criarTratamento(dados, repositorio = tratamentoRepository)
             descricao: dados.descricao?.trim() || null,
             data_inicio: dados.data_inicio,
             data_fim_prevista: dados.data_fim_prevista || null,
-            concluido: false, // Sempre começa como não concluído
-            data_fim_real: null,
-            notas_resultado: null
+            concluido: 'false' // No Supabase, concluido é text, não boolean
         };
 
         const tratamentoCriado = await repositorio.createTratamento(dadosNormalizados);

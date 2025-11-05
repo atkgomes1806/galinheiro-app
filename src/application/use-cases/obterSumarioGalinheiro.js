@@ -55,14 +55,15 @@ export async function obterSumarioGalinheiro() {
             .slice(0, 3);
 
         // 3. Métricas de Tratamentos
-        const tratamentosAtivos = tratamentos.filter(t => !t.concluido).length;
-        const tratamentosConcluidos = tratamentos.filter(t => t.concluido).length;
+        // No Supabase, concluido é text: 'false' ou 'true'
+        const tratamentosAtivos = tratamentos.filter(t => t.concluido === 'false').length;
+        const tratamentosConcluidos = tratamentos.filter(t => t.concluido === 'true').length;
 
         // Calcular tratamentos em alerta (vencidos ou vencendo hoje/próximos 3 dias)
         hoje.setHours(0, 0, 0, 0);
         
         const tratamentosEmAlerta = tratamentos.filter(t => {
-            if (t.concluido || !t.data_fim_prevista) return false;
+            if (t.concluido === 'true' || !t.data_fim_prevista) return false;
             
             const dataFim = new Date(t.data_fim_prevista);
             dataFim.setHours(0, 0, 0, 0);

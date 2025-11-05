@@ -10,10 +10,10 @@ class TratamentoRepositorySupabase extends TratamentoRepository {
      */
     async fetchAllTratamentos(galinhaId = null, status = null) {
         let query = supabase
-            .from('Tratamentos')
+            .from('tratamentos')
             .select(`
                 *,
-                Galinhas (
+                galinhas (
                     id,
                     nome,
                     raca
@@ -27,10 +27,11 @@ class TratamentoRepositorySupabase extends TratamentoRepository {
         }
 
         // Filtro por status (Ativo = não concluído, Concluído = concluído)
+        // No Supabase, concluido é text: 'false' ou 'true'
         if (status === 'Ativo') {
-            query = query.eq('concluido', false);
+            query = query.eq('concluido', 'false');
         } else if (status === 'Concluido') {
-            query = query.eq('concluido', true);
+            query = query.eq('concluido', 'true');
         }
 
         const { data, error } = await query;
@@ -49,11 +50,11 @@ class TratamentoRepositorySupabase extends TratamentoRepository {
      */
     async createTratamento(dados) {
         const { data, error } = await supabase
-            .from('Tratamentos')
+            .from('tratamentos')
             .insert([dados])
             .select(`
                 *,
-                Galinhas (
+                galinhas (
                     id,
                     nome,
                     raca
@@ -76,12 +77,12 @@ class TratamentoRepositorySupabase extends TratamentoRepository {
      */
     async atualizarTratamento(id, dados) {
         const { data, error } = await supabase
-            .from('Tratamentos')
+            .from('tratamentos')
             .update(dados)
             .eq('id', id)
             .select(`
                 *,
-                Galinhas (
+                galinhas (
                     id,
                     nome,
                     raca
@@ -103,7 +104,7 @@ class TratamentoRepositorySupabase extends TratamentoRepository {
      */
     async removerTratamento(id) {
         const { data, error } = await supabase
-            .from('Tratamentos')
+            .from('tratamentos')
             .delete()
             .eq('id', id)
             .select()

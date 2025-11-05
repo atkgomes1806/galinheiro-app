@@ -4,7 +4,7 @@ import GalinhaRepository from '../../domain/repositories/GalinhaRepository';
 class GalinhaRepositorySupabase extends GalinhaRepository {
     async fetchAllGalinhas() {
         const { data, error } = await supabase
-            .from('Galinhas')
+            .from('galinhas')
             .select('*')
             .order('nome', { ascending: true });
 
@@ -17,7 +17,7 @@ class GalinhaRepositorySupabase extends GalinhaRepository {
 
     async createGalinha(dados) {
         const { data, error } = await supabase
-            .from('Galinhas')
+            .from('galinhas')
             .insert([dados])
             .select()
             .single();
@@ -31,7 +31,7 @@ class GalinhaRepositorySupabase extends GalinhaRepository {
 
     async atualizarGalinha(id, dados) {
         const { data, error } = await supabase
-            .from('Galinhas')
+            .from('galinhas')
             .update(dados)
             .eq('id', id)
             .select()
@@ -46,7 +46,7 @@ class GalinhaRepositorySupabase extends GalinhaRepository {
 
     async removerGalinha(id) {
         const { data, error } = await supabase
-            .from('Galinhas')
+            .from('galinhas')
             .delete()
             .eq('id', id)
             .select()

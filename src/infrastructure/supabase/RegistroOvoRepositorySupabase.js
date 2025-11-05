@@ -9,10 +9,10 @@ class RegistroOvoRepositorySupabase extends RegistroOvoRepository {
      */
     async fetchAllRegistros(galinhaId = null) {
         let query = supabase
-            .from('Registros_Ovos')
+            .from('registros_ovos')
             .select(`
                 *,
-                Galinhas (
+                galinhas (
                     id,
                     nome,
                     raca
@@ -41,11 +41,11 @@ class RegistroOvoRepositorySupabase extends RegistroOvoRepository {
      */
     async createRegistro(dados) {
         const { data, error } = await supabase
-            .from('Registros_Ovos')
+            .from('registros_ovos')
             .insert([dados])
             .select(`
                 *,
-                Galinhas (
+                galinhas (
                     id,
                     nome,
                     raca
@@ -68,12 +68,12 @@ class RegistroOvoRepositorySupabase extends RegistroOvoRepository {
      */
     async atualizarRegistro(id, dados) {
         const { data, error } = await supabase
-            .from('Registros_Ovos')
+            .from('registros_ovos')
             .update(dados)
             .eq('id', id)
             .select(`
                 *,
-                Galinhas (
+                galinhas (
                     id,
                     nome,
                     raca
@@ -95,7 +95,7 @@ class RegistroOvoRepositorySupabase extends RegistroOvoRepository {
      */
     async removerRegistro(id) {
         const { data, error } = await supabase
-            .from('Registros_Ovos')
+            .from('registros_ovos')
             .delete()
             .eq('id', id)
             .select()

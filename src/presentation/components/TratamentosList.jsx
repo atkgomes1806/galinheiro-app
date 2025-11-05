@@ -8,7 +8,8 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
 
     // Verifica se um tratamento está vencido ou próximo do vencimento
     const verificarAlerta = (tratamento) => {
-        if (!tratamento.data_fim_prevista || tratamento.concluido) {
+        // No Supabase, concluido é text: 'false' ou 'true'
+        if (!tratamento.data_fim_prevista || tratamento.concluido === 'true') {
             return null;
         }
 
@@ -85,7 +86,7 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
                     return (
                         <div 
                             key={tratamento.id} 
-                            className={`tratamento-card ${tratamento.concluido ? 'concluido' : 'ativo'} ${alerta ? `alerta-${alerta.tipo}` : ''}`}
+                            className={`tratamento-card ${tratamento.concluido === 'true' ? 'concluido' : 'ativo'} ${alerta ? `alerta-${alerta.tipo}` : ''}`}
                         >
                             {/* Badge de Alerta */}
                             {alerta && (
@@ -96,7 +97,7 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
 
                             {/* Cabeçalho do Card */}
                             <div className="card-header">
-                                <h3>{tratamento.Galinhas?.nome || 'Galinha não encontrada'}</h3>
+                                <h3>{tratamento.galinhas?.nome || 'Galinha não encontrada'}</h3>
                                 <span className={`badge badge-${tratamento.tipo_tratamento.toLowerCase()}`}>
                                     {tratamento.tipo_tratamento}
                                 </span>
@@ -124,7 +125,7 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
                                     </div>
                                 )}
 
-                                {tratamento.concluido && tratamento.data_fim_real && (
+                                {tratamento.concluido === 'true' && tratamento.data_fim_real && (
                                     <div className="info-row">
                                         <span className="label">Concluído em:</span>
                                         <span className="value">
@@ -133,7 +134,7 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
                                     </div>
                                 )}
 
-                                {tratamento.concluido && tratamento.notas_resultado && (
+                                {tratamento.concluido === 'true' && tratamento.notas_resultado && (
                                     <div className="notas-resultado">
                                         <strong>Resultado:</strong>
                                         <p>{tratamento.notas_resultado}</p>
@@ -142,7 +143,7 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
                             </div>
 
                             {/* Ações */}
-                            {!tratamento.concluido && (
+                            {tratamento.concluido === 'false' && (
                                 <div className="card-footer">
                                     <button
                                         onClick={() => handleConcluir(tratamento)}

@@ -153,8 +153,8 @@ const HistoricoPosturaPage = () => {
                                     <td>
                                         {new Date(registro.data_postura).toLocaleDateString('pt-BR')}
                                     </td>
-                                    <td>{registro.Galinhas?.nome || 'N/A'}</td>
-                                    <td>{registro.Galinhas?.raca || 'Não especificada'}</td>
+                                    <td>{registro.galinhas?.nome || 'N/A'}</td>
+                                    <td>{registro.galinhas?.raca || 'Não especificada'}</td>
                                     <td className="text-center">
                                         <strong>{registro.quantidade}</strong>
                                     </td>
