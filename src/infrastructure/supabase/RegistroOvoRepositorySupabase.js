@@ -8,6 +8,7 @@ class RegistroOvoRepositorySupabase extends RegistroOvoRepository {
      * @returns {Promise<Array>} Lista de registros com nome da galinha
      */
     async fetchAllRegistros(galinhaId = null) {
+        // Primeira tentativa: com join (depende de FK configurada no banco)
         let query = supabase
             .from('registros_ovos')
             .select(`
@@ -25,10 +26,25 @@ class RegistroOvoRepositorySupabase extends RegistroOvoRepository {
             query = query.eq('galinha_id', galinhaId);
         }
 
-        const { data, error } = await query;
+        let { data, error } = await query;
 
+        // Fallback: se não houver relação configurada (ou permissão), tenta sem join
         if (error) {
-            throw new Error(error.message);
+            // Tenta novamente sem join para não quebrar a aplicação
+            let fallback = supabase
+                .from('registros_ovos')
+                .select('*')
+                .order('data_postura', { ascending: false });
+
+            if (galinhaId) {
+                fallback = fallback.eq('galinha_id', galinhaId);
+            }
+
+            const res = await fallback;
+            if (res.error) {
+                throw new Error(res.error.message);
+            }
+            return res.data;
         }
 
         return data;

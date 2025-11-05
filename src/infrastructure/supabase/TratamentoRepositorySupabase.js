@@ -9,6 +9,7 @@ class TratamentoRepositorySupabase extends TratamentoRepository {
      * @returns {Promise<Array>} Lista de tratamentos com nome da galinha
      */
     async fetchAllTratamentos(galinhaId = null, status = null) {
+        // Primeira tentativa: com join (depende de FK configurada no banco)
         let query = supabase
             .from('tratamentos')
             .select(`
@@ -34,10 +35,30 @@ class TratamentoRepositorySupabase extends TratamentoRepository {
             query = query.eq('concluido', 'true');
         }
 
-        const { data, error } = await query;
+        let { data, error } = await query;
 
+        // Fallback: se não houver relação configurada (ou permissão), tenta sem join
         if (error) {
-            throw new Error(error.message);
+            let fallback = supabase
+                .from('tratamentos')
+                .select('*')
+                .order('data_inicio', { ascending: false });
+
+            if (galinhaId) {
+                fallback = fallback.eq('galinha_id', galinhaId);
+            }
+
+            if (status === 'Ativo') {
+                fallback = fallback.eq('concluido', 'false');
+            } else if (status === 'Concluido') {
+                fallback = fallback.eq('concluido', 'true');
+            }
+
+            const res = await fallback;
+            if (res.error) {
+                throw new Error(res.error.message);
+            }
+            return res.data;
         }
 
         return data;
