@@ -5,7 +5,7 @@ import { atualizarGalinha } from '../../application/use-cases/atualizarGalinha';
 const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, onCancelar }) => {
     const [nome, setNome] = useState('');
     const [raca, setRaca] = useState('');
-    const [dataAquisicao, setDataAquisicao] = useState('');
+    const [dataNascimento, setDataNascimento] = useState('');
     const [loading, setLoading] = useState(false);
 
     // Preenche o formulário quando há uma galinha para editar
@@ -13,7 +13,7 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
         if (galinhaParaEditar) {
             setNome(galinhaParaEditar.nome || '');
             setRaca(galinhaParaEditar.raca || '');
-            setDataAquisicao(galinhaParaEditar.data_aquisicao || '');
+            setDataNascimento(galinhaParaEditar.data_nascimento || '');
         } else {
             limparFormulario();
         }
@@ -22,7 +22,7 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
     const limparFormulario = () => {
         setNome('');
         setRaca('');
-        setDataAquisicao('');
+        setDataNascimento('');
     };
 
     const handleSubmit = async (e) => {
@@ -32,7 +32,7 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
         const dados = {
             nome,
             raca,
-            data_aquisicao: dataAquisicao
+            data_nascimento: dataNascimento
         };
 
         try {
@@ -97,12 +97,12 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
                 </div>
 
                 <div className="form-group">
-                    <label htmlFor="dataAquisicao">Data de Aquisição:</label>
+                    <label htmlFor="dataNascimento">Data de Nascimento:</label>
                     <input
                         type="date"
-                        id="dataAquisicao"
-                        value={dataAquisicao}
-                        onChange={(e) => setDataAquisicao(e.target.value)}
+                        id="dataNascimento"
+                        value={dataNascimento}
+                        onChange={(e) => setDataNascimento(e.target.value)}
                     />
                 </div>
 
