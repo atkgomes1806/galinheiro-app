@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import DashboardPage from './presentation/pages/DashboardPage';
 import GalinhasPage from './presentation/pages/GalinhasPage';
 import HistoricoPosturaPage from './presentation/pages/HistoricoPosturaPage';
@@ -40,6 +41,9 @@ function App() {
             <Route path="/tratamentos" element={<TratamentosPage />} />
           </Routes>
         </div>
+        
+        {/* Vercel Speed Insights */}
+        <SpeedInsights />
       </div>
     </Router>
   );
