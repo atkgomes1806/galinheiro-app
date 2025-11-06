@@ -79,26 +79,26 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
 
     return (
         <div className="tratamentos-list">
-            <div className="tratamentos-grid">
+            <div className="grid grid-cols-3">
                 {tratamentos.map((tratamento) => {
                     const alerta = verificarAlerta(tratamento);
                     
                     return (
                         <div 
                             key={tratamento.id} 
-                            className={`tratamento-card ${tratamento.concluido === 'true' ? 'concluido' : 'ativo'} ${alerta ? `alerta-${alerta.tipo}` : ''}`}
+                            className={`card ${tratamento.concluido === 'true' ? '' : ''}`}
                         >
                             {/* Badge de Alerta */}
                             {alerta && (
-                                <div className={`alerta-badge alerta-${alerta.cor}`}>
+                                <div className="badge badge-warning" style={{ marginBottom: '0.5rem', width: 'fit-content' }}>
                                     ⚠️ {alerta.mensagem}
                                 </div>
                             )}
 
                             {/* Cabeçalho do Card */}
-                            <div className="card-header">
-                                <h3>{tratamento.galinhas?.nome || 'Galinha não encontrada'}</h3>
-                                <span className={`badge badge-${tratamento.tipo_tratamento.toLowerCase()}`}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '0.5rem' }}>
+                                <h3 style={{ margin: 0 }}>{tratamento.galinhas?.nome || 'Galinha não encontrada'}</h3>
+                                <span className="badge badge-info">
                                     {tratamento.tipo_tratamento}
                                 </span>
                             </div>
@@ -126,28 +126,28 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
                                 )}
 
                                 {tratamento.concluido === 'true' && tratamento.data_fim_real && (
-                                    <div className="info-row">
-                                        <span className="label">Concluído em:</span>
-                                        <span className="value">
+                                    <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
+                                        <span style={{ color: 'var(--gray-500)' }}>Concluído em:</span>
+                                        <span style={{ fontWeight: 600 }}>
                                             {new Date(tratamento.data_fim_real).toLocaleDateString('pt-BR')}
                                         </span>
                                     </div>
                                 )}
 
                                 {tratamento.concluido === 'true' && tratamento.notas_resultado && (
-                                    <div className="notas-resultado">
+                                    <div style={{ marginTop: '0.5rem' }}>
                                         <strong>Resultado:</strong>
-                                        <p>{tratamento.notas_resultado}</p>
+                                        <p style={{ margin: 0 }}>{tratamento.notas_resultado}</p>
                                     </div>
                                 )}
                             </div>
 
                             {/* Ações */}
                             {tratamento.concluido === 'false' && (
-                                <div className="card-footer">
+                                <div style={{ marginTop: '0.75rem' }}>
                                     <button
                                         onClick={() => handleConcluir(tratamento)}
-                                        className="btn-concluir"
+                                        className="btn btn-primary"
                                     >
                                         ✅ Concluir Tratamento
                                     </button>
@@ -181,18 +181,18 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
                             />
                         </div>
 
-                        <div className="modal-actions">
+                        <div className="form-actions">
                             <button
                                 onClick={confirmarConclusao}
                                 disabled={loading}
-                                className="btn-submit"
+                                className="btn btn-primary"
                             >
                                 {loading ? 'Concluindo...' : '✅ Confirmar Conclusão'}
                             </button>
                             <button
                                 onClick={cancelarConclusao}
                                 disabled={loading}
-                                className="btn-cancelar"
+                                className="btn btn-secondary"
                             >
                                 Cancelar
                             </button>

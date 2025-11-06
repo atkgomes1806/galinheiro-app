@@ -54,9 +54,9 @@ const TratamentoForm = ({ galinhas, onTratamentoCriado }) => {
 
     if (!galinhas || galinhas.length === 0) {
         return (
-            <div className="tratamento-form">
+            <div className="form-container">
                 <h2>Registrar Tratamento 💊</h2>
-                <p className="warning">
+                <p style={{ color: 'var(--warning)' }}>
                     ⚠️ Você precisa cadastrar pelo menos uma galinha antes de registrar tratamentos.
                 </p>
             </div>
@@ -64,7 +64,7 @@ const TratamentoForm = ({ galinhas, onTratamentoCriado }) => {
     }
 
     return (
-        <div className="tratamento-form">
+        <div className="form-container">
             <h2>Registrar Novo Tratamento 💊</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
@@ -113,7 +113,7 @@ const TratamentoForm = ({ galinhas, onTratamentoCriado }) => {
                     />
                 </div>
 
-                <div className="form-row">
+                <div className="form-row" style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' }}>
                     <div className="form-group">
                         <label htmlFor="dataInicio">Data de Início: *</label>
                         <input
@@ -142,7 +142,7 @@ const TratamentoForm = ({ galinhas, onTratamentoCriado }) => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="btn-submit"
+                        className="btn btn-primary"
                     >
                         {loading ? 'Registrando...' : '✅ Registrar Tratamento'}
                     </button>

@@ -71,21 +71,26 @@ const HistoricoPosturaPage = () => {
 
     if (loading) {
         return (
-            <div className="historico-postura-page">
-                <h1>Histórico de Posturas 🥚</h1>
-                <p>Carregando...</p>
+            <div>
+                <div className="card">
+                    <h1 style={{ margin: 0 }}>Histórico de Posturas 🥚</h1>
+                    <p style={{ color: 'var(--gray-600)' }}>Carregando...</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="historico-postura-page">
-            <h1>Histórico de Posturas 🥚</h1>
+        <div>
+            <header className="card" style={{ marginBottom: '1rem' }}>
+                <h1 style={{ margin: 0 }}>Histórico de Posturas 🥚</h1>
+                <p style={{ margin: 0, color: 'var(--gray-600)' }}>Registre e acompanhe a produção de ovos</p>
+            </header>
 
             {error && (
-                <div className="error-message">
-                    <p>Erro ao carregar dados: {error}</p>
-                    <button onClick={carregarDados}>Tentar Novamente</button>
+                <div className="card" style={{ borderLeft: '4px solid var(--danger)' }}>
+                    <p style={{ color: 'var(--danger)' }}>Erro ao carregar dados: {error}</p>
+                    <button className="btn btn-secondary" onClick={carregarDados}>Tentar Novamente</button>
                 </div>
             )}
 
@@ -96,47 +101,48 @@ const HistoricoPosturaPage = () => {
             />
 
             {/* Filtros e Estatísticas */}
-            <div className="filtros-e-stats">
-                <div className="filtros">
-                    <label htmlFor="filtroGalinha">Filtrar por Galinha:</label>
-                    <select
-                        id="filtroGalinha"
-                        value={filtroGalinhaId || ''}
-                        onChange={(e) => setFiltroGalinhaId(e.target.value || null)}
-                    >
-                        <option value="">Todas as galinhas</option>
-                        {galinhas.map((galinha) => (
-                            <option key={galinha.id} value={galinha.id}>
-                                {galinha.nome}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+            <div className="form-container" style={{ marginTop: '1rem' }}>
+                <div className="grid grid-cols-3">
+                    <div>
+                        <label htmlFor="filtroGalinha" className="form-label" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--gray-700)', fontSize: '0.875rem', textTransform: 'uppercase', fontWeight: 600 }}>Filtrar por Galinha</label>
+                        <select
+                            id="filtroGalinha"
+                            value={filtroGalinhaId || ''}
+                            onChange={(e) => setFiltroGalinhaId(e.target.value || null)}
+                            className="form-input"
+                        >
+                            <option value="">Todas as galinhas</option>
+                            {galinhas.map((galinha) => (
+                                <option key={galinha.id} value={galinha.id}>
+                                    {galinha.nome}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
 
-                <div className="estatisticas">
-                    <div className="stat-card">
-                        <span className="stat-label">Total de Registros:</span>
-                        <span className="stat-value">{totais.totalRegistros}</span>
+                    <div className="card">
+                        <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>Total de Registros</span>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{totais.totalRegistros}</div>
                     </div>
-                    <div className="stat-card">
-                        <span className="stat-label">Total de Ovos:</span>
-                        <span className="stat-value">{totais.totalOvos}</span>
+                    <div className="card">
+                        <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>Total de Ovos</span>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{totais.totalOvos}</div>
                     </div>
-                    <div className="stat-card">
-                        <span className="stat-label">Peso Médio:</span>
-                        <span className="stat-value">{totais.pesoMedio}g</span>
+                    <div className="card">
+                        <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>Peso Médio</span>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{totais.pesoMedio}g</div>
                     </div>
                 </div>
             </div>
 
             {/* Lista de Registros */}
-            <div className="registros-list">
-                <h2>Registros de Postura</h2>
+            <div className="card" style={{ marginTop: '1rem' }}>
+                <h2 style={{ marginTop: 0 }}>Registros de Postura</h2>
 
                 {registros.length === 0 ? (
-                    <p>Nenhum registro de postura encontrado.</p>
+                    <p style={{ color: 'var(--gray-600)' }}>Nenhum registro de postura encontrado.</p>
                 ) : (
-                    <table>
+                    <table style={{ width: '100%' }}>
                         <thead>
                             <tr>
                                 <th>Data</th>
@@ -148,26 +154,30 @@ const HistoricoPosturaPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {registros.map((registro) => (
-                                <tr key={registro.id}>
-                                    <td>
-                                        {new Date(registro.data_postura).toLocaleDateString('pt-BR')}
-                                    </td>
-                                    <td>{registro.galinhas?.nome || 'N/A'}</td>
-                                    <td>{registro.galinhas?.raca || 'Não especificada'}</td>
-                                    <td className="text-center">
-                                        <strong>{registro.quantidade}</strong>
-                                    </td>
-                                    <td className="text-center">
-                                        {registro.peso_gramas ? `${registro.peso_gramas}g` : '-'}
-                                    </td>
-                                    <td>
-                                        <span className={`badge badge-${registro.qualidade_casca?.toLowerCase()}`}>
-                                            {registro.qualidade_casca || 'N/A'}
-                                        </span>
-                                    </td>
-                                </tr>
-                            ))}
+                            {registros.map((registro) => {
+                                const qualidade = (registro.qualidade_casca || '').toLowerCase();
+                                const badgeClass = qualidade === 'excelente' || qualidade === 'boa' ? 'badge-success' : (qualidade === 'regular' ? 'badge-warning' : (qualidade === 'ruim' ? 'badge-danger' : 'badge-gray'));
+                                return (
+                                    <tr key={registro.id}>
+                                        <td>
+                                            {new Date(registro.data_postura).toLocaleDateString('pt-BR')}
+                                        </td>
+                                        <td>{registro.galinhas?.nome || 'N/A'}</td>
+                                        <td>{registro.galinhas?.raca || 'Não especificada'}</td>
+                                        <td className="text-center">
+                                            <strong>{registro.quantidade}</strong>
+                                        </td>
+                                        <td className="text-center">
+                                            {registro.peso_gramas ? `${registro.peso_gramas}g` : '-'}
+                                        </td>
+                                        <td>
+                                            <span className={`badge ${badgeClass}`}>
+                                                {registro.qualidade_casca || 'N/A'}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 )}

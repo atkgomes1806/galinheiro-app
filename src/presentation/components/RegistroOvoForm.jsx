@@ -54,9 +54,9 @@ const RegistroOvoForm = ({ galinhas, onRegistroCriado }) => {
 
     if (!galinhas || galinhas.length === 0) {
         return (
-            <div className="registro-ovo-form">
+            <div className="form-container">
                 <h2>Registrar Postura de Ovos 🥚</h2>
-                <p className="warning">
+                <p style={{ color: 'var(--warning)' }}>
                     ⚠️ Você precisa cadastrar pelo menos uma galinha antes de registrar ovos.
                 </p>
             </div>
@@ -64,7 +64,7 @@ const RegistroOvoForm = ({ galinhas, onRegistroCriado }) => {
     }
 
     return (
-        <div className="registro-ovo-form">
+        <div className="form-container">
             <h2>Registrar Postura de Ovos 🥚</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
@@ -141,7 +141,7 @@ const RegistroOvoForm = ({ galinhas, onRegistroCriado }) => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="btn-submit"
+                        className="btn btn-primary"
                     >
                         {loading ? 'Registrando...' : '✅ Registrar Ovo'}
                     </button>
