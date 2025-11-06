@@ -62,15 +62,14 @@ const TratamentosPage = () => {
     };
 
     const calcularEstatisticas = () => {
-        const ativos = tratamentos.filter(t => !t.concluido).length;
-        const concluidos = tratamentos.filter(t => t.concluido).length;
+        const ativos = tratamentos.filter(t => t.concluido === 'false' || !t.concluido).length;
+        const concluidos = tratamentos.filter(t => t.concluido === 'true').length;
         
-        // Tratamentos com alerta (vencidos ou próximos do vencimento)
         const hoje = new Date();
         hoje.setHours(0, 0, 0, 0);
         
         const comAlerta = tratamentos.filter(t => {
-            if (t.concluido || !t.data_fim_prevista) return false;
+            if ((t.concluido === 'true') || !t.data_fim_prevista) return false;
             const dataFim = new Date(t.data_fim_prevista);
             dataFim.setHours(0, 0, 0, 0);
             const diffDias = Math.ceil((dataFim - hoje) / (1000 * 60 * 60 * 24));
@@ -84,52 +83,55 @@ const TratamentosPage = () => {
 
     if (loading && tratamentos.length === 0) {
         return (
-            <div className="tratamentos-page">
-                <h1>Gerenciamento de Tratamentos 💊</h1>
-                <p>Carregando...</p>
+            <div>
+                <div className="card">
+                    <h1 style={{ margin: 0 }}>Gerenciamento de Tratamentos 💊</h1>
+                    <p style={{ color: 'var(--gray-600)' }}>Carregando...</p>
+                </div>
             </div>
         );
     }
 
     return (
-        <div className="tratamentos-page">
-            <h1>Gerenciamento de Tratamentos 💊</h1>
+        <div>
+            <header className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                <div>
+                    <h1 style={{ margin: 0 }}>Gerenciamento de Tratamentos 💊</h1>
+                    <p style={{ margin: 0, color: 'var(--gray-600)' }}>Acompanhe e conclua os tratamentos das galinhas</p>
+                </div>
+                <button
+                    onClick={() => setMostrarFormulario(!mostrarFormulario)}
+                    className="btn btn-primary"
+                >
+                    {mostrarFormulario ? '❌ Fechar Formulário' : '➕ Novo Tratamento'}
+                </button>
+            </header>
 
             {error && (
-                <div className="error-message">
-                    <p>Erro ao carregar dados: {error}</p>
-                    <button onClick={carregarTratamentos}>Tentar Novamente</button>
+                <div className="card" style={{ borderLeft: '4px solid var(--danger)', marginBottom: '1rem' }}>
+                    <p style={{ color: 'var(--danger)', margin: 0 }}>Erro ao carregar dados: {error}</p>
+                    <button className="btn btn-secondary" onClick={carregarTratamentos} style={{ marginTop: '0.5rem' }}>Tentar Novamente</button>
                 </div>
             )}
 
             {/* Estatísticas */}
-            <div className="estatisticas">
-                <div className="stat-card">
-                    <span className="stat-label">Ativos</span>
-                    <span className="stat-value">{stats.ativos}</span>
+            <div className="grid grid-cols-4" style={{ gap: '1rem', marginBottom: '1rem' }}>
+                <div className="card">
+                    <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>Ativos</span>
+                    <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary)' }}>{stats.ativos}</div>
                 </div>
-                <div className="stat-card">
-                    <span className="stat-label">Concluídos</span>
-                    <span className="stat-value">{stats.concluidos}</span>
+                <div className="card">
+                    <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>Concluídos</span>
+                    <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--gray-700)' }}>{stats.concluidos}</div>
                 </div>
-                <div className="stat-card alerta">
-                    <span className="stat-label">⚠️ Com Alerta</span>
-                    <span className="stat-value">{stats.comAlerta}</span>
+                <div className="card" style={{ borderLeft: stats.comAlerta > 0 ? '4px solid var(--warning)' : 'none' }}>
+                    <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>⚠️ Com Alerta</span>
+                    <div style={{ fontSize: '2rem', fontWeight: 700, color: stats.comAlerta > 0 ? 'var(--warning)' : 'var(--gray-700)' }}>{stats.comAlerta}</div>
                 </div>
-                <div className="stat-card">
-                    <span className="stat-label">Total</span>
-                    <span className="stat-value">{stats.total}</span>
+                <div className="card">
+                    <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>Total</span>
+                    <div style={{ fontSize: '2rem', fontWeight: 700 }}>{stats.total}</div>
                 </div>
-            </div>
-
-            {/* Botão para mostrar/ocultar formulário */}
-            <div className="page-actions">
-                <button
-                    onClick={() => setMostrarFormulario(!mostrarFormulario)}
-                    className="btn-toggle-form"
-                >
-                    {mostrarFormulario ? '❌ Fechar Formulário' : '➕ Novo Tratamento'}
-                </button>
             </div>
 
             {/* Formulário de Criação */}
@@ -141,51 +143,56 @@ const TratamentosPage = () => {
             )}
 
             {/* Filtros */}
-            <div className="filtros">
-                <div className="filtro-group">
-                    <label>Status:</label>
-                    <div className="filtro-tabs">
-                        <button
-                            className={filtroStatus === 'Ativo' ? 'active' : ''}
-                            onClick={() => setFiltroStatus('Ativo')}
-                        >
-                            🟢 Ativos
-                        </button>
-                        <button
-                            className={filtroStatus === 'Concluido' ? 'active' : ''}
-                            onClick={() => setFiltroStatus('Concluido')}
-                        >
-                            ✅ Concluídos
-                        </button>
-                        <button
-                            className={filtroStatus === 'Todos' ? 'active' : ''}
-                            onClick={() => setFiltroStatus('Todos')}
-                        >
-                            📋 Todos
-                        </button>
+            <div className="card" style={{ marginBottom: '1rem' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '1.5rem', alignItems: 'start' }}>
+                    <div>
+                        <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--gray-700)', fontSize: '0.875rem', textTransform: 'uppercase', fontWeight: 600 }}>Status</label>
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <button
+                                className={`btn ${filtroStatus === 'Ativo' ? 'btn-primary' : 'btn-outline'}`}
+                                onClick={() => setFiltroStatus('Ativo')}
+                                type="button"
+                            >
+                                🟢 Ativos
+                            </button>
+                            <button
+                                className={`btn ${filtroStatus === 'Concluido' ? 'btn-primary' : 'btn-outline'}`}
+                                onClick={() => setFiltroStatus('Concluido')}
+                                type="button"
+                            >
+                                ✅ Concluídos
+                            </button>
+                            <button
+                                className={`btn ${filtroStatus === 'Todos' ? 'btn-primary' : 'btn-outline'}`}
+                                onClick={() => setFiltroStatus('Todos')}
+                                type="button"
+                            >
+                                📋 Todos
+                            </button>
+                        </div>
                     </div>
-                </div>
-
-                <div className="filtro-group">
-                    <label htmlFor="filtroGalinha">Filtrar por Galinha:</label>
-                    <select
-                        id="filtroGalinha"
-                        value={filtroGalinhaId || ''}
-                        onChange={(e) => setFiltroGalinhaId(e.target.value || null)}
-                    >
-                        <option value="">Todas as galinhas</option>
-                        {galinhas.map((galinha) => (
-                            <option key={galinha.id} value={galinha.id}>
-                                {galinha.nome}
-                            </option>
-                        ))}
-                    </select>
+                    <div>
+                        <label htmlFor="filtroGalinha" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--gray-700)', fontSize: '0.875rem', textTransform: 'uppercase', fontWeight: 600 }}>Filtrar por Galinha</label>
+                        <select
+                            id="filtroGalinha"
+                            value={filtroGalinhaId || ''}
+                            onChange={(e) => setFiltroGalinhaId(e.target.value || null)}
+                            className="form-input"
+                        >
+                            <option value="">Todas as galinhas</option>
+                            {galinhas.map((galinha) => (
+                                <option key={galinha.id} value={galinha.id}>
+                                    {galinha.nome}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
             </div>
 
             {/* Lista de Tratamentos */}
-            <div className="tratamentos-container">
-                <h2>
+            <div>
+                <h2 style={{ marginBottom: '1rem' }}>
                     {filtroStatus === 'Ativo' && '🟢 Tratamentos Ativos'}
                     {filtroStatus === 'Concluido' && '✅ Tratamentos Concluídos'}
                     {filtroStatus === 'Todos' && '📋 Todos os Tratamentos'}

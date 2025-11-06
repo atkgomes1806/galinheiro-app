@@ -104,22 +104,22 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
                             </div>
 
                             {/* Corpo do Card */}
-                            <div className="card-body">
+                            <div>
                                 {tratamento.descricao && (
-                                    <p className="descricao">{tratamento.descricao}</p>
+                                    <p style={{ color: 'var(--gray-600)', marginBottom: '1rem' }}>{tratamento.descricao}</p>
                                 )}
 
-                                <div className="info-row">
-                                    <span className="label">Início:</span>
-                                    <span className="value">
+                                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                                    <span style={{ color: 'var(--gray-500)', fontSize: '0.875rem' }}>Início:</span>
+                                    <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>
                                         {new Date(tratamento.data_inicio).toLocaleDateString('pt-BR')}
                                     </span>
                                 </div>
 
                                 {tratamento.data_fim_prevista && (
-                                    <div className="info-row">
-                                        <span className="label">Fim Previsto:</span>
-                                        <span className="value">
+                                    <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.25rem' }}>
+                                        <span style={{ color: 'var(--gray-500)', fontSize: '0.875rem' }}>Fim Previsto:</span>
+                                        <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>
                                             {new Date(tratamento.data_fim_prevista).toLocaleDateString('pt-BR')}
                                         </span>
                                     </div>
@@ -127,27 +127,28 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
 
                                 {tratamento.concluido === 'true' && tratamento.data_fim_real && (
                                     <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
-                                        <span style={{ color: 'var(--gray-500)' }}>Concluído em:</span>
-                                        <span style={{ fontWeight: 600 }}>
+                                        <span style={{ color: 'var(--gray-500)', fontSize: '0.875rem' }}>Concluído em:</span>
+                                        <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>
                                             {new Date(tratamento.data_fim_real).toLocaleDateString('pt-BR')}
                                         </span>
                                     </div>
                                 )}
 
                                 {tratamento.concluido === 'true' && tratamento.notas_resultado && (
-                                    <div style={{ marginTop: '0.5rem' }}>
-                                        <strong>Resultado:</strong>
-                                        <p style={{ margin: 0 }}>{tratamento.notas_resultado}</p>
+                                    <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: 'var(--gray-50)', borderRadius: '0.5rem' }}>
+                                        <strong style={{ fontSize: '0.875rem', color: 'var(--gray-700)' }}>Resultado:</strong>
+                                        <p style={{ margin: 0, marginTop: '0.25rem', fontSize: '0.875rem', color: 'var(--gray-600)' }}>{tratamento.notas_resultado}</p>
                                     </div>
                                 )}
                             </div>
 
                             {/* Ações */}
                             {tratamento.concluido === 'false' && (
-                                <div style={{ marginTop: '0.75rem' }}>
+                                <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--gray-200)' }}>
                                     <button
                                         onClick={() => handleConcluir(tratamento)}
                                         className="btn btn-primary"
+                                        style={{ width: '100%' }}
                                     >
                                         ✅ Concluir Tratamento
                                     </button>
@@ -160,20 +161,23 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
 
             {/* Modal de Conclusão */}
             {tratamentoSelecionado && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <h2>Concluir Tratamento</h2>
-                        <p>
-                            <strong>Galinha:</strong> {tratamentoSelecionado.Galinhas?.nome}
-                        </p>
-                        <p>
-                            <strong>Tipo:</strong> {tratamentoSelecionado.tipo_tratamento}
-                        </p>
+                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
+                    <div className="card" style={{ maxWidth: '500px', width: '90%', maxHeight: '90vh', overflow: 'auto' }}>
+                        <h2 style={{ marginTop: 0 }}>Concluir Tratamento</h2>
+                        <div style={{ marginBottom: '1rem', padding: '1rem', background: 'var(--gray-50)', borderRadius: '0.5rem' }}>
+                            <p style={{ margin: 0, marginBottom: '0.5rem' }}>
+                                <strong>Galinha:</strong> {tratamentoSelecionado.galinhas?.nome || 'N/A'}
+                            </p>
+                            <p style={{ margin: 0 }}>
+                                <strong>Tipo:</strong> {tratamentoSelecionado.tipo_tratamento}
+                            </p>
+                        </div>
 
                         <div className="form-group">
                             <label htmlFor="notasResultado">Notas sobre o resultado:</label>
                             <textarea
                                 id="notasResultado"
+                                className="form-input"
                                 value={notasResultado}
                                 onChange={(e) => setNotasResultado(e.target.value)}
                                 rows="4"
