@@ -27,10 +27,10 @@ const DashboardPage = () => {
 
     if (loading) {
         return (
-            <div className="dashboard-page">
-                <h1>Dashboard do Galinheiro 🐔</h1>
-                <div className="loading-spinner">
-                    <p>Carregando métricas...</p>
+            <div>
+                <div className="card" style={{ marginBottom: '1rem' }}>
+                    <h1 style={{ margin: 0 }}>Dashboard do Galinheiro 🐔</h1>
+                    <p style={{ color: 'var(--gray-600)' }}>Carregando métricas...</p>
                 </div>
             </div>
         );
@@ -38,11 +38,11 @@ const DashboardPage = () => {
 
     if (error) {
         return (
-            <div className="dashboard-page">
-                <h1>Dashboard do Galinheiro 🐔</h1>
-                <div className="error-message">
-                    <p>Erro ao carregar dados: {error}</p>
-                    <button onClick={carregarSumario}>Tentar Novamente</button>
+            <div>
+                <div className="card" style={{ marginBottom: '1rem' }}>
+                    <h1 style={{ margin: 0 }}>Dashboard do Galinheiro 🐔</h1>
+                    <p style={{ color: 'var(--danger)' }}>Erro ao carregar dados: {error}</p>
+                    <button className="btn btn-secondary" onClick={carregarSumario}>Tentar Novamente</button>
                 </div>
             </div>
         );
@@ -53,37 +53,41 @@ const DashboardPage = () => {
     }
 
     return (
-        <div className="dashboard-page">
-            <header className="dashboard-header">
-                <h1>Dashboard do Galinheiro 🐔</h1>
-                <p className="subtitle">Visão geral do seu galinheiro em tempo real</p>
-                <button onClick={carregarSumario} className="btn-refresh">
+        <div>
+            <header className="card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '1rem' }}>
+                <div>
+                    <h1 style={{ margin: 0 }}>Dashboard do Galinheiro 🐔</h1>
+                    <p style={{ margin: 0, color: 'var(--gray-600)' }}>Visão geral do seu galinheiro em tempo real</p>
+                </div>
+                <button onClick={carregarSumario} className="btn btn-secondary">
                     🔄 Atualizar Dados
                 </button>
             </header>
 
             {/* ALERTA CRÍTICO - Máxima Prioridade */}
             {sumario.tratamentos.emAlerta > 0 && (
-                <div className="alerta-critico">
-                    <div className="alerta-content">
-                        <span className="alerta-icon">⚠️</span>
-                        <div className="alerta-info">
-                            <h3>Atenção: Tratamentos Requerem Ação!</h3>
-                            <p>
-                                {sumario.tratamentos.vencidos > 0 && (
-                                    <span className="destaque-critico">
-                                        {sumario.tratamentos.vencidos} tratamento(s) vencido(s)
-                                    </span>
-                                )}
-                                {sumario.tratamentos.vencidos > 0 && sumario.tratamentos.emAlerta > sumario.tratamentos.vencidos && ' • '}
-                                {sumario.tratamentos.emAlerta > sumario.tratamentos.vencidos && (
-                                    <span>
-                                        {sumario.tratamentos.emAlerta - sumario.tratamentos.vencidos} próximo(s) do vencimento
-                                    </span>
-                                )}
-                            </p>
+                <div className="card" style={{ borderLeft: '4px solid var(--danger)', background: 'var(--danger-50)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
+                        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                            <span style={{ fontSize: '1.25rem' }}>⚠️</span>
+                            <div>
+                                <h3 style={{ margin: 0 }}>Atenção: Tratamentos Requerem Ação!</h3>
+                                <p style={{ margin: 0, color: 'var(--gray-700)' }}>
+                                    {sumario.tratamentos.vencidos > 0 && (
+                                        <span style={{ color: 'var(--danger)', fontWeight: 600 }}>
+                                            {sumario.tratamentos.vencidos} tratamento(s) vencido(s)
+                                        </span>
+                                    )}
+                                    {sumario.tratamentos.vencidos > 0 && sumario.tratamentos.emAlerta > sumario.tratamentos.vencidos && ' • '}
+                                    {sumario.tratamentos.emAlerta > sumario.tratamentos.vencidos && (
+                                        <span>
+                                            {sumario.tratamentos.emAlerta - sumario.tratamentos.vencidos} próximo(s) do vencimento
+                                        </span>
+                                    )}
+                                </p>
+                            </div>
                         </div>
-                        <Link to="/tratamentos" className="btn-alerta">
+                        <Link to="/tratamentos" className="btn btn-danger">
                             Ver Tratamentos →
                         </Link>
                     </div>
@@ -91,61 +95,59 @@ const DashboardPage = () => {
             )}
 
             {/* KPIs Principais */}
-            <div className="kpis-container">
+            <div className="grid grid-cols-4" style={{ gap: '1rem', marginTop: '1rem', marginBottom: '1rem' }}>
                 {/* KPI: Saúde Geral */}
-                <div className={`kpi-card saude-geral saude-${sumario.saudeGeral.cor}`}>
-                    <div className="kpi-icon">💚</div>
-                    <div className="kpi-content">
+                <div className={`card`}>
+                    <div className="badge badge-success" style={{ float: 'right' }}>💚</div>
+                    <div>
                         <h3>Saúde Geral</h3>
-                        <div className="kpi-value-large">{sumario.saudeGeral.pontuacao}%</div>
-                        <div className="kpi-status">{sumario.saudeGeral.status}</div>
+                        <div style={{ fontSize: '2rem', fontWeight: 700 }}>{sumario.saudeGeral.pontuacao}%</div>
+                        <div style={{ color: 'var(--gray-600)' }}>{sumario.saudeGeral.status}</div>
                     </div>
                 </div>
 
                 {/* KPI: Total de Galinhas */}
-                <div className="kpi-card">
-                    <div className="kpi-icon">🐔</div>
-                    <div className="kpi-content">
+                <div className="card">
+                    <div className="badge badge-info" style={{ float: 'right' }}>🐔</div>
+                    <div>
                         <h3>Galinhas Ativas</h3>
-                        <div className="kpi-value">{sumario.galinhas.ativas}</div>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{sumario.galinhas.ativas}</div>
                         {sumario.galinhas.inativas > 0 && (
-                            <div className="kpi-detail">
+                            <div style={{ color: 'var(--gray-600)' }}>
                                 {sumario.galinhas.inativas} inativa(s)
                             </div>
                         )}
-                        <Link to="/galinhas" className="kpi-link">
+                        <Link to="/galinhas" className="btn btn-secondary" style={{ marginTop: '0.5rem' }}>
                             Gerenciar →
                         </Link>
                     </div>
                 </div>
 
                 {/* KPI: Produção de Ovos (7 dias) */}
-                <div className="kpi-card produtividade">
-                    <div className="kpi-icon">🥚</div>
-                    <div className="kpi-content">
+                <div className="card">
+                    <div className="badge" style={{ float: 'right', background: 'var(--primary)', color: 'white' }}>🥚</div>
+                    <div>
                         <h3>Produção (7 dias)</h3>
-                        <div className="kpi-value">{sumario.ovos.ultimos7Dias} ovos</div>
-                        <div className="kpi-detail">
-                            Média: {sumario.ovos.mediaPostura7Dias} ovos/galinha
-                        </div>
-                        <Link to="/ovos" className="kpi-link">
+                        <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{sumario.ovos.ultimos7Dias} ovos</div>
+                        <div style={{ color: 'var(--gray-600)' }}>Média: {sumario.ovos.mediaPostura7Dias} ovos/galinha</div>
+                        <Link to="/ovos" className="btn btn-secondary" style={{ marginTop: '0.5rem' }}>
                             Ver Histórico →
                         </Link>
                     </div>
                 </div>
 
                 {/* KPI: Tratamentos Ativos */}
-                <div className={`kpi-card tratamentos ${sumario.tratamentos.emAlerta > 0 ? 'com-alerta' : ''}`}>
-                    <div className="kpi-icon">💊</div>
-                    <div className="kpi-content">
+                <div className={`card ${sumario.tratamentos.emAlerta > 0 ? '' : ''}`}>
+                    <div className="badge badge-warning" style={{ float: 'right' }}>💊</div>
+                    <div>
                         <h3>Tratamentos Ativos</h3>
-                        <div className="kpi-value">{sumario.tratamentos.ativos}</div>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{sumario.tratamentos.ativos}</div>
                         {sumario.tratamentos.emAlerta > 0 && (
-                            <div className="kpi-alert">
+                            <div style={{ color: 'var(--danger)', fontWeight: 600 }}>
                                 ⚠️ {sumario.tratamentos.emAlerta} em alerta
                             </div>
                         )}
-                        <Link to="/tratamentos" className="kpi-link">
+                        <Link to="/tratamentos" className="btn btn-secondary" style={{ marginTop: '0.5rem' }}>
                             Gerenciar →
                         </Link>
                     </div>
@@ -154,15 +156,15 @@ const DashboardPage = () => {
 
             {/* Seção: Top Performers */}
             {sumario.ovos.topProducers.length > 0 && (
-                <div className="secao-top-performers">
-                    <h2>🏆 Top Produtoras (últimos 7 dias)</h2>
-                    <div className="top-performers-grid">
+                <div>
+                    <h2 style={{ marginBottom: '0.75rem' }}>🏆 Top Produtoras (últimos 7 dias)</h2>
+                    <div className="grid grid-cols-3" style={{ gap: '1rem' }}>
                         {sumario.ovos.topProducers.map((galinha, index) => (
-                            <div key={index} className="performer-card">
-                                <div className="performer-rank">#{index + 1}</div>
-                                <div className="performer-info">
+                            <div key={index} className="card">
+                                <div className="badge" style={{ float: 'right' }}>#{index + 1}</div>
+                                <div>
                                     <h4>{galinha.nome}</h4>
-                                    <p className="performer-producao">{galinha.total} ovos</p>
+                                    <p style={{ color: 'var(--gray-600)' }}>{galinha.total} ovos</p>
                                 </div>
                             </div>
                         ))}
@@ -171,70 +173,36 @@ const DashboardPage = () => {
             )}
 
             {/* Seção: Métricas Detalhadas */}
-            <div className="metricas-detalhadas">
-                <h2>📊 Métricas Detalhadas</h2>
-                
-                <div className="metricas-grid">
+            <div>
+                <h2 style={{ marginTop: '1rem' }}>📊 Métricas Detalhadas</h2>
+                <div className="grid grid-cols-3" style={{ gap: '1rem' }}>
                     {/* Card: Produção Mensal */}
-                    <div className="metrica-card">
+                    <div className="card">
                         <h3>Produção de Ovos</h3>
-                        <div className="metrica-item">
-                            <span className="metrica-label">Últimos 7 dias:</span>
-                            <span className="metrica-valor">{sumario.ovos.ultimos7Dias} ovos</span>
-                        </div>
-                        <div className="metrica-item">
-                            <span className="metrica-label">Últimos 30 dias:</span>
-                            <span className="metrica-valor">{sumario.ovos.ultimos30Dias} ovos</span>
-                        </div>
-                        <div className="metrica-item">
-                            <span className="metrica-label">Média 7 dias:</span>
-                            <span className="metrica-valor">{sumario.ovos.mediaPostura7Dias} ovos/galinha</span>
-                        </div>
-                        <div className="metrica-item">
-                            <span className="metrica-label">Média 30 dias:</span>
-                            <span className="metrica-valor">{sumario.ovos.mediaPostura30Dias} ovos/galinha</span>
-                        </div>
+                        <div><span style={{ color: 'var(--gray-500)' }}>Últimos 7 dias:</span> <span style={{ fontWeight: 600 }}>{sumario.ovos.ultimos7Dias} ovos</span></div>
+                        <div><span style={{ color: 'var(--gray-500)' }}>Últimos 30 dias:</span> <span style={{ fontWeight: 600 }}>{sumario.ovos.ultimos30Dias} ovos</span></div>
+                        <div><span style={{ color: 'var(--gray-500)' }}>Média 7 dias:</span> <span style={{ fontWeight: 600 }}>{sumario.ovos.mediaPostura7Dias} ovos/galinha</span></div>
+                        <div><span style={{ color: 'var(--gray-500)' }}>Média 30 dias:</span> <span style={{ fontWeight: 600 }}>{sumario.ovos.mediaPostura30Dias} ovos/galinha</span></div>
                     </div>
 
                     {/* Card: Saúde */}
-                    <div className="metrica-card">
+                    <div className="card">
                         <h3>Saúde do Galinheiro</h3>
-                        <div className="metrica-item">
-                            <span className="metrica-label">Tratamentos ativos:</span>
-                            <span className="metrica-valor">{sumario.tratamentos.ativos}</span>
-                        </div>
-                        <div className="metrica-item">
-                            <span className="metrica-label">Tratamentos concluídos:</span>
-                            <span className="metrica-valor">{sumario.tratamentos.concluidos}</span>
-                        </div>
-                        <div className="metrica-item alerta">
-                            <span className="metrica-label">Em alerta:</span>
-                            <span className="metrica-valor destaque">{sumario.tratamentos.emAlerta}</span>
-                        </div>
+                        <div><span style={{ color: 'var(--gray-500)' }}>Tratamentos ativos:</span> <span style={{ fontWeight: 600 }}>{sumario.tratamentos.ativos}</span></div>
+                        <div><span style={{ color: 'var(--gray-500)' }}>Tratamentos concluídos:</span> <span style={{ fontWeight: 600 }}>{sumario.tratamentos.concluidos}</span></div>
+                        <div><span style={{ color: 'var(--gray-500)' }}>Em alerta:</span> <span className="badge badge-warning">{sumario.tratamentos.emAlerta}</span></div>
                         {sumario.tratamentos.vencidos > 0 && (
-                            <div className="metrica-item critico">
-                                <span className="metrica-label">Vencidos:</span>
-                                <span className="metrica-valor destaque-critico">{sumario.tratamentos.vencidos}</span>
-                            </div>
+                            <div><span style={{ color: 'var(--gray-500)' }}>Vencidos:</span> <span className="badge badge-danger">{sumario.tratamentos.vencidos}</span></div>
                         )}
                     </div>
 
                     {/* Card: Galinhas */}
-                    <div className="metrica-card">
+                    <div className="card">
                         <h3>Plantel</h3>
-                        <div className="metrica-item">
-                            <span className="metrica-label">Total de galinhas:</span>
-                            <span className="metrica-valor">{sumario.galinhas.total}</span>
-                        </div>
-                        <div className="metrica-item">
-                            <span className="metrica-label">Ativas:</span>
-                            <span className="metrica-valor">{sumario.galinhas.ativas}</span>
-                        </div>
+                        <div><span style={{ color: 'var(--gray-500)' }}>Total de galinhas:</span> <span style={{ fontWeight: 600 }}>{sumario.galinhas.total}</span></div>
+                        <div><span style={{ color: 'var(--gray-500)' }}>Ativas:</span> <span style={{ fontWeight: 600 }}>{sumario.galinhas.ativas}</span></div>
                         {sumario.galinhas.inativas > 0 && (
-                            <div className="metrica-item">
-                                <span className="metrica-label">Inativas:</span>
-                                <span className="metrica-valor">{sumario.galinhas.inativas}</span>
-                            </div>
+                            <div><span style={{ color: 'var(--gray-500)' }}>Inativas:</span> <span style={{ fontWeight: 600 }}>{sumario.galinhas.inativas}</span></div>
                         )}
                     </div>
                 </div>
@@ -242,40 +210,40 @@ const DashboardPage = () => {
 
             {/* Seção: Alertas de Tratamentos Detalhados */}
             {sumario.tratamentos.alertas.length > 0 && (
-                <div className="secao-alertas-detalhados">
-                    <h2>⚠️ Tratamentos que Requerem Atenção</h2>
-                    <div className="alertas-lista">
+                <div>
+                    <h2 style={{ marginTop: '1rem' }}>⚠️ Tratamentos que Requerem Atenção</h2>
+                    <div className="grid" style={{ gap: '0.75rem' }}>
                         {sumario.tratamentos.alertas.map((alerta) => (
-                            <div key={alerta.id} className="alerta-item">
-                                <span className="alerta-galinha">{alerta.galinha}</span>
-                                <span className="alerta-tipo">{alerta.tipo}</span>
-                                <span className="alerta-data">
+                            <div key={alerta.id} className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span style={{ fontWeight: 600 }}>{alerta.galinha}</span>
+                                <span className="badge badge-info">{alerta.tipo}</span>
+                                <span style={{ color: 'var(--gray-600)' }}>
                                     Vence em: {new Date(alerta.dataFimPrevista).toLocaleDateString('pt-BR')}
                                 </span>
                             </div>
                         ))}
                     </div>
-                    <Link to="/tratamentos" className="btn-ver-todos">
+                    <Link to="/tratamentos" className="btn btn-secondary" style={{ marginTop: '0.75rem' }}>
                         Ver Todos os Tratamentos →
                     </Link>
                 </div>
             )}
 
             {/* Ações Rápidas */}
-            <div className="acoes-rapidas">
-                <h2>⚡ Ações Rápidas</h2>
-                <div className="acoes-grid">
-                    <Link to="/galinhas" className="acao-card">
-                        <span className="acao-icon">🐔</span>
-                        <span className="acao-titulo">Cadastrar Galinha</span>
+            <div>
+                <h2 style={{ marginTop: '1rem' }}>⚡ Ações Rápidas</h2>
+                <div className="grid grid-cols-3" style={{ gap: '1rem' }}>
+                    <Link to="/galinhas" className="card" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span>🐔</span>
+                        <span style={{ fontWeight: 600 }}>Cadastrar Galinha</span>
                     </Link>
-                    <Link to="/ovos" className="acao-card">
-                        <span className="acao-icon">🥚</span>
-                        <span className="acao-titulo">Registrar Ovos</span>
+                    <Link to="/ovos" className="card" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span>🥚</span>
+                        <span style={{ fontWeight: 600 }}>Registrar Ovos</span>
                     </Link>
-                    <Link to="/tratamentos" className="acao-card">
-                        <span className="acao-icon">💊</span>
-                        <span className="acao-titulo">Novo Tratamento</span>
+                    <Link to="/tratamentos" className="card" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span>💊</span>
+                        <span style={{ fontWeight: 600 }}>Novo Tratamento</span>
                     </Link>
                 </div>
             </div>

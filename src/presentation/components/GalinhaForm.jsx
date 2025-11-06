@@ -1,6 +1,23 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { criarGalinha } from '../../application/use-cases/criarGalinha';
 import { atualizarGalinha } from '../../application/use-cases/atualizarGalinha';
+
+const RACAS_GALINHAS = [
+    'Rhode Island Red',
+    'Plymouth Rock',
+    'Leghorn',
+    'Sussex',
+    'Orpington',
+    'Wyandotte',
+    'Brahma',
+    'Australorp',
+    'Marans',
+    'Cochim',
+    'Caipira',
+    'Garnisé',
+    'New Hampshire',
+    'Outra'
+];
 
 const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, onCancelar }) => {
     const [nome, setNome] = useState('');
@@ -8,7 +25,6 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
     const [dataNascimento, setDataNascimento] = useState('');
     const [loading, setLoading] = useState(false);
 
-    // Preenche o formulário quando há uma galinha para editar
     useEffect(() => {
         if (galinhaParaEditar) {
             setNome(galinhaParaEditar.nome || '');
@@ -37,7 +53,6 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
 
         try {
             if (galinhaParaEditar) {
-                // Modo Edição
                 const galinhaAtualizada = await atualizarGalinha(galinhaParaEditar.id, dados);
                 alert('Galinha atualizada com sucesso!');
                 
@@ -45,7 +60,6 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
                     onGalinhaAtualizada(galinhaAtualizada);
                 }
             } else {
-                // Modo Criação
                 const novaGalinha = await criarGalinha(dados);
                 alert('Galinha cadastrada com sucesso!');
                 
@@ -70,12 +84,13 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
     };
 
     return (
-        <div className="galinha-form">
+        <div className="form-container">
             <h2>{galinhaParaEditar ? 'Editar Galinha' : 'Cadastrar Nova Galinha'}</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="nome">Nome: *</label>
                     <input
+                        className="form-input"
                         type="text"
                         id="nome"
                         value={nome}
@@ -87,18 +102,28 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
 
                 <div className="form-group">
                     <label htmlFor="raca">Raça:</label>
-                    <input
-                        type="text"
+                    <select
+                        className="form-input"
                         id="raca"
                         value={raca}
                         onChange={(e) => setRaca(e.target.value)}
-                        placeholder="Ex: Rhode Island Red"
-                    />
+                    >
+                        <option value="">Selecione uma raça</option>
+                        {RACAS_GALINHAS.map((racaOpcao) => (
+                            <option key={racaOpcao} value={racaOpcao}>
+                                {racaOpcao}
+                            </option>
+                        ))}
+                    </select>
+                    <small style={{ color: 'var(--gray-500)', fontSize: '0.875rem', display: 'block', marginTop: '0.25rem' }}>
+                        Escolha a raça que mais se aproxima da sua galinha
+                    </small>
                 </div>
 
                 <div className="form-group">
                     <label htmlFor="dataNascimento">Data de Nascimento:</label>
                     <input
+                        className="form-input"
                         type="date"
                         id="dataNascimento"
                         value={dataNascimento}
@@ -110,7 +135,7 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
                     <button 
                         type="submit" 
                         disabled={loading}
-                        className="btn-submit"
+                        className="btn btn-primary"
                     >
                         {loading ? 'Salvando...' : (galinhaParaEditar ? 'Salvar Edição' : 'Cadastrar Galinha')}
                     </button>
@@ -119,7 +144,7 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
                         <button 
                             type="button" 
                             onClick={handleCancelar}
-                            className="btn-cancelar"
+                            className="btn btn-secondary"
                         >
                             Cancelar
                         </button>
