@@ -43,7 +43,7 @@ export async function obterSumarioGalinheiro() {
             const galinhaId = registro.galinha_id;
             if (!producaoPorGalinha[galinhaId]) {
                 producaoPorGalinha[galinhaId] = {
-                    nome: registro.Galinhas?.nome || 'Desconhecida',
+                    nome: registro.galinhas?.nome || 'Desconhecida',
                     total: 0
                 };
             }
@@ -134,7 +134,7 @@ export async function obterSumarioGalinheiro() {
                 vencidos: tratamentosVencidos,
                 alertas: tratamentosEmAlerta.map(t => ({
                     id: t.id,
-                    galinha: t.Galinhas?.nome || 'Desconhecida',
+                    galinha: t.galinhas?.nome || 'Desconhecida',
                     tipo: t.tipo_tratamento,
                     dataFimPrevista: t.data_fim_prevista
                 }))
