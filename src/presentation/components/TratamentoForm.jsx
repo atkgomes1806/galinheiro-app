@@ -56,7 +56,7 @@ const TratamentoForm = ({ galinhas, onTratamentoCriado }) => {
         return (
             <div className="form-container">
                 <h2>Registrar Tratamento 💊</h2>
-                <p style={{ color: 'var(--warning)' }}>
+                <p className="text-warning">
                     ⚠️ Você precisa cadastrar pelo menos uma galinha antes de registrar tratamentos.
                 </p>
             </div>
@@ -113,7 +113,7 @@ const TratamentoForm = ({ galinhas, onTratamentoCriado }) => {
                     />
                 </div>
 
-                <div className="form-row" style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))' }}>
+                <div className="form-row">
                     <div className="form-group">
                         <label htmlFor="dataInicio">Data de Início: *</label>
                         <input

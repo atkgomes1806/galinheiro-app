@@ -56,7 +56,7 @@ const RegistroOvoForm = ({ galinhas, onRegistroCriado }) => {
         return (
             <div className="form-container">
                 <h2>Registrar Postura de Ovos 🥚</h2>
-                <p style={{ color: 'var(--warning)' }}>
+                <p className="text-warning">
                     ⚠️ Você precisa cadastrar pelo menos uma galinha antes de registrar ovos.
                 </p>
             </div>

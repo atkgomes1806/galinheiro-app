@@ -66,6 +66,10 @@
 
 /* Form helpers */
 .form-help{color:var(--gray-500);font-size:0.875rem;display:block;margin-top:0.25rem}
+.form-row{display:grid;gap:1rem;grid-template-columns:repeat(2,minmax(0,1fr))}
+
+/* Warning text */
+.text-warning{color:var(--warning)}
 
 /* Card layout helpers */
 .card-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:1rem}
