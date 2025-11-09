@@ -48,40 +48,30 @@ function AppNav() {
   };
 
   return (
-    <nav style={{
-      background: '#2c3e50',
-      padding: '1rem',
-      marginBottom: '2rem'
-    }}>
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        display: 'flex',
-        gap: '2rem',
-        alignItems: 'center'
-      }}>
+    <nav className="app-nav">
+      <div className="nav-inner">
         <h2 style={{ margin: 0, color: 'white' }}>🐔 Galinheiro App</h2>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-          <NavLink to="/" style={({isActive}) => ({...baseItemStyle, ...(isActive ? activeItemStyle : {})})} end>
+        <div className="nav-items">
+          <NavLink to="/" className={({isActive}) => `nav-item${isActive ? ' nav-item-active' : ''}`} end>
             <span style={{ color: 'inherit' }}>Dashboard</span>
           </NavLink>
 
-          <NavLink to="/galinhas" style={({isActive}) => ({...baseItemStyle, ...(isActive ? activeItemStyle : {})})}>
+          <NavLink to="/galinhas" className={({isActive}) => `nav-item${isActive ? ' nav-item-active' : ''}`}>
             <span style={{ color: 'inherit' }}>Galinhas</span>
           </NavLink>
 
-          <NavLink to="/historico" style={({isActive}) => ({...baseItemStyle, ...(isActive ? activeItemStyle : {})})}>
+          <NavLink to="/historico" className={({isActive}) => `nav-item${isActive ? ' nav-item-active' : ''}`}>
             <span style={{ color: 'inherit' }}>Histórico de Postura</span>
           </NavLink>
 
-          <NavLink to="/tratamentos" style={({isActive}) => ({...baseItemStyle, ...(isActive ? activeItemStyle : {})})}>
+          <NavLink to="/tratamentos" className={({isActive}) => `nav-item${isActive ? ' nav-item-active' : ''}`}>
             <span style={{ color: 'inherit' }}>Tratamentos</span>
           </NavLink>
 
           {authed ? (
-            <button onClick={handleLogout} className="btn" style={{ marginLeft: '1rem' }}>Sair</button>
+            <button onClick={handleLogout} className="btn ml-1">Sair</button>
           ) : (
-            <NavLink to="/login" style={({isActive}) => ({...baseItemStyle, marginLeft: '1rem', ...(isActive ? activeItemStyle : {})})}>
+            <NavLink to="/login" className={({isActive}) => `nav-item ml-1${isActive ? ' nav-item-active' : ''}`}>
               <span style={{ color: 'inherit' }}>Entrar</span>
             </NavLink>
           )}

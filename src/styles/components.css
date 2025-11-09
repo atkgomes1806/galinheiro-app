@@ -1,0 +1,74 @@
+/* Componentes e utilitários adicionais para o projeto */
+
+/* Navegação */
+.app-nav{
+  background:#2c3e50;
+  padding:1rem;
+  margin-bottom:2rem;
+}
+.app-nav .nav-inner{
+  max-width:1200px;
+  margin:0 auto;
+  display:flex;
+  gap:2rem;
+  align-items:center;
+}
+.nav-items{
+  display:flex;
+  gap:0.5rem;
+  align-items:center;
+}
+.nav-item{
+  color:white;
+  text-decoration:none;
+  padding:0.5rem 0.75rem;
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  border-radius:0;
+  transition:background 0.15s, color 0.15s;
+}
+.nav-item-active{
+  background:#F7F7F7;
+  color:#1f2d3d;
+  border-radius:0 12px 12px 0;
+  padding:0.5rem 0.9rem;
+}
+
+/* KPI card helpers */
+.kpi-card{cursor:pointer;min-height:140px;display:flex;flex-direction:column;gap:0.75rem}
+.kpi-chip{display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 0.75rem;border-radius:8px;width:fit-content}
+.kpi-chip--yellow{background:#FFC72C;color:#1f2d3d}
+.kpi-chip--primary{background:var(--primary);color:white}
+.kpi-chip--blue{background:#2980b9;color:white}
+.kpi-chip--treatment{background:#f1c40f;color:#1f2d3d}
+
+/* Avatar */
+.avatar{
+  width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1.05rem;
+}
+
+/* FAB */
+.fab-root{position:fixed;bottom:2rem;right:2rem;z-index:1000}
+.fab-actions{position:absolute;bottom:4.5rem;right:0;display:flex;flex-direction:column;gap:0.5rem;align-items:flex-end}
+.fab-action-btn{background:#FFC72C;color:black;border:none;padding:0.75rem 1rem;border-radius:50px;box-shadow:0 4px 12px rgba(0,0,0,0.15);display:flex;align-items:center;gap:0.5rem;text-decoration:none;font-weight:600}
+.fab-btn{width:56px;height:56px;border-radius:50%;background:#FFC72C;border:none;color:black;font-size:1.5rem;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:all 0.3s ease}
+.fab-rotate{transform:rotate(45deg)}
+
+/* Modal */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal-content{background:white;border-radius:0.75rem;max-width:500px;width:90%;max-height:90vh;overflow:auto;padding:1.5rem}
+
+/* small utilities */
+.muted{color:var(--gray-600)}
+.muted-strong{color:var(--gray-500);font-weight:600}
+
+/* small spacing helpers */
+.ml-1{margin-left:1rem}
+
+/* Autenticação */
+.auth-container{max-width:420px;margin:3rem auto}
+.form-grid{display:grid;gap:0.5rem}
+
+/* animações */
+@keyframes fabSlideIn{to{transform:translateY(0);opacity:1}}

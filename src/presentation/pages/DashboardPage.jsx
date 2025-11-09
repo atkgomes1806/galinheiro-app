@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { obterSumarioGalinheiro } from '../../application/use-cases/obterSumarioGalinheiro';
+import { getAvatarColor, getInitial } from '../../utils';
 
 const DashboardPage = () => {
     const [sumario, setSumario] = useState(null);
@@ -26,20 +27,7 @@ const DashboardPage = () => {
         }
     };
 
-    // Função para gerar cor baseada no nome
-    const getAvatarColor = (nome) => {
-        const colors = [
-            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
-            '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'
-        ];
-        const index = nome.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
-        return colors[index];
-    };
-
-    // Função para obter inicial do nome
-    const getInitial = (nome) => {
-        return nome.charAt(0).toUpperCase();
-    };
+    // avatar helpers foram centralizados em src/utils/index.js
 
     if (loading) {
         return (
@@ -109,17 +97,8 @@ const DashboardPage = () => {
             <div className="grid grid-cols-4" style={{ gap: '1rem', marginTop: '1rem', marginBottom: '1rem' }}>
                 {/* KPI: Média de Postura (promoção do detalhe) */}
                 <Link to="/historico" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div className={`card`} style={{ cursor: 'pointer', minHeight: '140px', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                        <div style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            background: '#FFC72C',
-                            color: '#1f2d3d',
-                            padding: '0.5rem 0.75rem',
-                            borderRadius: '8px',
-                            width: 'fit-content'
-                        }}>
+                    <div className={`card kpi-card`}>
+                        <div className="kpi-chip kpi-chip--yellow">
                             <span>🥚</span>
                             <span style={{ fontWeight: 600 }}>Média de Postura (7d)</span>
                         </div>
@@ -133,17 +112,8 @@ const DashboardPage = () => {
 
                 {/* KPI: Total de Galinhas */}
                 <Link to="/galinhas" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div className="card" style={{ cursor: 'pointer', minHeight: '140px', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                        <div style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            background: '#2980b9',
-                            color: 'white',
-                            padding: '0.5rem 0.75rem',
-                            borderRadius: '8px',
-                            width: 'fit-content'
-                        }}>
+                    <div className="card kpi-card">
+                        <div className="kpi-chip kpi-chip--blue">
                             <span>🐔</span>
                             <span style={{ fontWeight: 600 }}>Galinhas Ativas</span>
                         </div>
@@ -159,17 +129,8 @@ const DashboardPage = () => {
 
                 {/* KPI: Produção de Ovos (7 dias) */}
                 <Link to="/historico" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div className="card" style={{ cursor: 'pointer', minHeight: '140px', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                        <div style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            background: 'var(--primary)',
-                            color: 'white',
-                            padding: '0.5rem 0.75rem',
-                            borderRadius: '8px',
-                            width: 'fit-content'
-                        }}>
+                    <div className="card kpi-card">
+                        <div className="kpi-chip kpi-chip--primary">
                             <span>🥚</span>
                             <span style={{ fontWeight: 600 }}>Produção (7 dias)</span>
                         </div>
@@ -183,17 +144,8 @@ const DashboardPage = () => {
 
                 {/* KPI: Tratamentos Ativos */}
                 <Link to="/tratamentos" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div className={`card ${sumario.tratamentos.emAlerta > 0 ? '' : ''}`} style={{ cursor: 'pointer', minHeight: '140px', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-                        <div style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '0.5rem',
-                            background: '#f1c40f',
-                            color: '#1f2d3d',
-                            padding: '0.5rem 0.75rem',
-                            borderRadius: '8px',
-                            width: 'fit-content'
-                        }}>
+                    <div className={`card kpi-card`}>
+                        <div className="kpi-chip kpi-chip--treatment">
                             <span>💊</span>
                             <span style={{ fontWeight: 600 }}>Tratamentos Ativos</span>
                         </div>
@@ -215,18 +167,7 @@ const DashboardPage = () => {
                     <div className="grid grid-cols-3" style={{ gap: '1rem' }}>
                         {sumario.ovos.topProducers.map((galinha, index) => (
                             <div key={index} className="card" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                                <div style={{
-                                    width: '40px',
-                                    height: '40px',
-                                    borderRadius: '50%',
-                                    backgroundColor: getAvatarColor(galinha.nome),
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    color: 'white',
-                                    fontWeight: 'bold',
-                                    fontSize: '1.1rem'
-                                }}>
+                                <div className="avatar" style={{ backgroundColor: getAvatarColor(galinha.nome) }}>
                                     {getInitial(galinha.nome)}
                                 </div>
                                 <div style={{ flex: 1 }}>
@@ -299,133 +240,29 @@ const DashboardPage = () => {
                 </div>
             )}
 
-            {/* Ações Rápidas */}
-
             {/* FAB - Floating Action Button */}
-            <div style={{
-                position: 'fixed',
-                bottom: '2rem',
-                right: '2rem',
-                zIndex: 1000
-            }}>
-                {/* Ações expandidas */}
+            <div className="fab-root">
                 {fabExpanded && (
-                    <div style={{
-                        position: 'absolute',
-                        bottom: '4.5rem',
-                        right: '0',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.5rem',
-                        alignItems: 'flex-end'
-                    }}>
-                        <Link
-                            to="/galinhas"
-                            className="btn"
-                            style={{
-                                backgroundColor: '#FFC72C',
-                                color: 'black',
-                                border: 'none',
-                                padding: '0.75rem 1rem',
-                                borderRadius: '50px',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                textDecoration: 'none',
-                                fontWeight: '600',
-                                transform: 'translateY(10px)',
-                                opacity: 0,
-                                animation: 'fabSlideIn 0.3s ease-out forwards'
-                            }}
-                        >
-                            <span>🐔</span>
+                    <div className="fab-actions">
+                        <Link to="/galinhas" className="fab-action-btn" style={{ animation: 'fabSlideIn 0.3s ease-out forwards' }}>
+                            <span>�</span>
                             <span>Cadastrar Galinha</span>
                         </Link>
-                        <Link
-                            to="/historico"
-                            className="btn"
-                            style={{
-                                backgroundColor: '#FFC72C',
-                                color: 'black',
-                                border: 'none',
-                                padding: '0.75rem 1rem',
-                                borderRadius: '50px',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                textDecoration: 'none',
-                                fontWeight: '600',
-                                transform: 'translateY(10px)',
-                                opacity: 0,
-                                animation: 'fabSlideIn 0.3s ease-out 0.1s forwards'
-                            }}
-                        >
+                        <Link to="/historico" className="fab-action-btn" style={{ animation: 'fabSlideIn 0.3s ease-out 0.1s forwards' }}>
                             <span>🥚</span>
                             <span>Registrar Ovos</span>
                         </Link>
-                        <Link
-                            to="/tratamentos"
-                            className="btn"
-                            style={{
-                                backgroundColor: '#FFC72C',
-                                color: 'black',
-                                border: 'none',
-                                padding: '0.75rem 1rem',
-                                borderRadius: '50px',
-                                boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.5rem',
-                                textDecoration: 'none',
-                                fontWeight: '600',
-                                transform: 'translateY(10px)',
-                                opacity: 0,
-                                animation: 'fabSlideIn 0.3s ease-out 0.2s forwards'
-                            }}
-                        >
+                        <Link to="/tratamentos" className="fab-action-btn" style={{ animation: 'fabSlideIn 0.3s ease-out 0.2s forwards' }}>
                             <span>💊</span>
                             <span>Novo Tratamento</span>
                         </Link>
                     </div>
                 )}
 
-                {/* Botão principal do FAB */}
-                <button
-                    onClick={() => setFabExpanded(!fabExpanded)}
-                    style={{
-                        width: '56px',
-                        height: '56px',
-                        borderRadius: '50%',
-                        backgroundColor: '#FFC72C',
-                        border: 'none',
-                        color: 'black',
-                        fontSize: '1.5rem',
-                        fontWeight: 'bold',
-                        cursor: 'pointer',
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'all 0.3s ease',
-                        transform: fabExpanded ? 'rotate(45deg)' : 'rotate(0deg)'
-                    }}
-                    aria-label="Ações rápidas"
-                >
+                <button onClick={() => setFabExpanded(!fabExpanded)} className={`fab-btn ${fabExpanded ? 'fab-rotate' : ''}`} aria-label="Ações rápidas">
                     +
                 </button>
             </div>
-
-            {/* CSS para animação */}
-            <style>{`
-                @keyframes fabSlideIn {
-                    to {
-                        transform: translateY(0);
-                        opacity: 1;
-                    }
-                }
-            `}</style>
         </div>
     );
 };

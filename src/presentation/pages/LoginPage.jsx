@@ -21,12 +21,12 @@ const LoginPage = () => {
     };
 
     return (
-        <div style={{ maxWidth: 420, margin: '3rem auto' }}>
+        <div className="auth-container">
             <div className="card">
                 <h2 style={{ marginTop: 0 }}>Entrar no Galinheiro</h2>
-                <p style={{ color: 'var(--gray-600)' }}>Proteção simples para uso pessoal. Informe a senha.</p>
+                <p className="muted">Proteção simples para uso pessoal. Informe a senha.</p>
 
-                <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '0.5rem' }}>
+                <form onSubmit={handleSubmit} className="form-grid">
                     <label style={{ fontSize: '0.85rem', color: 'var(--gray-700)' }}>Senha</label>
                     <input
                         type="password"

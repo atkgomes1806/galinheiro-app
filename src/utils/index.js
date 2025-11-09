@@ -7,6 +7,22 @@ export const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+// Helpers para avatares (usados no dashboard)
+export const getAvatarColor = (nome) => {
+    const colors = [
+        '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+        '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'
+    ];
+    if (!nome) return colors[0];
+    const index = nome.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % colors.length;
+    return colors[index];
+};
+
+export const getInitial = (nome) => {
+    if (!nome) return '?';
+    return nome.charAt(0).toUpperCase();
+};
+
 // Autenticação simples (fake) para uso local
 export const AUTH_KEY = 'galinheiro_auth_v1';
 
