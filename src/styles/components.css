@@ -1,0 +1,252 @@
+/* Componentes e utilitários adicionais para o projeto */
+
+/* Navegação */
+.app-nav{
+  background:#2c3e50;
+  padding:1rem;
+  margin-bottom:2rem;
+}
+.app-nav .nav-inner{
+  max-width:1200px;
+  margin:0 auto;
+  display:flex;
+  gap:2rem;
+  align-items:center;
+}
+.nav-items{
+  display:flex;
+  gap:0.5rem;
+  align-items:center;
+}
+.nav-item{
+  color:white;
+  text-decoration:none;
+  padding:0.5rem 0.75rem;
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  border-radius:0;
+  transition:background 0.15s, color 0.15s;
+}
+.nav-item-active{
+  background:#F7F7F7;
+  color:#1f2d3d;
+  border-radius:0 12px 12px 0;
+  padding:0.5rem 0.9rem;
+}
+
+/* KPI card helpers */
+.kpi-card{cursor:pointer;min-height:140px;display:flex;flex-direction:column;gap:0.75rem}
+.kpi-chip{display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 0.75rem;border-radius:8px;width:fit-content}
+.kpi-chip--yellow{background:#FFC72C;color:#1f2d3d}
+.kpi-chip--primary{background:var(--primary);color:white}
+.kpi-chip--blue{background:#2980b9;color:white}
+.kpi-chip--treatment{background:#f1c40f;color:#1f2d3d}
+
+/* Avatar */
+.avatar{
+  width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:1.05rem;
+}
+
+/* FAB */
+.fab-root{position:fixed;bottom:2rem;right:2rem;z-index:1000}
+.fab-actions{position:absolute;bottom:4.5rem;right:0;display:flex;flex-direction:column;gap:0.5rem;align-items:flex-end}
+.fab-action-btn{background:#FFC72C;color:black;border:none;padding:0.75rem 1rem;border-radius:50px;box-shadow:0 4px 12px rgba(0,0,0,0.15);display:flex;align-items:center;gap:0.5rem;text-decoration:none;font-weight:600}
+.fab-btn{width:56px;height:56px;border-radius:50%;background:#FFC72C;border:none;color:black;font-size:1.5rem;font-weight:bold;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.15);transition:all 0.3s ease}
+.fab-rotate{transform:rotate(45deg)}
+
+/* Modal */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:1000}
+.modal-content{background:white;border-radius:0.75rem;max-width:500px;width:90%;max-height:90vh;overflow:auto;padding:1.5rem}
+
+/* small utilities */
+.muted{color:var(--gray-600)}
+.muted-strong{color:var(--gray-500);font-weight:600}
+.ml-1{margin-left:1rem}
+
+/* Form helpers */
+.form-help{color:var(--gray-500);font-size:0.875rem;display:block;margin-top:0.25rem}
+.form-row{display:grid;gap:1rem;grid-template-columns:repeat(2,minmax(0,1fr))}
+
+/* Warning text */
+.text-warning{color:var(--warning)}
+
+/* Card layout helpers */
+.card-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:0.5rem}
+.card-section{margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--gray-200)}
+.card-section-title{font-size:0.75rem;color:var(--gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.5rem}
+.card-section-value{margin:0.25rem 0;color:var(--gray-700)}
+.card-actions{display:flex;gap:0.5rem}
+.card-actions .btn{flex:1}
+
+/* Card section item */
+.card-section-item{display:flex;gap:0.5rem;margin-bottom:0.25rem}
+.card-section-item:last-child{margin-bottom:0}
+
+/* Card result */
+.card-result{margin-top:0.75rem;padding:0.75rem;background:var(--gray-50);border-radius:0.5rem}
+.card-result-title{font-size:0.875rem;color:var(--gray-700);font-weight:600}
+.card-result-text{margin:0;margin-top:0.25rem;font-size:0.875rem;color:var(--gray-600)}
+
+/* Grid helpers */
+.grid-gap-1-5{gap:1.5rem}
+
+/* Typography helpers */
+.h2-mb-1-5{margin-bottom:1.5rem}
+.h3-card{font-size:1.25rem;color:var(--gray-900);margin:0}
+.p-muted{color:var(--gray-600);font-size:0.875rem;margin:0.25rem 0}
+.text-label{color:var(--gray-500);font-size:0.875rem}
+.text-value{font-weight:600;font-size:0.875rem}
+.text-result{font-size:0.875rem;color:var(--gray-600);margin:0;margin-top:0.25rem}
+.text-strong{font-size:0.875rem;color:var(--gray-700)}
+
+/* Badge helpers */
+.badge-fit{margin-bottom:0.5rem;width:fit-content}
+
+/* Modal helpers */
+.modal-info{margin-bottom:1rem;padding:1rem;background:var(--gray-50);border-radius:0.5rem}
+.modal-info p{margin:0;margin-bottom:0.5rem}
+.modal-info p:last-child{margin:0}
+
+/* Result section */
+.result-section{margin-top:0.75rem;padding:0.75rem;background:var(--gray-50);border-radius:0.5rem}
+
+/* Actions section */
+.actions-section{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--gray-200)}
+.btn-full{width:100%}
+
+/* Date rows */
+.date-row{display:flex;gap:0.5rem;margin-bottom:0.25rem}
+.date-row-completed{margin-top:0.25rem}
+
+/* Page header */
+.page-header{margin-bottom:1rem}
+.page-title{margin:0}
+.page-subtitle{margin:0;color:var(--gray-600)}
+
+/* Error card */
+.error-card{border-left:4px solid var(--danger)}
+.error-text{color:var(--danger)}
+
+/* Filter label */
+.filter-label{display:block;margin-bottom:0.5rem;color:var(--gray-700);font-size:0.875rem;text-transform:uppercase;font-weight:600}
+
+/* Stats card */
+.stats-card-title{color:var(--gray-500);text-transform:uppercase;font-weight:600;font-size:0.75rem}
+.stats-card-value{font-size:1.5rem;font-weight:700}
+
+/* Records section */
+.records-section{margin-top:1rem}
+.records-title{margin-top:0}
+.records-empty{color:var(--gray-600)}
+.records-table{width:100%}
+
+/* Tratamentos page */
+.page-header-flex{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem}
+.page-header-main{margin:0}
+.page-subtitle-main{margin:0;color:var(--gray-600)}
+.stats-grid{gap:1rem;margin-bottom:1rem}
+.stats-title{color:var(--gray-500);text-transform:uppercase;font-weight:600;font-size:0.75rem}
+.stats-value{font-size:2rem;font-weight:700}
+.stats-value-primary{color:var(--primary)}
+.stats-value-warning{color:var(--warning)}
+.filters-section{margin-bottom:1rem}
+.filters-grid{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start}
+.filters-label{display:block;margin-bottom:0.5rem;color:var(--gray-700);font-size:0.875rem;text-transform:uppercase;font-weight:600}
+.btn-retry{margin-top:0.5rem}
+
+/* Filters button group */
+.filters-btn-group{display:flex;gap:0.5rem}
+
+/* animações */
+@keyframes fabSlideIn{to{transform:translateY(0);opacity:1}}
+
+/* Form label small */
+.form-label-small{font-size:0.85rem;color:var(--gray-700)}
+
+/* Alert card */
+.alert-card{border-left:4px solid var(--danger);background:var(--danger-50)}
+.alert-card-header{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.alert-card-content{display:flex;gap:0.75rem;align-items:center}
+.alert-icon{font-size:1.25rem}
+.alert-title{margin:0}
+.alert-text{margin:0;color:var(--gray-700)}
+.alert-highlight{color:var(--danger);font-weight:600}
+
+/* KPI grid */
+.kpi-grid{gap:1rem;margin-top:1rem;margin-bottom:1rem}
+
+/* KPI content */
+.kpi-content-title{font-weight:600}
+.kpi-content-value{font-size:1.5rem;font-weight:700}
+.kpi-content-subtitle{color:var(--gray-600)}
+.kpi-content-link{margin-top:auto;font-size:0.875rem;color:var(--gray-500)}
+
+/* Top performers */
+.top-performers-title{margin-bottom:0.75rem}
+.top-performers-grid{gap:1rem}
+.top-performer-card{display:flex;align-items:center;gap:0.75rem}
+.top-performer-info{flex:1}
+.top-performer-header{display:flex;align-items:center;gap:0.5rem}
+.top-performer-name{margin:0}
+.top-performer-rank{font-size:0.9rem;color:var(--gray-500)}
+.top-performer-total{margin:0;color:var(--gray-600)}
+
+/* Metrics section */
+.metrics-title{margin-top:1rem}
+.metrics-grid{gap:1rem}
+.metric-label{color:var(--gray-500)}
+.metric-value{font-weight:600}
+
+/* Alerts section */
+.alerts-title{margin-top:1rem}
+.alerts-grid{gap:0.75rem}
+.alert-item{display:flex;justify-content:space-between;align-items:center}
+.alert-item-title{font-weight:600}
+.alert-item-date{color:var(--gray-600)}
+.alerts-link{margin-top:0.75rem}
+
+/* ===== EMBRAPA WEATHER CARD (Padrão KPI) ===== */
+
+/* Chip de clima - mesmo estilo dos outros KPIs */
+.kpi-chip--weather{
+  background: #3b82f6;
+  color: white;
+}
+
+/* Layout das métricas (temperatura e umidade lado a lado) */
+.weather-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+/* Botão de atualização minimalista */
+.weather-refresh-mini {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  opacity: 0.5;
+  transition: opacity 0.2s, transform 0.2s;
+  padding: 0.25rem;
+}
+
+.weather-refresh-mini:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Estados de loading e erro - mantém estilo padrão do card */
+.weather-card-loading,
+.weather-card-error {
+  min-height: 140px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
