@@ -95,14 +95,14 @@ Este documento descreve o plano para centralizar estilos CSS inline e funções 
 **Lote 5 Concluído**: TratamentosPage.jsx (commit deee422).
 **Lote 6 Concluído**: LoginPage.jsx e DashboardPage.jsx (commit pendente).
 
-### Parte 5: Testes e Validação 🔄 Pendente
+### Parte 5: Testes e Validação ✅ Concluído
 **Descrição**: Garantir que a refatoração não quebrou nada.
 
 **Tarefas**:
-- [ ] Executar `npm run dev` e verificar HMR.
-- [ ] Testar navegação e funcionalidades visuais.
-- [ ] Corrigir erros menores (se houver).
-- [ ] Verificar responsividade e acessibilidade.
+- [x] Executar `npm run dev` e verificar HMR.
+- [x] Testar navegação e funcionalidades visuais.
+- [x] Corrigir erros menores (se houver).
+- [x] Verificar responsividade e acessibilidade.
 
 ### Parte 6: Documentação Final e Próximos Passos 🔄 Pendente
 **Descrição**: Finalizar documentação e propor melhorias futuras.
