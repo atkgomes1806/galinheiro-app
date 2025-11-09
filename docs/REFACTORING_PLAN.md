@@ -80,7 +80,7 @@ Este documento descreve o plano para centralizar estilos CSS inline e funções 
 - [ ] Refatorar `src/presentation/components/TratamentoForm.jsx`.
 - [ ] Refatorar `src/presentation/components/RegistroOvoForm.jsx`.
 - [x] Refatorar `src/presentation/components/TratamentosList.jsx`.
-- [ ] Refatorar `src/presentation/pages/HistoricoPosturaPage.jsx`.
+- [x] Refatorar `src/presentation/pages/HistoricoPosturaPage.jsx`.
 - [ ] Refatorar `src/presentation/pages/TratamentosPage.jsx`.
 - [ ] Refatorar `src/presentation/pages/GalinhasPage.jsx`.
 - [ ] Verificar e refatorar `src/presentation/components/RequireAuth.jsx` (se necessário).
@@ -89,7 +89,8 @@ Este documento descreve o plano para centralizar estilos CSS inline e funções 
 
 **Lote 1 Concluído**: GalinhasList.jsx e GalinhaForm.jsx (commit c32172f).
 **Lote 2 Concluído**: TratamentoForm.jsx e RegistroOvoForm.jsx (commit 597255c).
-**Lote 3 Concluído**: TratamentosList.jsx (commit pendente).
+**Lote 3 Concluído**: TratamentosList.jsx (commit edaaae7).
+**Lote 4 Concluído**: HistoricoPosturaPage.jsx (commit pendente).
 
 ### Parte 5: Testes e Validação 🔄 Pendente
 **Descrição**: Garantir que a refatoração não quebrou nada.
@@ -110,10 +111,10 @@ Este documento descreve o plano para centralizar estilos CSS inline e funções 
 - [ ] Revisar e otimizar classes não utilizadas.
 
 ## Próximos Passos Imediatos
-1. Refatorar `src/presentation/pages/HistoricoPosturaPage.jsx`.
-2. Commitar Lote 3 (TratamentosList.jsx).
+1. Refatorar `src/presentation/pages/TratamentosPage.jsx` e `src/presentation/pages/GalinhasPage.jsx`.
+2. Commitar Lote 4 (HistoricoPosturaPage.jsx).
 3. Testar localmente.
-4. Continuar com próximos componentes.
+4. Verificar se há mais componentes para refatorar.
 
 ## Notas Técnicas
 - **Ferramentas Usadas**: grep_search, replace_string_in_file, create_file.

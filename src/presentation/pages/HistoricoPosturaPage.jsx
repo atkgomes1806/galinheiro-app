@@ -73,8 +73,8 @@ const HistoricoPosturaPage = () => {
         return (
             <div>
                 <div className="card">
-                    <h1 style={{ margin: 0 }}>Histórico de Posturas 🥚</h1>
-                    <p style={{ color: 'var(--gray-600)' }}>Carregando...</p>
+                    <h1 className="page-title">Histórico de Posturas 🥚</h1>
+                    <p className="page-subtitle">Carregando...</p>
                 </div>
             </div>
         );
@@ -82,14 +82,14 @@ const HistoricoPosturaPage = () => {
 
     return (
         <div>
-            <header className="card" style={{ marginBottom: '1rem' }}>
-                <h1 style={{ margin: 0 }}>Histórico de Posturas 🥚</h1>
-                <p style={{ margin: 0, color: 'var(--gray-600)' }}>Registre e acompanhe a produção de ovos</p>
+            <header className="card page-header">
+                <h1 className="page-title">Histórico de Posturas 🥚</h1>
+                <p className="page-subtitle">Registre e acompanhe a produção de ovos</p>
             </header>
 
             {error && (
-                <div className="card" style={{ borderLeft: '4px solid var(--danger)' }}>
-                    <p style={{ color: 'var(--danger)' }}>Erro ao carregar dados: {error}</p>
+                <div className="card error-card">
+                    <p className="error-text">Erro ao carregar dados: {error}</p>
                     <button className="btn btn-secondary" onClick={carregarDados}>Tentar Novamente</button>
                 </div>
             )}
@@ -104,7 +104,7 @@ const HistoricoPosturaPage = () => {
             <div className="form-container" style={{ marginTop: '1rem' }}>
                 <div className="grid grid-cols-3">
                     <div>
-                        <label htmlFor="filtroGalinha" className="form-label" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--gray-700)', fontSize: '0.875rem', textTransform: 'uppercase', fontWeight: 600 }}>Filtrar por Galinha</label>
+                        <label htmlFor="filtroGalinha" className="filter-label">Filtrar por Galinha</label>
                         <select
                             id="filtroGalinha"
                             value={filtroGalinhaId || ''}
@@ -121,28 +121,28 @@ const HistoricoPosturaPage = () => {
                     </div>
 
                     <div className="card">
-                        <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>Total de Registros</span>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{totais.totalRegistros}</div>
+                        <span className="stats-card-title">Total de Registros</span>
+                        <div className="stats-card-value">{totais.totalRegistros}</div>
                     </div>
                     <div className="card">
-                        <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>Total de Ovos</span>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{totais.totalOvos}</div>
+                        <span className="stats-card-title">Total de Ovos</span>
+                        <div className="stats-card-value">{totais.totalOvos}</div>
                     </div>
                     <div className="card">
-                        <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>Peso Médio</span>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{totais.pesoMedio}g</div>
+                        <span className="stats-card-title">Peso Médio</span>
+                        <div className="stats-card-value">{totais.pesoMedio}g</div>
                     </div>
                 </div>
             </div>
 
             {/* Lista de Registros */}
-            <div className="card" style={{ marginTop: '1rem' }}>
-                <h2 style={{ marginTop: 0 }}>Registros de Postura</h2>
+            <div className="card records-section">
+                <h2 className="records-title">Registros de Postura</h2>
 
                 {registros.length === 0 ? (
-                    <p style={{ color: 'var(--gray-600)' }}>Nenhum registro de postura encontrado.</p>
+                    <p className="records-empty">Nenhum registro de postura encontrado.</p>
                 ) : (
-                    <table style={{ width: '100%' }}>
+                    <table className="records-table">
                         <thead>
                             <tr>
                                 <th>Data</th>
