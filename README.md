@@ -4,9 +4,11 @@ Este projeto é uma aplicação React chamada "galinheiro-app", que consome dado
 
 ## ✨ Destaques Recentes
 
+- ✅ **Organização Scripts (Novembro 2025)**: Pasta `/scripts/` centralizada com testes e utilitários
+- ✅ **Teste Comparativo OAuth vs Bearer**: Validação completa das credenciais da API Embrapa
 - ✅ **Refatoração Completa (Novembro 2025)**: Centralização de CSS e funções utilitárias
-- �️ **Integração API Embrapa**: Dados climáticos em tempo real no dashboard
-- �🎨 **Sistema de Design**: Classes CSS reutilizáveis e consistentes
+- 🌍 **Integração API Embrapa**: Dados climáticos em tempo real no dashboard
+- � **Sistema de Design**: Classes CSS reutilizáveis e consistentes
 - 📱 **Interface Moderna**: UI responsiva e acessível
 - 🏗️ **Arquitetura Limpa**: Separação clara de responsabilidades
 - 🚀 **Performance Otimizada**: CSS e JavaScript eficientes
@@ -23,8 +25,24 @@ galinheiro-app
 ├── .gitignore                    # Arquivos e pastas a serem ignorados pelo Git
 ├── .env.example                  # Exemplo de variáveis de ambiente
 ├── README.md                     # Documentação do projeto
+├── backend/                      # Servidor proxy para API Embrapa
+│   ├── server.js                 # Servidor Express
+│   ├── package.json              # Dependências do backend
+│   ├── .env                      # Variáveis de ambiente do backend
+│   └── src/
+│       ├── routes/               # Rotas do backend
+│       │   └── weather.js        # Endpoints de clima
+│       └── services/             # Serviços do backend
+│           └── embrapaAuth.js    # Autenticação OAuth 2.0
 ├── docs/
-│   └── REFACTORING_PLAN.md       # Plano detalhado da refatoração
+│   ├── REFACTORING_PLAN.md       # Plano detalhado da refatoração
+│   └── TESTES_CLIMAPI_REAL.md    # Log dos testes da API Embrapa
+├── scripts/                      # 🆕 Scripts de teste e utilitários
+│   ├── README.md                 # Documentação dos scripts
+│   ├── test-connection.js        # Teste de conectividade básica
+│   ├── test-embrapa-api.js       # Teste comparativo OAuth vs Bearer
+│   ├── test-real-api.js          # Teste detalhado com Bearer Token
+│   └── start-backend.ps1         # Script PowerShell para iniciar backend
 ├── public
 │   └── robots.txt                # Instruções para motores de busca
 └── src
@@ -87,6 +105,41 @@ galinheiro-app
             ├── RegistroOvoRepositorySupabase.js
             └── TratamentoRepositorySupabase.js
 ```
+
+## 🧪 Scripts de Teste e Utilitários
+
+O projeto inclui uma pasta `/scripts/` com ferramentas para desenvolvimento e validação:
+
+### 📂 Arquivos Disponíveis
+
+- **`test-connection.js`**: Teste de conectividade básica do projeto
+- **`test-embrapa-api.js`**: � Teste comparativo OAuth 2.0 vs Bearer Token
+- **`test-real-api.js`**: Teste detalhado com token Bearer da API Embrapa
+- **`start-backend.ps1`**: Script PowerShell para iniciar o backend facilmente
+- **`README.md`**: Documentação completa dos scripts
+
+### 🔧 Como Usar os Scripts
+
+```bash
+# Testar conectividade básica
+node scripts/test-connection.js
+
+# Comparar OAuth vs Bearer Token (recomendado)
+node scripts/test-embrapa-api.js
+
+# Teste detalhado da API com Bearer
+node scripts/test-real-api.js
+```
+
+### 🎯 Resultado dos Testes Recentes
+
+**Teste OAuth vs Bearer Token (9/11/2025)**:
+- ✅ **OAuth 2.0**: Funcionando perfeitamente (Status 200)
+- ❌ **Bearer Token**: Expirado (Status 401)
+- ✅ **API Embrapa**: 19 variáveis disponíveis
+- ✅ **Credenciais**: Consumer Key/Secret validados
+
+**Conclusão**: O backend atual com OAuth 2.0 está otimizado e não necessita mudanças.
 
 ## 🎨 Padrões de CSS
 
@@ -212,13 +265,34 @@ VITE_LOCATION_NAME=São Paulo
 
 ## Executando a Aplicação
 
-Para iniciar a aplicação em modo de desenvolvimento, execute:
+### Frontend (React)
+Para iniciar a aplicação frontend em modo de desenvolvimento:
 
-```
+```bash
 npm run dev
 ```
 
 A aplicação estará disponível em `http://localhost:3000`.
+
+### Backend (Servidor Proxy)
+Para iniciar o servidor backend que faz proxy para a API Embrapa:
+
+```bash
+# Opção 1: Script PowerShell (recomendado)
+PowerShell -ExecutionPolicy Bypass -File "scripts/start-backend.ps1"
+
+# Opção 2: Manual
+cd backend
+npm install  # primeira vez
+npm start
+```
+
+O servidor backend estará disponível em `http://localhost:3002`.
+
+### 🔧 Ordem de Inicialização
+1. **Primeiro**: Inicie o backend (porta 3002)
+2. **Segundo**: Inicie o frontend (porta 3000)
+3. **Verificação**: Acesse http://localhost:3000
 
 ## Contribuição
 
@@ -327,7 +401,7 @@ Veja a seção [Configuração](#configuração) acima para obter e configurar s
 - **Registrar aplicação**: https://api.cnptia.embrapa.br
 - **Modelo GFS**: NCEP Global Forecast System
 
-## �📋 Próximos Passos
+##  Próximos Passos
 
 - [ ] Implementar testes automatizados (Jest + React Testing Library)
 - [ ] Adicionar TypeScript para melhor type safety
@@ -336,3 +410,6 @@ Veja a seção [Configuração](#configuração) acima para obter e configurar s
 - [ ] Adicionar gráficos e dashboards avançados
 - [ ] Otimizar performance com lazy loading
 - [ ] Histórico de dados climáticos (gráficos de temperatura/umidade)
+- [ ] Expandir testes automatizados para API Embrapa
+- [ ] Implementar monitoramento de uptime da API
+- [ ] Adicionar alertas por email/SMS para condições críticas
