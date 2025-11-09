@@ -155,5 +155,53 @@
 .filters-label{display:block;margin-bottom:0.5rem;color:var(--gray-700);font-size:0.875rem;text-transform:uppercase;font-weight:600}
 .btn-retry{margin-top:0.5rem}
 
+/* Filters button group */
+.filters-btn-group{display:flex;gap:0.5rem}
+
 /* animações */
 @keyframes fabSlideIn{to{transform:translateY(0);opacity:1}}
+
+/* Form label small */
+.form-label-small{font-size:0.85rem;color:var(--gray-700)}
+
+/* Alert card */
+.alert-card{border-left:4px solid var(--danger);background:var(--danger-50)}
+.alert-card-header{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.alert-card-content{display:flex;gap:0.75rem;align-items:center}
+.alert-icon{font-size:1.25rem}
+.alert-title{margin:0}
+.alert-text{margin:0;color:var(--gray-700)}
+.alert-highlight{color:var(--danger);font-weight:600}
+
+/* KPI grid */
+.kpi-grid{gap:1rem;margin-top:1rem;margin-bottom:1rem}
+
+/* KPI content */
+.kpi-content-title{font-weight:600}
+.kpi-content-value{font-size:1.5rem;font-weight:700}
+.kpi-content-subtitle{color:var(--gray-600)}
+.kpi-content-link{margin-top:auto;font-size:0.875rem;color:var(--gray-500)}
+
+/* Top performers */
+.top-performers-title{margin-bottom:0.75rem}
+.top-performers-grid{gap:1rem}
+.top-performer-card{display:flex;align-items:center;gap:0.75rem}
+.top-performer-info{flex:1}
+.top-performer-header{display:flex;align-items:center;gap:0.5rem}
+.top-performer-name{margin:0}
+.top-performer-rank{font-size:0.9rem;color:var(--gray-500)}
+.top-performer-total{margin:0;color:var(--gray-600)}
+
+/* Metrics section */
+.metrics-title{margin-top:1rem}
+.metrics-grid{gap:1rem}
+.metric-label{color:var(--gray-500)}
+.metric-value{font-weight:600}
+
+/* Alerts section */
+.alerts-title{margin-top:1rem}
+.alerts-grid{gap:0.75rem}
+.alert-item{display:flex;justify-content:space-between;align-items:center}
+.alert-item-title{font-weight:600}
+.alert-item-date{color:var(--gray-600)}
+.alerts-link{margin-top:0.75rem}

@@ -23,11 +23,11 @@ const LoginPage = () => {
     return (
         <div className="auth-container">
             <div className="card">
-                <h2 style={{ marginTop: 0 }}>Entrar no Galinheiro</h2>
+                <h2 className="page-header-main">Entrar no Galinheiro</h2>
                 <p className="muted">Proteção simples para uso pessoal. Informe a senha.</p>
 
                 <form onSubmit={handleSubmit} className="form-grid">
-                    <label style={{ fontSize: '0.85rem', color: 'var(--gray-700)' }}>Senha</label>
+                    <label className="form-label-small">Senha</label>
                     <input
                         type="password"
                         value={password}
@@ -35,9 +35,9 @@ const LoginPage = () => {
                         className="form-input"
                         autoFocus
                     />
-                    {error && <div style={{ color: 'var(--danger)' }}>{error}</div>}
+                    {error && <div className="error-text">{error}</div>}
 
-                    <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                    <div className="form-actions">
                         <button className="btn btn-primary" type="submit">Entrar</button>
                         <button type="button" className="btn btn-outline" onClick={() => { setPassword(''); setError(null); }}>Limpar</button>
                     </div>

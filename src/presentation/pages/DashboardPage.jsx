@@ -32,9 +32,9 @@ const DashboardPage = () => {
     if (loading) {
         return (
             <div>
-                <div className="card" style={{ marginBottom: '1rem' }}>
-                    <h1 style={{ margin: 0 }}>Dashboard do Galinheiro 🐔</h1>
-                    <p style={{ color: 'var(--gray-600)' }}>Carregando métricas...</p>
+                <div className="card page-header">
+                    <h1 className="page-title">Dashboard do Galinheiro 🐔</h1>
+                    <p className="page-subtitle">Carregando métricas...</p>
                 </div>
             </div>
         );
@@ -43,9 +43,9 @@ const DashboardPage = () => {
     if (error) {
         return (
             <div>
-                <div className="card" style={{ marginBottom: '1rem' }}>
-                    <h1 style={{ margin: 0 }}>Dashboard do Galinheiro 🐔</h1>
-                    <p style={{ color: 'var(--danger)' }}>Erro ao carregar dados: {error}</p>
+                <div className="card page-header">
+                    <h1 className="page-title">Dashboard do Galinheiro 🐔</h1>
+                    <p className="error-text">Erro ao carregar dados: {error}</p>
                     <button className="btn btn-secondary" onClick={carregarSumario}>Tentar Novamente</button>
                 </div>
             </div>
@@ -58,22 +58,22 @@ const DashboardPage = () => {
 
     return (
         <div>
-            <header className="card" style={{ marginBottom: '1rem' }}>
-                <h1 style={{ margin: 0 }}>Dashboard do Galinheiro 🐔</h1>
-                <p style={{ margin: 0, color: 'var(--gray-600)' }}>Visão geral atualizada do seu galinheiro</p>
+            <header className="card page-header">
+                <h1 className="page-title">Dashboard do Galinheiro 🐔</h1>
+                <p className="page-subtitle">Visão geral atualizada do seu galinheiro</p>
             </header>
 
             {/* ALERTA CRÍTICO - Máxima Prioridade */}
             {sumario.tratamentos.emAlerta > 0 && (
-                <div className="card" style={{ borderLeft: '4px solid var(--danger)', background: 'var(--danger-50)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem' }}>
-                        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-                            <span style={{ fontSize: '1.25rem' }}>⚠️</span>
+                <div className="card alert-card">
+                    <div className="alert-card-header">
+                        <div className="alert-card-content">
+                            <span className="alert-icon">⚠️</span>
                             <div>
-                                <h3 style={{ margin: 0 }}>Atenção: Tratamentos Requerem Ação!</h3>
-                                <p style={{ margin: 0, color: 'var(--gray-700)' }}>
+                                <h3 className="alert-title">Atenção: Tratamentos Requerem Ação!</h3>
+                                <p className="alert-text">
                                     {sumario.tratamentos.vencidos > 0 && (
-                                        <span style={{ color: 'var(--danger)', fontWeight: 600 }}>
+                                        <span className="alert-highlight">
                                             {sumario.tratamentos.vencidos} tratamento(s) vencido(s)
                                         </span>
                                     )}
@@ -94,19 +94,19 @@ const DashboardPage = () => {
             )}
 
             {/* KPIs Principais */}
-            <div className="grid grid-cols-4" style={{ gap: '1rem', marginTop: '1rem', marginBottom: '1rem' }}>
+            <div className="grid grid-cols-4 kpi-grid">
                 {/* KPI: Média de Postura (promoção do detalhe) */}
                 <Link to="/historico" style={{ textDecoration: 'none', color: 'inherit' }}>
                     <div className={`card kpi-card`}>
                         <div className="kpi-chip kpi-chip--yellow">
                             <span>🥚</span>
-                            <span style={{ fontWeight: 600 }}>Média de Postura (7d)</span>
+                            <span className="kpi-content-title">Média de Postura (7d)</span>
                         </div>
                         <div>
-                            <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{Number(sumario.ovos.mediaPostura7Dias).toFixed(2)}</div>
-                            <div style={{ color: 'var(--gray-600)' }}>ovos por galinha/dia</div>
+                            <div className="kpi-content-value">{Number(sumario.ovos.mediaPostura7Dias).toFixed(2)}</div>
+                            <div className="kpi-content-subtitle">ovos por galinha/dia</div>
                         </div>
-                        <div style={{ marginTop: 'auto', fontSize: '0.875rem', color: 'var(--gray-500)' }}>Ver Histórico →</div>
+                        <div className="kpi-content-link">Ver Histórico →</div>
                     </div>
                 </Link>
 
@@ -132,13 +132,13 @@ const DashboardPage = () => {
                     <div className="card kpi-card">
                         <div className="kpi-chip kpi-chip--primary">
                             <span>🥚</span>
-                            <span style={{ fontWeight: 600 }}>Produção (7 dias)</span>
+                            <span className="kpi-content-title">Produção (7 dias)</span>
                         </div>
                         <div>
-                            <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{sumario.ovos.ultimos7Dias} ovos</div>
-                            <div style={{ color: 'var(--gray-600)' }}>Média: {sumario.ovos.mediaPostura7Dias} ovos/galinha</div>
+                            <div className="kpi-content-value">{sumario.ovos.ultimos7Dias} ovos</div>
+                            <div className="kpi-content-subtitle">Média: {sumario.ovos.mediaPostura7Dias} ovos/galinha</div>
                         </div>
-                        <div style={{ marginTop: 'auto', fontSize: '0.875rem', color: 'var(--gray-500)' }}>Ver Histórico →</div>
+                        <div className="kpi-content-link">Ver Histórico →</div>
                     </div>
                 </Link>
 
@@ -147,15 +147,15 @@ const DashboardPage = () => {
                     <div className={`card kpi-card`}>
                         <div className="kpi-chip kpi-chip--treatment">
                             <span>💊</span>
-                            <span style={{ fontWeight: 600 }}>Tratamentos Ativos</span>
+                            <span className="kpi-content-title">Tratamentos Ativos</span>
                         </div>
                         <div>
-                            <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{sumario.tratamentos.ativos}</div>
-                            <div style={{ color: 'var(--gray-600)' }}>
+                            <div className="kpi-content-value">{sumario.tratamentos.ativos}</div>
+                            <div className="kpi-content-subtitle">
                                 {sumario.tratamentos.emAlerta > 0 ? `⚠️ ${sumario.tratamentos.emAlerta} em alerta` : 'Tudo em dia'}
                             </div>
                         </div>
-                        <div style={{ marginTop: 'auto', fontSize: '0.875rem', color: 'var(--gray-500)' }}>Gerenciar Tratamentos →</div>
+                        <div className="kpi-content-link">Gerenciar Tratamentos →</div>
                     </div>
                 </Link>
             </div>
@@ -163,19 +163,19 @@ const DashboardPage = () => {
             {/* Seção: Top Performers */}
             {sumario.ovos.topProducers.length > 0 && (
                 <div>
-                    <h2 style={{ marginBottom: '0.75rem' }}>🏆 Top Produtoras (últimos 7 dias)</h2>
-                    <div className="grid grid-cols-3" style={{ gap: '1rem' }}>
+                    <h2 className="top-performers-title">🏆 Top Produtoras (últimos 7 dias)</h2>
+                    <div className="grid grid-cols-3 top-performers-grid">
                         {sumario.ovos.topProducers.map((galinha, index) => (
-                            <div key={index} className="card" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                            <div key={index} className="card top-performer-card">
                                 <div className="avatar" style={{ backgroundColor: getAvatarColor(galinha.nome) }}>
                                     {getInitial(galinha.nome)}
                                 </div>
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                                        <h4 style={{ margin: 0 }}>{galinha.nome}</h4>
-                                        <span style={{ fontSize: '0.9rem', color: 'var(--gray-500)' }}>#{index + 1}</span>
+                                <div className="top-performer-info">
+                                    <div className="top-performer-header">
+                                        <h4 className="top-performer-name">{galinha.nome}</h4>
+                                        <span className="top-performer-rank">#{index + 1}</span>
                                     </div>
-                                    <p style={{ margin: 0, color: 'var(--gray-600)' }}>{galinha.total} ovos</p>
+                                    <p className="top-performer-total">{galinha.total} ovos</p>
                                 </div>
                             </div>
                         ))}
@@ -185,35 +185,35 @@ const DashboardPage = () => {
 
             {/* Seção: Métricas Detalhadas */}
             <div>
-                <h2 style={{ marginTop: '1rem' }}>📊 Métricas Detalhadas</h2>
-                <div className="grid grid-cols-3" style={{ gap: '1rem' }}>
+                <h2 className="metrics-title">📊 Métricas Detalhadas</h2>
+                <div className="grid grid-cols-3 metrics-grid">
                     {/* Card: Produção Mensal */}
                     <div className="card">
                         <h3>Produção de Ovos</h3>
-                        <div><span style={{ color: 'var(--gray-500)' }}>Últimos 7 dias:</span> <span style={{ fontWeight: 600 }}>{sumario.ovos.ultimos7Dias} ovos</span></div>
-                        <div><span style={{ color: 'var(--gray-500)' }}>Últimos 30 dias:</span> <span style={{ fontWeight: 600 }}>{sumario.ovos.ultimos30Dias} ovos</span></div>
-                        <div><span style={{ color: 'var(--gray-500)' }}>Média 7 dias:</span> <span style={{ fontWeight: 600 }}>{sumario.ovos.mediaPostura7Dias} ovos/galinha</span></div>
-                        <div><span style={{ color: 'var(--gray-500)' }}>Média 30 dias:</span> <span style={{ fontWeight: 600 }}>{sumario.ovos.mediaPostura30Dias} ovos/galinha</span></div>
+                        <div><span className="metric-label">Últimos 7 dias:</span> <span className="metric-value">{sumario.ovos.ultimos7Dias} ovos</span></div>
+                        <div><span className="metric-label">Últimos 30 dias:</span> <span className="metric-value">{sumario.ovos.ultimos30Dias} ovos</span></div>
+                        <div><span className="metric-label">Média 7 dias:</span> <span className="metric-value">{sumario.ovos.mediaPostura7Dias} ovos/galinha</span></div>
+                        <div><span className="metric-label">Média 30 dias:</span> <span className="metric-value">{sumario.ovos.mediaPostura30Dias} ovos/galinha</span></div>
                     </div>
 
                     {/* Card: Saúde */}
                     <div className="card">
                         <h3>Saúde do Galinheiro</h3>
-                        <div><span style={{ color: 'var(--gray-500)' }}>Tratamentos ativos:</span> <span style={{ fontWeight: 600 }}>{sumario.tratamentos.ativos}</span></div>
-                        <div><span style={{ color: 'var(--gray-500)' }}>Tratamentos concluídos:</span> <span style={{ fontWeight: 600 }}>{sumario.tratamentos.concluidos}</span></div>
-                        <div><span style={{ color: 'var(--gray-500)' }}>Em alerta:</span> <span className="badge badge-warning">{sumario.tratamentos.emAlerta}</span></div>
+                        <div><span className="metric-label">Tratamentos ativos:</span> <span className="metric-value">{sumario.tratamentos.ativos}</span></div>
+                        <div><span className="metric-label">Tratamentos concluídos:</span> <span className="metric-value">{sumario.tratamentos.concluidos}</span></div>
+                        <div><span className="metric-label">Em alerta:</span> <span className="badge badge-warning">{sumario.tratamentos.emAlerta}</span></div>
                         {sumario.tratamentos.vencidos > 0 && (
-                            <div><span style={{ color: 'var(--gray-500)' }}>Vencidos:</span> <span className="badge badge-danger">{sumario.tratamentos.vencidos}</span></div>
+                            <div><span className="metric-label">Vencidos:</span> <span className="badge badge-danger">{sumario.tratamentos.vencidos}</span></div>
                         )}
                     </div>
 
                     {/* Card: Galinhas */}
                     <div className="card">
                         <h3>Plantel</h3>
-                        <div><span style={{ color: 'var(--gray-500)' }}>Total de galinhas:</span> <span style={{ fontWeight: 600 }}>{sumario.galinhas.total}</span></div>
-                        <div><span style={{ color: 'var(--gray-500)' }}>Ativas:</span> <span style={{ fontWeight: 600 }}>{sumario.galinhas.ativas}</span></div>
+                        <div><span className="metric-label">Total de galinhas:</span> <span className="metric-value">{sumario.galinhas.total}</span></div>
+                        <div><span className="metric-label">Ativas:</span> <span className="metric-value">{sumario.galinhas.ativas}</span></div>
                         {sumario.galinhas.inativas > 0 && (
-                            <div><span style={{ color: 'var(--gray-500)' }}>Inativas:</span> <span style={{ fontWeight: 600 }}>{sumario.galinhas.inativas}</span></div>
+                            <div><span className="metric-label">Inativas:</span> <span className="metric-value">{sumario.galinhas.inativas}</span></div>
                         )}
                     </div>
                 </div>
@@ -222,19 +222,19 @@ const DashboardPage = () => {
             {/* Seção: Alertas de Tratamentos Detalhados */}
             {sumario.tratamentos.alertas.length > 0 && (
                 <div>
-                    <h2 style={{ marginTop: '1rem' }}>⚠️ Tratamentos que Requerem Atenção</h2>
-                    <div className="grid" style={{ gap: '0.75rem' }}>
+                    <h2 className="alerts-title">⚠️ Tratamentos que Requerem Atenção</h2>
+                    <div className="alerts-grid">
                         {sumario.tratamentos.alertas.map((alerta) => (
-                            <div key={alerta.id} className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span style={{ fontWeight: 600 }}>{alerta.galinha}</span>
+                            <div key={alerta.id} className="card alert-item">
+                                <span className="alert-item-title">{alerta.galinha}</span>
                                 <span className="badge badge-info">{alerta.tipo}</span>
-                                <span style={{ color: 'var(--gray-600)' }}>
+                                <span className="alert-item-date">
                                     Vence em: {new Date(alerta.dataFimPrevista).toLocaleDateString('pt-BR')}
                                 </span>
                             </div>
                         ))}
                     </div>
-                    <Link to="/tratamentos" className="btn btn-secondary" style={{ marginTop: '0.75rem' }}>
+                    <Link to="/tratamentos" className="btn btn-secondary alerts-link">
                         Ver Todos os Tratamentos →
                     </Link>
                 </div>
