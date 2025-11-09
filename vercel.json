@@ -1,0 +1,20 @@
+{
+  "functions": {
+    "api/weather/[...path].js": {
+      "runtime": "@vercel/node"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/weather/(.*)",
+      "destination": "/api/weather/$1"
+    }
+  ],
+  "env": {
+    "EMBRAPA_CONSUMER_KEY": "@embrapa-consumer-key",
+    "EMBRAPA_CONSUMER_SECRET": "@embrapa-consumer-secret",
+    "EMBRAPA_TOKEN_URL": "https://api.cnptia.embrapa.br/token",
+    "EMBRAPA_API_URL": "https://api.cnptia.embrapa.br/climapi/v1",
+    "NODE_ENV": "production"
+  }
+}

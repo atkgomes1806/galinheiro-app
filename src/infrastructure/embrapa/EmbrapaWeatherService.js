@@ -11,8 +11,14 @@
 
 class EmbrapaWeatherService {
   constructor() {
+    // Detectar ambiente automaticamente
+    const isProduction = window.location.hostname !== 'localhost';
+    const baseURL = isProduction 
+      ? window.location.origin  // No Vercel, usar o próprio domínio
+      : 'http://localhost:3002'; // Local, usar backend separado
+    
     // URL do backend proxy
-    this.proxyURL = import.meta.env.VITE_BACKEND_PROXY_URL || 'http://localhost:3002';
+    this.proxyURL = import.meta.env.VITE_BACKEND_PROXY_URL || baseURL;
     
     // Cache de dados (mínimo, pois backend já tem cache)
     this.cachedData = null;
@@ -21,6 +27,8 @@ class EmbrapaWeatherService {
     
     // Modo de demonstração (ativar se houver problemas com backend)
     this.useDemoData = import.meta.env.VITE_USE_DEMO_WEATHER === 'true';
+    
+    console.log(`🌐 EmbrapaWeatherService configurado para: ${this.proxyURL}`);
   }
   
   /**
