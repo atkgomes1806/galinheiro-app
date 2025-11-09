@@ -23,6 +23,12 @@ export function loginWithPassword(password) {
     const envPassword = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_DEV_PASSWORD) || 'galinheiro';
     if (password === envPassword) {
         localStorage.setItem(AUTH_KEY, 'true');
+        try {
+            // Notifica a aplicação que o estado de auth mudou
+            window.dispatchEvent(new Event('authChanged'));
+        } catch (e) {
+            // noop
+        }
         return true;
     }
     return false;
@@ -31,6 +37,11 @@ export function loginWithPassword(password) {
 export function logout() {
     try {
         localStorage.removeItem(AUTH_KEY);
+        try {
+            window.dispatchEvent(new Event('authChanged'));
+        } catch (e) {
+            // noop
+        }
     } catch (e) {
         // noop
     }

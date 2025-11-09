@@ -14,7 +14,12 @@ function AppNav() {
   const [authed, setAuthed] = useState(isAuthenticated());
 
   useEffect(() => {
-    setAuthed(isAuthenticated());
+    const update = () => setAuthed(isAuthenticated());
+    // atualiza inicialmente
+    update();
+    // escuta mudanças de auth disparadas por login/logout
+    window.addEventListener('authChanged', update);
+    return () => window.removeEventListener('authChanged', update);
   }, []);
 
   const handleLogout = () => {
