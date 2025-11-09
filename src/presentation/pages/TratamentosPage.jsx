@@ -85,8 +85,8 @@ const TratamentosPage = () => {
         return (
             <div>
                 <div className="card">
-                    <h1 style={{ margin: 0 }}>Gerenciamento de Tratamentos 💊</h1>
-                    <p style={{ color: 'var(--gray-600)' }}>Carregando...</p>
+                    <h1 className="page-header-main">Gerenciamento de Tratamentos 💊</h1>
+                    <p className="page-subtitle-main">Carregando...</p>
                 </div>
             </div>
         );
@@ -94,10 +94,10 @@ const TratamentosPage = () => {
 
     return (
         <div>
-            <header className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+            <header className="card page-header-flex">
                 <div>
-                    <h1 style={{ margin: 0 }}>Gerenciamento de Tratamentos 💊</h1>
-                    <p style={{ margin: 0, color: 'var(--gray-600)' }}>Acompanhe e conclua os tratamentos das galinhas</p>
+                    <h1 className="page-header-main">Gerenciamento de Tratamentos 💊</h1>
+                    <p className="page-subtitle-main">Acompanhe e conclua os tratamentos das galinhas</p>
                 </div>
                 <button
                     onClick={() => setMostrarFormulario(!mostrarFormulario)}
@@ -108,29 +108,29 @@ const TratamentosPage = () => {
             </header>
 
             {error && (
-                <div className="card" style={{ borderLeft: '4px solid var(--danger)', marginBottom: '1rem' }}>
-                    <p style={{ color: 'var(--danger)', margin: 0 }}>Erro ao carregar dados: {error}</p>
-                    <button className="btn btn-secondary" onClick={carregarTratamentos} style={{ marginTop: '0.5rem' }}>Tentar Novamente</button>
+                <div className="card error-card">
+                    <p className="error-text">Erro ao carregar dados: {error}</p>
+                    <button className="btn btn-secondary btn-retry" onClick={carregarTratamentos}>Tentar Novamente</button>
                 </div>
             )}
 
             {/* Estatísticas */}
-            <div className="grid grid-cols-4" style={{ gap: '1rem', marginBottom: '1rem' }}>
+            <div className="grid grid-cols-4 stats-grid">
                 <div className="card">
-                    <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>Ativos</span>
-                    <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary)' }}>{stats.ativos}</div>
+                    <span className="stats-title">Ativos</span>
+                    <div className="stats-value stats-value-primary">{stats.ativos}</div>
                 </div>
                 <div className="card">
-                    <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>Concluídos</span>
-                    <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--gray-700)' }}>{stats.concluidos}</div>
+                    <span className="stats-title">Concluídos</span>
+                    <div className="stats-value">{stats.concluidos}</div>
                 </div>
-                <div className="card" style={{ borderLeft: stats.comAlerta > 0 ? '4px solid var(--warning)' : 'none' }}>
-                    <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>⚠️ Com Alerta</span>
-                    <div style={{ fontSize: '2rem', fontWeight: 700, color: stats.comAlerta > 0 ? 'var(--warning)' : 'var(--gray-700)' }}>{stats.comAlerta}</div>
+                <div className={`card ${stats.comAlerta > 0 ? 'error-card' : ''}`}>
+                    <span className="stats-title">⚠️ Com Alerta</span>
+                    <div className={`stats-value ${stats.comAlerta > 0 ? 'stats-value-warning' : ''}`}>{stats.comAlerta}</div>
                 </div>
                 <div className="card">
-                    <span style={{ color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600, fontSize: '0.75rem' }}>Total</span>
-                    <div style={{ fontSize: '2rem', fontWeight: 700 }}>{stats.total}</div>
+                    <span className="stats-title">Total</span>
+                    <div className="stats-value">{stats.total}</div>
                 </div>
             </div>
 
@@ -143,10 +143,10 @@ const TratamentosPage = () => {
             )}
 
             {/* Filtros */}
-            <div className="card" style={{ marginBottom: '1rem' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: 'auto 1fr', gap: '1.5rem', alignItems: 'start' }}>
+            <div className="card filters-section">
+                <div className="filters-grid">
                     <div>
-                        <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--gray-700)', fontSize: '0.875rem', textTransform: 'uppercase', fontWeight: 600 }}>Status</label>
+                        <label className="filters-label">Status</label>
                         <div style={{ display: 'flex', gap: '0.5rem' }}>
                             <button
                                 className={`btn ${filtroStatus === 'Ativo' ? 'btn-primary' : 'btn-outline'}`}
@@ -172,7 +172,7 @@ const TratamentosPage = () => {
                         </div>
                     </div>
                     <div>
-                        <label htmlFor="filtroGalinha" style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--gray-700)', fontSize: '0.875rem', textTransform: 'uppercase', fontWeight: 600 }}>Filtrar por Galinha</label>
+                        <label htmlFor="filtroGalinha" className="filters-label">Filtrar por Galinha</label>
                         <select
                             id="filtroGalinha"
                             value={filtroGalinhaId || ''}

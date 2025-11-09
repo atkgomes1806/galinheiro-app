@@ -141,5 +141,19 @@
 .records-empty{color:var(--gray-600)}
 .records-table{width:100%}
 
+/* Tratamentos page */
+.page-header-flex{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem}
+.page-header-main{margin:0}
+.page-subtitle-main{margin:0;color:var(--gray-600)}
+.stats-grid{gap:1rem;margin-bottom:1rem}
+.stats-title{color:var(--gray-500);text-transform:uppercase;font-weight:600;font-size:0.75rem}
+.stats-value{font-size:2rem;font-weight:700}
+.stats-value-primary{color:var(--primary)}
+.stats-value-warning{color:var(--warning)}
+.filters-section{margin-bottom:1rem}
+.filters-grid{display:grid;grid-template-columns:auto 1fr;gap:1.5rem;align-items:start}
+.filters-label{display:block;margin-bottom:0.5rem;color:var(--gray-700);font-size:0.875rem;text-transform:uppercase;font-weight:600}
+.btn-retry{margin-top:0.5rem}
+
 /* animações */
 @keyframes fabSlideIn{to{transform:translateY(0);opacity:1}}
