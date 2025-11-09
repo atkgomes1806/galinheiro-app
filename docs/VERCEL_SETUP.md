@@ -18,16 +18,30 @@ git push origin main
 ### 2️⃣ **Configurar Variáveis de Ambiente no Vercel**
 No dashboard do Vercel, vá em **Settings > Environment Variables** e adicione:
 
+⚠️ **IMPORTANTE**: Adicione como **Environment Variables**, NÃO como Secrets!
+
 ```bash
 # Obrigatórias para API funcionar
 EMBRAPA_CONSUMER_KEY=Gu1cl2cXpRt8mPwOw0IjntwrnZsa
 EMBRAPA_CONSUMER_SECRET=4kVqfR7tip5lm2rPKfKuj3gofFoa
 
-# URLs da API (já configuradas por padrão)
+# URLs da API (opcionais, já têm valores padrão)
 EMBRAPA_TOKEN_URL=https://api.cnptia.embrapa.br/token
 EMBRAPA_API_URL=https://api.cnptia.embrapa.br/climapi/v1
 NODE_ENV=production
 ```
+
+📝 **Como adicionar no Vercel:**
+1. Vá para seu projeto no Vercel Dashboard
+2. Clique em **Settings**
+3. Clique em **Environment Variables**
+4. Para cada variável:
+   - **Name**: `EMBRAPA_CONSUMER_KEY`
+   - **Value**: `Gu1cl2cXpRt8mPwOw0IjntwrnZsa`
+   - **Environments**: Selecione **Production**, **Preview** e **Development**
+   - Clique **Save**
+5. Repita para `EMBRAPA_CONSUMER_SECRET`
+6. **Redeploy** o projeto após adicionar as variáveis
 
 ### 3️⃣ **Endpoints Disponíveis**
 Depois do deploy, a API estará disponível em:
