@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, NavLink, useNavigate } from 'react-router-dom';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import DashboardPage from './presentation/pages/DashboardPage';
 import GalinhasPage from './presentation/pages/GalinhasPage';
@@ -28,6 +28,25 @@ function AppNav() {
     navigate('/login');
   };
 
+  // estilos base para nav items
+  const baseItemStyle = {
+    color: 'white',
+    textDecoration: 'none',
+    padding: '0.5rem 0.75rem',
+    borderRadius: '0',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.5rem'
+  };
+
+  // estilo quando ativo: fundo off-white, canto direito arredondado criando a "aba" fluida
+  const activeItemStyle = {
+    background: '#F7F7F7',
+    color: '#1f2d3d',
+    borderRadius: '0 12px 12px 0',
+    padding: '0.5rem 0.9rem'
+  };
+
   return (
     <nav style={{
       background: '#2c3e50',
@@ -42,15 +61,29 @@ function AppNav() {
         alignItems: 'center'
       }}>
         <h2 style={{ margin: 0, color: 'white' }}>🐔 Galinheiro App</h2>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <Link to="/" style={linkStyle}>Dashboard</Link>
-          <Link to="/galinhas" style={linkStyle}>Galinhas</Link>
-          <Link to="/historico" style={linkStyle}>Histórico de Postura</Link>
-          <Link to="/tratamentos" style={linkStyle}>Tratamentos</Link>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <NavLink to="/" style={({isActive}) => ({...baseItemStyle, ...(isActive ? activeItemStyle : {})})} end>
+            <span style={{ color: 'inherit' }}>Dashboard</span>
+          </NavLink>
+
+          <NavLink to="/galinhas" style={({isActive}) => ({...baseItemStyle, ...(isActive ? activeItemStyle : {})})}>
+            <span style={{ color: 'inherit' }}>Galinhas</span>
+          </NavLink>
+
+          <NavLink to="/historico" style={({isActive}) => ({...baseItemStyle, ...(isActive ? activeItemStyle : {})})}>
+            <span style={{ color: 'inherit' }}>Histórico de Postura</span>
+          </NavLink>
+
+          <NavLink to="/tratamentos" style={({isActive}) => ({...baseItemStyle, ...(isActive ? activeItemStyle : {})})}>
+            <span style={{ color: 'inherit' }}>Tratamentos</span>
+          </NavLink>
+
           {authed ? (
             <button onClick={handleLogout} className="btn" style={{ marginLeft: '1rem' }}>Sair</button>
           ) : (
-            <Link to="/login" style={{ ...linkStyle, marginLeft: '1rem' }}>Entrar</Link>
+            <NavLink to="/login" style={({isActive}) => ({...baseItemStyle, marginLeft: '1rem', ...(isActive ? activeItemStyle : {})})}>
+              <span style={{ color: 'inherit' }}>Entrar</span>
+            </NavLink>
           )}
         </div>
       </div>
