@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { obterSumarioGalinheiro } from '../../application/use-cases/obterSumarioGalinheiro';
 import { getAvatarColor, getInitial } from '../../utils';
+import EmbrapaWeatherCard from '../components/EmbrapaWeatherCard';
 
 const DashboardPage = () => {
     const [sumario, setSumario] = useState(null);
@@ -95,20 +96,8 @@ const DashboardPage = () => {
 
             {/* KPIs Principais */}
             <div className="grid grid-cols-4 kpi-grid">
-                {/* KPI: Média de Postura (promoção do detalhe) */}
-                <Link to="/historico" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div className={`card kpi-card`}>
-                        <div className="kpi-chip kpi-chip--yellow">
-                            <span>🥚</span>
-                            <span className="kpi-content-title">Média de Postura (7d)</span>
-                        </div>
-                        <div>
-                            <div className="kpi-content-value">{Number(sumario.ovos.mediaPostura7Dias).toFixed(2)}</div>
-                            <div className="kpi-content-subtitle">ovos por galinha/dia</div>
-                        </div>
-                        <div className="kpi-content-link">Ver Histórico →</div>
-                    </div>
-                </Link>
+                {/* Card: Clima no Galinheiro (API Embrapa) */}
+                <EmbrapaWeatherCard />
 
                 {/* KPI: Total de Galinhas */}
                 <Link to="/galinhas" style={{ textDecoration: 'none', color: 'inherit' }}>

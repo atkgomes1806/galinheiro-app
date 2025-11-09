@@ -147,7 +147,7 @@ const TratamentosPage = () => {
                 <div className="filters-grid">
                     <div>
                         <label className="filters-label">Status</label>
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <div className="filters-btn-group">
                             <button
                                 className={`btn ${filtroStatus === 'Ativo' ? 'btn-primary' : 'btn-outline'}`}
                                 onClick={() => setFiltroStatus('Ativo')}
@@ -192,7 +192,7 @@ const TratamentosPage = () => {
 
             {/* Lista de Tratamentos */}
             <div>
-                <h2 style={{ marginBottom: '1rem' }}>
+                <h2 className="records-title">
                     {filtroStatus === 'Ativo' && '🟢 Tratamentos Ativos'}
                     {filtroStatus === 'Concluido' && '✅ Tratamentos Concluídos'}
                     {filtroStatus === 'Todos' && '📋 Todos os Tratamentos'}

@@ -101,7 +101,7 @@ const HistoricoPosturaPage = () => {
             />
 
             {/* Filtros e Estatísticas */}
-            <div className="form-container" style={{ marginTop: '1rem' }}>
+            <div className="form-container filters-section">
                 <div className="grid grid-cols-3">
                     <div>
                         <label htmlFor="filtroGalinha" className="filter-label">Filtrar por Galinha</label>
