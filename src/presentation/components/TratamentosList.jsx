@@ -90,65 +90,64 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
                         >
                             {/* Badge de Alerta */}
                             {alerta && (
-                                <div className="badge badge-warning" style={{ marginBottom: '0.5rem', width: 'fit-content' }}>
+                                <div className="badge badge-warning badge-fit">
                                     ⚠️ {alerta.mensagem}
                                 </div>
                             )}
 
                             {/* Cabeçalho do Card */}
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '0.5rem' }}>
-                                <h3 style={{ margin: 0 }}>{tratamento.galinhas?.nome || 'Galinha não encontrada'}</h3>
+                            <div className="card-header">
+                                <h3 className="h3-card">{tratamento.galinhas?.nome || 'Galinha não encontrada'}</h3>
                                 <span className="badge badge-info">
                                     {tratamento.tipo_tratamento}
                                 </span>
                             </div>
 
                             {/* Corpo do Card */}
-                            <div>
+                            <div className="card-section">
                                 {tratamento.descricao && (
-                                    <p style={{ color: 'var(--gray-600)', marginBottom: '1rem' }}>{tratamento.descricao}</p>
+                                    <p className="p-muted">{tratamento.descricao}</p>
                                 )}
 
-                                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                                    <span style={{ color: 'var(--gray-500)', fontSize: '0.875rem' }}>Início:</span>
-                                    <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>
+                                <div className="card-section-item">
+                                    <span className="card-section-title">Início:</span>
+                                    <span className="card-section-value">
                                         {new Date(tratamento.data_inicio).toLocaleDateString('pt-BR')}
                                     </span>
                                 </div>
 
                                 {tratamento.data_fim_prevista && (
-                                    <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.25rem' }}>
-                                        <span style={{ color: 'var(--gray-500)', fontSize: '0.875rem' }}>Fim Previsto:</span>
-                                        <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>
+                                    <div className="card-section-item">
+                                        <span className="card-section-title">Fim Previsto:</span>
+                                        <span className="card-section-value">
                                             {new Date(tratamento.data_fim_prevista).toLocaleDateString('pt-BR')}
                                         </span>
                                     </div>
                                 )}
 
                                 {tratamento.concluido === 'true' && tratamento.data_fim_real && (
-                                    <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
-                                        <span style={{ color: 'var(--gray-500)', fontSize: '0.875rem' }}>Concluído em:</span>
-                                        <span style={{ fontWeight: 600, fontSize: '0.875rem' }}>
+                                    <div className="card-section-item">
+                                        <span className="card-section-title">Concluído em:</span>
+                                        <span className="card-section-value">
                                             {new Date(tratamento.data_fim_real).toLocaleDateString('pt-BR')}
                                         </span>
                                     </div>
                                 )}
 
                                 {tratamento.concluido === 'true' && tratamento.notas_resultado && (
-                                    <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: 'var(--gray-50)', borderRadius: '0.5rem' }}>
-                                        <strong style={{ fontSize: '0.875rem', color: 'var(--gray-700)' }}>Resultado:</strong>
-                                        <p style={{ margin: 0, marginTop: '0.25rem', fontSize: '0.875rem', color: 'var(--gray-600)' }}>{tratamento.notas_resultado}</p>
+                                    <div className="card-result">
+                                        <strong className="card-result-title">Resultado:</strong>
+                                        <p className="card-result-text">{tratamento.notas_resultado}</p>
                                     </div>
                                 )}
                             </div>
 
                             {/* Ações */}
                             {tratamento.concluido === 'false' && (
-                                <div style={{ marginTop: '1rem', paddingTop: '1rem', borderTop: '1px solid var(--gray-200)' }}>
+                                <div className="card-actions">
                                     <button
                                         onClick={() => handleConcluir(tratamento)}
                                         className="btn btn-primary"
-                                        style={{ width: '100%' }}
                                     >
                                         ✅ Concluir Tratamento
                                     </button>
@@ -161,14 +160,14 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
 
             {/* Modal de Conclusão */}
             {tratamentoSelecionado && (
-                <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-                    <div className="card" style={{ maxWidth: '500px', width: '90%', maxHeight: '90vh', overflow: 'auto' }}>
-                        <h2 style={{ marginTop: 0 }}>Concluir Tratamento</h2>
-                        <div style={{ marginBottom: '1rem', padding: '1rem', background: 'var(--gray-50)', borderRadius: '0.5rem' }}>
-                            <p style={{ margin: 0, marginBottom: '0.5rem' }}>
+                <div className="modal-overlay">
+                    <div className="card modal-content">
+                        <h2>Concluir Tratamento</h2>
+                        <div className="modal-info">
+                            <p>
                                 <strong>Galinha:</strong> {tratamentoSelecionado.galinhas?.nome || 'N/A'}
                             </p>
-                            <p style={{ margin: 0 }}>
+                            <p>
                                 <strong>Tipo:</strong> {tratamentoSelecionado.tipo_tratamento}
                             </p>
                         </div>

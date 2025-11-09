@@ -72,12 +72,21 @@
 .text-warning{color:var(--warning)}
 
 /* Card layout helpers */
-.card-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:1rem}
+.card-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:0.5rem}
 .card-section{margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--gray-200)}
 .card-section-title{font-size:0.75rem;color:var(--gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.5rem}
 .card-section-value{margin:0.25rem 0;color:var(--gray-700)}
 .card-actions{display:flex;gap:0.5rem}
 .card-actions .btn{flex:1}
+
+/* Card section item */
+.card-section-item{display:flex;gap:0.5rem;margin-bottom:0.25rem}
+.card-section-item:last-child{margin-bottom:0}
+
+/* Card result */
+.card-result{margin-top:0.75rem;padding:0.75rem;background:var(--gray-50);border-radius:0.5rem}
+.card-result-title{font-size:0.875rem;color:var(--gray-700);font-weight:600}
+.card-result-text{margin:0;margin-top:0.25rem;font-size:0.875rem;color:var(--gray-600)}
 
 /* Grid helpers */
 .grid-gap-1-5{gap:1.5rem}
@@ -86,10 +95,29 @@
 .h2-mb-1-5{margin-bottom:1.5rem}
 .h3-card{font-size:1.25rem;color:var(--gray-900);margin:0}
 .p-muted{color:var(--gray-600);font-size:0.875rem;margin:0.25rem 0}
+.text-label{color:var(--gray-500);font-size:0.875rem}
+.text-value{font-weight:600;font-size:0.875rem}
+.text-result{font-size:0.875rem;color:var(--gray-600);margin:0;margin-top:0.25rem}
+.text-strong{font-size:0.875rem;color:var(--gray-700)}
 
-/* Autenticação */
-.auth-container{max-width:420px;margin:3rem auto}
-.form-grid{display:grid;gap:0.5rem}
+/* Badge helpers */
+.badge-fit{margin-bottom:0.5rem;width:fit-content}
+
+/* Modal helpers */
+.modal-info{margin-bottom:1rem;padding:1rem;background:var(--gray-50);border-radius:0.5rem}
+.modal-info p{margin:0;margin-bottom:0.5rem}
+.modal-info p:last-child{margin:0}
+
+/* Result section */
+.result-section{margin-top:0.75rem;padding:0.75rem;background:var(--gray-50);border-radius:0.5rem}
+
+/* Actions section */
+.actions-section{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--gray-200)}
+.btn-full{width:100%}
+
+/* Date rows */
+.date-row{display:flex;gap:0.5rem;margin-bottom:0.25rem}
+.date-row-completed{margin-top:0.25rem}
 
 /* animações */
 @keyframes fabSlideIn{to{transform:translateY(0);opacity:1}}
