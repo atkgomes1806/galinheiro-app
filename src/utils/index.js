@@ -6,3 +6,32 @@ export const formatDate = (date) => {
 export const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
+
+// Autenticação simples (fake) para uso local
+export const AUTH_KEY = 'galinheiro_auth_v1';
+
+export function isAuthenticated() {
+    try {
+        return localStorage.getItem(AUTH_KEY) === 'true';
+    } catch (e) {
+        return false;
+    }
+}
+
+export function loginWithPassword(password) {
+    // Use uma senha simples para proteção básica. Pode ser sobrescrita via env VITE_DEV_PASSWORD
+    const envPassword = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_DEV_PASSWORD) || 'galinheiro';
+    if (password === envPassword) {
+        localStorage.setItem(AUTH_KEY, 'true');
+        return true;
+    }
+    return false;
+}
+
+export function logout() {
+    try {
+        localStorage.removeItem(AUTH_KEY);
+    } catch (e) {
+        // noop
+    }
+}
