@@ -551,7 +551,7 @@ router.get('/data-real', async (req, res) => {
     console.log(`📅 Data do modelo: ${modelDate}`);
     
     // Token Bearer fornecido pelo usuário
-    const bearerToken = 'c2ca68ae-0235-31ca-9a8a-de525b67ee7b';
+    const bearerToken = '724ecc90-70b1-36c1-b573-c5b01d6173ea';
     
     // URLs corretas baseadas no Swagger
     const tempURL = `${getConfig().apiURL}/ncep-gfs/tmpsfc/${modelDate}/${longitude}/${latitude}`;

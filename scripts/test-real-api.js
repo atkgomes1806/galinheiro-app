@@ -5,7 +5,7 @@
 
 import https from 'https';
 
-const BEARER_TOKEN = 'c2ca68ae-0235-31ca-9a8a-de525b67ee7b';
+const BEARER_TOKEN = '724ecc90-70b1-36c1-b573-c5b01d6173ea';
 const API_BASE = 'api.cnptia.embrapa.br';
 
 // São Paulo

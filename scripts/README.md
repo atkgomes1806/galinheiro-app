@@ -86,7 +86,7 @@ npm run dev
 
 ### Token Bearer (Funciona)
 ```
-c2ca68ae-0235-31ca-9a8a-de525b67ee7b
+724ecc90-70b1-36c1-b573-c5b01d6173ea
 ```
 
 ### OAuth 2.0 (Limitado)

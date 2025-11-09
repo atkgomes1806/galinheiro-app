@@ -12,7 +12,7 @@ const CONFIG = {
   baseURL: 'https://api.cnptia.embrapa.br/climapi/v1',
   consumerKey: 'Gu1cl2cXpRt8mPwOw0IjntwrnZsa',
   consumerSecret: '4kVqfR7tip5lm2rPKfKuj3gofFoa',
-  bearerToken: 'c2ca68ae-0235-31ca-9a8a-de525b67ee7b'
+  bearerToken: '724ecc90-70b1-36c1-b573-c5b01d6173ea'
 };
 
 const API_BASE = 'api.cnptia.embrapa.br';
