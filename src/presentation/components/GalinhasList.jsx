@@ -47,21 +47,21 @@ const GalinhasList = ({ galinhas, onGalinhaRemovida, onEditarGalinha }) => {
         return (
             <div>
                 <h2>Lista de Galinhas</h2>
-                <p style={{ color: 'var(--gray-500)' }}>Nenhuma galinha cadastrada ainda.</p>
+                <p className="muted">Nenhuma galinha cadastrada ainda.</p>
             </div>
         );
     }
 
     return (
         <div>
-            <h2 style={{ marginBottom: '1.5rem' }}>Lista de Galinhas ({galinhas.length})</h2>
-            <div className="grid grid-cols-3" style={{ gap: '1.5rem' }}>
+            <h2 className="h2-mb-1-5">Lista de Galinhas ({galinhas.length})</h2>
+            <div className="grid grid-cols-3 grid-gap-1-5">
                 {galinhas.map((galinha) => (
                     <div key={galinha.id} className="card">
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '1rem' }}>
+                        <div className="card-header">
                             <div>
-                                <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--gray-900)' }}>{galinha.nome}</h3>
-                                <p style={{ margin: '0.25rem 0', color: 'var(--gray-600)', fontSize: '0.875rem' }}>
+                                <h3 className="h3-card">{galinha.nome}</h3>
+                                <p className="p-muted">
                                     {galinha.raca || 'Raça não especificada'}
                                 </p>
                             </div>
@@ -70,30 +70,26 @@ const GalinhasList = ({ galinhas, onGalinhaRemovida, onEditarGalinha }) => {
                             </span>
                         </div>
                         
-                        <div style={{ marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid var(--gray-200)' }}>
-                            <div style={{ marginBottom: '0.5rem' }}>
-                                <span style={{ fontSize: '0.75rem', color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600 }}>
-                                    Data de Nascimento
-                                </span>
-                                <p style={{ margin: '0.25rem 0', color: 'var(--gray-700)' }}>
-                                    {formatarData(galinha.data_nascimento)}
-                                </p>
+                        <div className="card-section">
+                            <div className="card-section-title">
+                                Data de Nascimento
                             </div>
-                            <div>
-                                <span style={{ fontSize: '0.75rem', color: 'var(--gray-500)', textTransform: 'uppercase', fontWeight: 600 }}>
-                                    Idade
-                                </span>
-                                <p style={{ margin: '0.25rem 0', color: 'var(--gray-700)' }}>
-                                    {calcularIdade(galinha.data_nascimento)}
-                                </p>
+                            <p className="card-section-value">
+                                {formatarData(galinha.data_nascimento)}
+                            </p>
+                            <div className="card-section-title">
+                                Idade
                             </div>
+                            <p className="card-section-value">
+                                {calcularIdade(galinha.data_nascimento)}
+                            </p>
                         </div>
                         
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
-                            <button onClick={() => handleEditar(galinha)} className="btn btn-secondary" style={{ flex: 1 }}>
+                        <div className="card-actions">
+                            <button onClick={() => handleEditar(galinha)} className="btn btn-secondary">
                                 Editar
                             </button>
-                            <button onClick={() => handleRemover(galinha.id, galinha.nome)} className="btn btn-danger" style={{ flex: 1 }}>
+                            <button onClick={() => handleRemover(galinha.id, galinha.nome)} className="btn btn-danger">
                                 Remover
                             </button>
                         </div>

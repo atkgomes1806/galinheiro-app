@@ -115,7 +115,7 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
                             </option>
                         ))}
                     </select>
-                    <small style={{ color: 'var(--gray-500)', fontSize: '0.875rem', display: 'block', marginTop: '0.25rem' }}>
+                    <small className="form-help">
                         Escolha a raça que mais se aproxima da sua galinha
                     </small>
                 </div>

@@ -62,9 +62,26 @@
 /* small utilities */
 .muted{color:var(--gray-600)}
 .muted-strong{color:var(--gray-500);font-weight:600}
-
-/* small spacing helpers */
 .ml-1{margin-left:1rem}
+
+/* Form helpers */
+.form-help{color:var(--gray-500);font-size:0.875rem;display:block;margin-top:0.25rem}
+
+/* Card layout helpers */
+.card-header{display:flex;justify-content:space-between;align-items:start;margin-bottom:1rem}
+.card-section{margin-bottom:1rem;padding-bottom:1rem;border-bottom:1px solid var(--gray-200)}
+.card-section-title{font-size:0.75rem;color:var(--gray-500);text-transform:uppercase;font-weight:600;margin-bottom:0.5rem}
+.card-section-value{margin:0.25rem 0;color:var(--gray-700)}
+.card-actions{display:flex;gap:0.5rem}
+.card-actions .btn{flex:1}
+
+/* Grid helpers */
+.grid-gap-1-5{gap:1.5rem}
+
+/* Typography helpers */
+.h2-mb-1-5{margin-bottom:1.5rem}
+.h3-card{font-size:1.25rem;color:var(--gray-900);margin:0}
+.p-muted{color:var(--gray-600);font-size:0.875rem;margin:0.25rem 0}
 
 /* Autenticação */
 .auth-container{max-width:420px;margin:3rem auto}
