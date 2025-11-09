@@ -9,11 +9,7 @@
 ## 📋 **PASSOS PARA CONFIGURAR NO VERCEL**
 
 ### 1️⃣ **Deploy do Código**
-```bash
-git add .
-git commit -m "🚀 Add Vercel Serverless Functions"
-git push origin main
-```
+O código já foi enviado para GitHub. O Vercel detectará automaticamente a Serverless Function em `/api/weather/data-real.js`.
 
 ### 2️⃣ **Configurar Variáveis de Ambiente no Vercel**
 No dashboard do Vercel, vá em **Settings > Environment Variables** e adicione:
@@ -35,13 +31,21 @@ NODE_ENV=production
 1. Vá para seu projeto no Vercel Dashboard
 2. Clique em **Settings**
 3. Clique em **Environment Variables**
-4. Para cada variável:
-   - **Name**: `EMBRAPA_CONSUMER_KEY`
-   - **Value**: `Gu1cl2cXpRt8mPwOw0IjntwrnZsa`
-   - **Environments**: Selecione **Production**, **Preview** e **Development**
-   - Clique **Save**
-5. Repita para `EMBRAPA_CONSUMER_SECRET`
-6. **Redeploy** o projeto após adicionar as variáveis
+4. Para cada variável, adicione no formato **key:value**:
+
+**Variável 1:**
+- **Name**: `EMBRAPA_CONSUMER_KEY`
+- **Value**: `Gu1cl2cXpRt8mPwOw0IjntwrnZsa`
+- **Environments**: Selecione **Production**, **Preview** e **Development**
+- Clique **Save**
+
+**Variável 2:**
+- **Name**: `EMBRAPA_CONSUMER_SECRET`  
+- **Value**: `4kVqfR7tip5lm2rPKfKuj3gofFoa`
+- **Environments**: Selecione **Production**, **Preview** e **Development**
+- Clique **Save**
+
+5. **Redeploy** o projeto após adicionar as variáveis (Deployments > ⋯ > Redeploy)
 
 ### 3️⃣ **Endpoints Disponíveis**
 Depois do deploy, a API estará disponível em:

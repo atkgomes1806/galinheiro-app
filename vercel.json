@@ -1,13 +1,1 @@
-{
-  "functions": {
-    "api/weather/data-real.js": {
-      "runtime": "@vercel/node"
-    }
-  },
-  "rewrites": [
-    {
-      "source": "/api/weather/(.*)",
-      "destination": "/api/weather/$1"
-    }
-  ]
-}
+{}
