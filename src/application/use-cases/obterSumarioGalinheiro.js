@@ -15,8 +15,16 @@ export async function obterSumarioGalinheiro() {
         ]);
 
         // 1. Métricas de Galinhas
-        const totalGalinhas = galinhas.filter(g => g.status === 'Ativa' || !g.status).length;
-        const galinhasInativas = galinhas.filter(g => g.status === 'Inativa').length;
+        const totalGalinhas = galinhas.length; // Total de todas as galinhas
+        const galinhasAtivas = galinhas.filter(g => 
+            g.status === 'Ativa' || 
+            g.status === "'Ativa'" || 
+            !g.status
+        ).length;
+        const galinhasInativas = galinhas.filter(g => 
+            g.status === 'Inativa' || 
+            g.status === "'Inativa'"
+        ).length;
 
         // 2. Métricas de Ovos (últimos 7 dias)
         const hoje = new Date();
@@ -33,8 +41,8 @@ export async function obterSumarioGalinheiro() {
             0
         );
 
-        const mediaPostura7Dias = totalGalinhas > 0 
-            ? (totalOvos7Dias / totalGalinhas).toFixed(2)
+        const mediaPostura7Dias = galinhasAtivas > 0 
+            ? (totalOvos7Dias / galinhasAtivas).toFixed(2)
             : 0;
 
         // Produção por galinha (top performers)
@@ -97,13 +105,14 @@ export async function obterSumarioGalinheiro() {
             0
         );
 
-        const mediaPostura30Dias = totalGalinhas > 0
-            ? (totalOvos30Dias / totalGalinhas).toFixed(2)
+        const mediaPostura30Dias = galinhasAtivas > 0
+            ? (totalOvos30Dias / galinhasAtivas).toFixed(2)
             : 0;
 
         // 5. Saúde Geral do Galinheiro
         const pontuacaoSaude = calcularPontuacaoSaude({
             totalGalinhas,
+            galinhasAtivas,
             mediaPostura7Dias: parseFloat(mediaPostura7Dias),
             tratamentosAtivos,
             tratamentosEmAlertaCount
@@ -113,7 +122,7 @@ export async function obterSumarioGalinheiro() {
             // Métricas de Galinhas
             galinhas: {
                 total: totalGalinhas,
-                ativas: totalGalinhas,
+                ativas: galinhasAtivas,
                 inativas: galinhasInativas
             },
             
@@ -154,13 +163,13 @@ export async function obterSumarioGalinheiro() {
  * @param {Object} metricas - Métricas para cálculo
  * @returns {Object} Pontuação e status
  */
-function calcularPontuacaoSaude({ totalGalinhas, mediaPostura7Dias, tratamentosAtivos, tratamentosEmAlertaCount }) {
+function calcularPontuacaoSaude({ totalGalinhas, galinhasAtivas, mediaPostura7Dias, tratamentosAtivos, tratamentosEmAlertaCount }) {
     let pontuacao = 100;
 
     // Penalidades
     if (totalGalinhas === 0) pontuacao -= 50;
     if (mediaPostura7Dias < 0.5) pontuacao -= 20; // Produção baixa
-    if (tratamentosAtivos > totalGalinhas * 0.3) pontuacao -= 15; // Muitos tratamentos
+    if (tratamentosAtivos > galinhasAtivas * 0.3) pontuacao -= 15; // Muitos tratamentos ativos em relação às galinhas ativas
     if (tratamentosEmAlertaCount > 0) pontuacao -= (tratamentosEmAlertaCount * 10); // Alertas críticos
 
     pontuacao = Math.max(0, Math.min(100, pontuacao));

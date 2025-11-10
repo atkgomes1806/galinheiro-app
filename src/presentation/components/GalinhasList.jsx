@@ -37,10 +37,19 @@ const GalinhasList = ({ galinhas, onGalinhaRemovida, onEditarGalinha }) => {
     const getStatusBadge = (status) => {
         const statusMap = {
             'Ativa': 'badge-success',
+            "'Ativa'": 'badge-success',
             'Inativa': 'badge-danger',
-            'Em Tratamento': 'badge-warning'
+            "'Inativa'": 'badge-danger',
+            'Em Tratamento': 'badge-warning',
+            "'Em Tratamento'": 'badge-warning'
         };
         return statusMap[status] || 'badge-info';
+    };
+
+    const normalizeStatus = (status) => {
+        if (!status) return 'Ativa';
+        // Remove aspas simples literais se existirem
+        return status.replace(/^'|'$/g, '');
     };
 
     if (!galinhas || galinhas.length === 0) {
@@ -66,7 +75,7 @@ const GalinhasList = ({ galinhas, onGalinhaRemovida, onEditarGalinha }) => {
                                 </p>
                             </div>
                             <span className={'badge ' + getStatusBadge(galinha.status || 'Ativa')}>
-                                {galinha.status || 'Ativa'}
+                                {normalizeStatus(galinha.status)}
                             </span>
                         </div>
                         
