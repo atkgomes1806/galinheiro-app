@@ -8,33 +8,96 @@
  * @description Card climático moderno com dados da Open-Meteo
  */
 
-import React, { useState, useEffect } from 'react';
-import { obterDadosClima, atualizarDadosClima } from '../../application/use-cases/obterDadosClima';
+import React, { useState, useEffect, useCallback } from 'react';
+import { obterDadosClima, atualizarDadosClima, obterDadosClimaPorGPS } from '../../application/use-cases/obterDadosClima';
+import { useGeolocation } from '../../hooks/useGeolocation';
 
 const WeatherCard = () => {
     const [weatherData, setWeatherData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [expandido, setExpandido] = useState(false);
+    const [usingGPS, setUsingGPS] = useState(false);
+    const [locationMode, setLocationMode] = useState('default'); // 'default', 'gps', 'manual'
+    
+    // Hook de geolocalização
+    const {
+        coordinates,
+        loading: gpsLoading,
+        error: gpsError,
+        hasPermission,
+        isLocationCached,
+        locationName,
+        requestLocation,
+        clearLocation
+    } = useGeolocation();
 
-    // Carregar dados ao montar o componente
+    // Carregar dados ao montar o componente ou quando coordenadas GPS mudarem
     useEffect(() => {
         carregarDadosIniciais();
     }, []);
+    
+    // Monitorar mudanças nas coordenadas GPS
+    useEffect(() => {
+        if (coordinates && usingGPS) {
+            carregarDadosComGPS();
+        }
+    }, [coordinates, usingGPS]);
 
     const carregarDadosIniciais = async () => {
         try {
             setLoading(true);
             setError(null);
             
+            // Se tem coordenadas em cache e usuário estava usando GPS, use GPS
+            if (isLocationCached && hasPermission && locationMode === 'gps') {
+                setUsingGPS(true);
+                await carregarDadosComGPS();
+                return;
+            }
+            
+            // Senão, use localização padrão
             const dadosClima = await obterDadosClima();
             setWeatherData(dadosClima);
+            setUsingGPS(false);
+            setLocationMode('default');
             
-            console.log('🌦️ Weather data loaded:', dadosClima);
+            console.log('🌦️ Weather data loaded (default location):', dadosClima);
             
         } catch (err) {
             console.error('❌ Erro ao carregar dados climáticos:', err);
             setError(err.message || 'Erro ao carregar dados climáticos');
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    const carregarDadosComGPS = async () => {
+        if (!coordinates) return;
+        
+        try {
+            setLoading(true);
+            setError(null);
+            
+            const dadosClima = await obterDadosClimaPorGPS(coordinates.latitude, coordinates.longitude);
+            setWeatherData(dadosClima);
+            setLocationMode('gps');
+            
+            console.log('🌦️ Weather data loaded (GPS):', dadosClima, coordinates);
+            
+        } catch (err) {
+            console.error('❌ Erro ao carregar dados climáticos via GPS:', err);
+            setError(err.message || 'Erro ao carregar dados climáticos via GPS');
+            
+            // Fallback para localização padrão
+            try {
+                const dadosClimaDefault = await obterDadosClima();
+                setWeatherData(dadosClimaDefault);
+                setUsingGPS(false);
+                setLocationMode('default');
+            } catch (fallbackErr) {
+                console.error('❌ Fallback também falhou:', fallbackErr);
+            }
         } finally {
             setLoading(false);
         }
@@ -45,16 +108,53 @@ const WeatherCard = () => {
             setLoading(true);
             setError(null);
             
-            const dadosClima = await atualizarDadosClima();
-            setWeatherData(dadosClima);
+            let dadosClima;
             
-            console.log('🔄 Weather data updated:', dadosClima);
+            if (usingGPS && coordinates) {
+                dadosClima = await obterDadosClimaPorGPS(coordinates.latitude, coordinates.longitude);
+                console.log('🔄 Weather data updated (GPS):', dadosClima);
+            } else {
+                dadosClima = await atualizarDadosClima();
+                console.log('🔄 Weather data updated (default):', dadosClima);
+            }
+            
+            setWeatherData(dadosClima);
             
         } catch (err) {
             console.error('❌ Erro ao atualizar dados climáticos:', err);
             setError(err.message || 'Erro ao atualizar dados climáticos');
         } finally {
             setLoading(false);
+        }
+    };
+    
+    const handleHabilitarGPS = async () => {
+        try {
+            setError(null);
+            await requestLocation();
+            setUsingGPS(true);
+        } catch (err) {
+            console.error('❌ Erro ao solicitar localização GPS:', err);
+            setError(err.message || 'Erro ao solicitar localização GPS');
+        }
+    };
+    
+    const handleDesabilitarGPS = async () => {
+        try {
+            setError(null);
+            clearLocation();
+            setUsingGPS(false);
+            setLocationMode('default');
+            
+            // Recarregar com localização padrão
+            const dadosClima = await obterDadosClima();
+            setWeatherData(dadosClima);
+            
+            console.log('📍 GPS desabilitado, voltou para localização padrão');
+            
+        } catch (err) {
+            console.error('❌ Erro ao desabilitar GPS:', err);
+            setError(err.message || 'Erro ao desabilitar GPS');
         }
     };
 
@@ -92,7 +192,7 @@ const WeatherCard = () => {
         }
     };
 
-    if (loading) {
+    if (loading || gpsLoading) {
         return (
             <div className="card kpi-card">
                 <div style={{ 
@@ -101,7 +201,9 @@ const WeatherCard = () => {
                     justifyContent: 'center',
                     minHeight: '140px'
                 }}>
-                    <div className="loading-spinner">🌦️ Carregando...</div>
+                    <div className="loading-spinner">
+                        {gpsLoading ? '📍 Obtendo localização...' : '🌦️ Carregando clima...'}
+                    </div>
                 </div>
             </div>
         );
@@ -157,23 +259,57 @@ const WeatherCard = () => {
             <div className="weather-header">
                 <div>
                     <div className="weather-location">
-                        🌍 {localizacao?.nome || 'Localização'}
+                        {usingGPS && coordinates ? (
+                            <span>📍 {locationName || `${coordinates.latitude.toFixed(3)}, ${coordinates.longitude.toFixed(3)}`}</span>
+                        ) : (
+                            <span>🌍 {localizacao?.nome || 'Localização Padrão'}</span>
+                        )}
                     </div>
                     <div className="weather-condition">
                         {condicaoTempo || 'Condição desconhecida'}
                     </div>
                 </div>
-                <button 
-                    className="btn btn-sm btn-ghost"
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        handleAtualizar();
-                    }}
-                    disabled={loading}
-                    title="Atualizar dados climáticos"
-                >
-                    🔄
-                </button>
+                <div className="weather-controls">
+                    {/* Botão GPS */}
+                    {!usingGPS ? (
+                        <button 
+                            className="btn btn-sm btn-ghost"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleHabilitarGPS();
+                            }}
+                            disabled={loading || gpsLoading}
+                            title="Usar minha localização GPS"
+                        >
+                            📍
+                        </button>
+                    ) : (
+                        <button 
+                            className="btn btn-sm btn-ghost active"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleDesabilitarGPS();
+                            }}
+                            disabled={loading}
+                            title="Desativar GPS (usar localização padrão)"
+                        >
+                            📍
+                        </button>
+                    )}
+                    
+                    {/* Botão Atualizar */}
+                    <button 
+                        className="btn btn-sm btn-ghost"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleAtualizar();
+                        }}
+                        disabled={loading}
+                        title="Atualizar dados climáticos"
+                    >
+                        🔄
+                    </button>
+                </div>
             </div>
 
             {/* Dados Principais */}
@@ -219,6 +355,35 @@ const WeatherCard = () => {
             {/* Seção Expansível */}
             {expandido && (
                 <div className="weather-expanded">
+                    {/* Status de Localização GPS */}
+                    {(usingGPS || gpsError) && (
+                        <div className="weather-location-status">
+                            <div className="weather-section-title">📍 Localização</div>
+                            {usingGPS && coordinates && (
+                                <div className="weather-gps-info">
+                                    <div className="weather-gps-coords">
+                                        📍 {coordinates.latitude.toFixed(6)}, {coordinates.longitude.toFixed(6)}
+                                    </div>
+                                    {locationName && (
+                                        <div className="weather-gps-address">
+                                            🏠 {locationName}
+                                        </div>
+                                    )}
+                                    {isLocationCached && (
+                                        <div className="weather-gps-cached">
+                                            💾 Localização em cache (24h)
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                            {gpsError && (
+                                <div className="weather-gps-error">
+                                    ❌ {gpsError}
+                                </div>
+                            )}
+                        </div>
+                    )}
+                
                     {/* Vento */}
                     {(velocidadeVento || direcaoVento) && (
                         <div className="weather-wind">
@@ -303,6 +468,7 @@ const WeatherCard = () => {
             <div className="weather-footer">
                 <div className="weather-source">
                     📡 {fonte || 'Open-Meteo Weather API'}
+                    {usingGPS && <span className="weather-gps-badge"> • GPS</span>}
                 </div>
                 <div className="weather-updated">
                     🕒 {formatarUltimaAtualizacao(ultimaAtualizacao)}

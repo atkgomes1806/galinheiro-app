@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Teste GPS - Galinheiro App</title>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { 
+            margin: 20px 0; 
+            padding: 15px; 
+            border: 1px solid #ccc; 
+            border-radius: 8px;
+        }
+        .result { 
+            background: #f5f5f5; 
+            padding: 10px; 
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .error { background: #ffebee; color: #c62828; }
+        .success { background: #e8f5e8; color: #2e7d2e; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste de Integração GPS - Galinheiro App</h1>
+    
+    <div class="test-section">
+        <h2>1. Verificação de Suporte do Browser</h2>
+        <div id="browser-support" class="result">Verificando...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Teste de Geolocalização</h2>
+        <button onclick="testLocation()">🧭 Solicitar Localização</button>
+        <div id="location-result" class="result">Aguardando teste...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Teste de Reverse Geocoding</h2>
+        <div id="geocoding-result" class="result">Aguardando localização...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Teste de Cache localStorage</h2>
+        <div id="cache-result" class="result">
+            <button onclick="testCache()">💾 Verificar Cache</button>
+            <button onclick="clearCache()">🗑️ Limpar Cache</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. Verificar suporte do browser
+        function checkBrowserSupport() {
+            const supportDiv = document.getElementById('browser-support');
+            
+            if (!navigator.geolocation) {
+                supportDiv.innerHTML = '❌ Geolocalização não suportada neste browser';
+                supportDiv.className = 'result error';
+                return false;
+            }
+            
+            supportDiv.innerHTML = '✅ Geolocalização suportada';
+            supportDiv.className = 'result success';
+            return true;
+        }
+        
+        // 2. Testar solicitação de localização
+        function testLocation() {
+            const resultDiv = document.getElementById('location-result');
+            const geocodingDiv = document.getElementById('geocoding-result');
+            
+            resultDiv.innerHTML = '📍 Solicitando localização...';
+            resultDiv.className = 'result';
+            
+            const options = {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 300000
+            };
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const coords = position.coords;
+                    resultDiv.innerHTML = `
+                        ✅ Localização obtida!<br>
+                        📍 Latitude: ${coords.latitude}<br>
+                        📍 Longitude: ${coords.longitude}<br>
+                        🎯 Precisão: ${coords.accuracy} metros<br>
+                        🕒 Timestamp: ${new Date(position.timestamp).toLocaleString()}
+                    `;
+                    resultDiv.className = 'result success';
+                    
+                    // Testar reverse geocoding
+                    testReverseGeocoding(coords.latitude, coords.longitude);
+                    
+                    // Salvar no cache para teste
+                    saveToCache(coords);
+                },
+                (error) => {
+                    let message = '';
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            message = '❌ Permissão negada pelo usuário';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            message = '❌ Localização não disponível';
+                            break;
+                        case error.TIMEOUT:
+                            message = '❌ Timeout na solicitação';
+                            break;
+                        default:
+                            message = '❌ Erro desconhecido';
+                            break;
+                    }
+                    resultDiv.innerHTML = message + '<br>Detalhes: ' + error.message;
+                    resultDiv.className = 'result error';
+                },
+                options
+            );
+        }
+        
+        // 3. Testar reverse geocoding
+        async function testReverseGeocoding(lat, lon) {
+            const geocodingDiv = document.getElementById('geocoding-result');
+            
+            try {
+                geocodingDiv.innerHTML = '🗺️ Obtendo endereço...';
+                
+                const response = await fetch(
+                    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=pt`
+                );
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    geocodingDiv.innerHTML = `
+                        ✅ Endereço obtido!<br>
+                        🏠 ${data.city}, ${data.principalSubdivision}<br>
+                        🌍 ${data.countryName}<br>
+                        📮 Localidade: ${data.locality}
+                    `;
+                    geocodingDiv.className = 'result success';
+                } else {
+                    geocodingDiv.innerHTML = '⚠️ Erro na API de geocoding';
+                    geocodingDiv.className = 'result error';
+                }
+            } catch (error) {
+                geocodingDiv.innerHTML = '❌ Erro no reverse geocoding: ' + error.message;
+                geocodingDiv.className = 'result error';
+            }
+        }
+        
+        // 4. Funções de cache
+        function saveToCache(coords) {
+            const cacheData = {
+                coordinates: {
+                    latitude: coords.latitude,
+                    longitude: coords.longitude,
+                    accuracy: coords.accuracy
+                },
+                timestamp: Date.now(),
+                permission: 'granted'
+            };
+            
+            localStorage.setItem('galinheiro_user_location', JSON.stringify(cacheData));
+            localStorage.setItem('galinheiro_location_permission', 'granted');
+        }
+        
+        function testCache() {
+            const cacheDiv = document.getElementById('cache-result');
+            
+            try {
+                const locationCache = localStorage.getItem('galinheiro_user_location');
+                const permissionCache = localStorage.getItem('galinheiro_location_permission');
+                
+                if (locationCache) {
+                    const data = JSON.parse(locationCache);
+                    const age = Date.now() - data.timestamp;
+                    const ageHours = Math.floor(age / (1000 * 60 * 60));
+                    const ageMinutes = Math.floor((age % (1000 * 60 * 60)) / (1000 * 60));
+                    
+                    cacheDiv.innerHTML = `
+                        ✅ Cache encontrado!<br>
+                        📍 Lat: ${data.coordinates.latitude}<br>
+                        📍 Lon: ${data.coordinates.longitude}<br>
+                        🕒 Idade: ${ageHours}h ${ageMinutes}m<br>
+                        🔐 Permissão: ${permissionCache}
+                    `;
+                    cacheDiv.className = 'result success';
+                } else {
+                    cacheDiv.innerHTML = '❌ Nenhum cache encontrado';
+                    cacheDiv.className = 'result error';
+                }
+            } catch (error) {
+                cacheDiv.innerHTML = '❌ Erro ao verificar cache: ' + error.message;
+                cacheDiv.className = 'result error';
+            }
+        }
+        
+        function clearCache() {
+            localStorage.removeItem('galinheiro_user_location');
+            localStorage.removeItem('galinheiro_location_permission');
+            
+            const cacheDiv = document.getElementById('cache-result');
+            cacheDiv.innerHTML = '🗑️ Cache limpo com sucesso!';
+            cacheDiv.className = 'result success';
+        }
+        
+        // Executar verificação inicial
+        checkBrowserSupport();
+    </script>
+</body>
+</html>

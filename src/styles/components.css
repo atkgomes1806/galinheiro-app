@@ -233,11 +233,76 @@
     margin-bottom: 1rem;
 }
 
+/* Controles GPS e atualização */
+.weather-controls {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+}
+
+.weather-controls .btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+.weather-controls .btn:not(.active):hover {
+    background: var(--gray-100);
+}
+
 .weather-location {
     font-size: 0.875rem;
     color: var(--gray-600);
     font-weight: 500;
     margin-bottom: 0.25rem;
+}
+
+/* Seção de status da localização GPS */
+.weather-location-status {
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: var(--gray-50);
+    border-radius: 0.5rem;
+    border: 1px solid var(--gray-200);
+}
+
+.weather-gps-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.weather-gps-coords {
+    font-size: 0.8rem;
+    color: var(--gray-600);
+    font-family: 'Monaco', 'Menlo', monospace;
+    background: var(--gray-100);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+}
+
+.weather-gps-address {
+    font-size: 0.8rem;
+    color: var(--gray-700);
+}
+
+.weather-gps-cached {
+    font-size: 0.75rem;
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.weather-gps-error {
+    font-size: 0.8rem;
+    color: var(--danger);
+    padding: 0.5rem;
+    background: #fee2e2;
+    border-radius: 0.25rem;
+    border: 1px solid var(--danger);
+}
+
+.weather-gps-badge {
+    color: var(--primary);
+    font-weight: 600;
 }
 
 .weather-condition {

@@ -12,9 +12,14 @@ import { fetchWeatherApi } from 'openmeteo';
 class OpenMeteoWeatherService {
     constructor() {
         // Coordenadas padrão (São Paulo) - podem ser configuradas via env
-        this.latitude = parseFloat(process.env.VITE_LOCATION_LATITUDE) || -23.5505;
-        this.longitude = parseFloat(process.env.VITE_LOCATION_LONGITUDE) || -46.6333;
-        this.locationName = process.env.VITE_LOCATION_NAME || 'São Paulo';
+        this.defaultLatitude = parseFloat(process.env.VITE_LOCATION_LATITUDE) || -23.5505;
+        this.defaultLongitude = parseFloat(process.env.VITE_LOCATION_LONGITUDE) || -46.6333;
+        this.defaultLocationName = process.env.VITE_LOCATION_NAME || 'São Paulo';
+        
+        // Coordenadas atuais (podem ser alteradas dinamicamente)
+        this.latitude = this.defaultLatitude;
+        this.longitude = this.defaultLongitude;
+        this.locationName = this.defaultLocationName;
         
         // URL da API Open-Meteo
         this.apiURL = 'https://api.open-meteo.com/v1/forecast';
@@ -23,17 +28,71 @@ class OpenMeteoWeatherService {
     }
 
     /**
+     * Define coordenadas dinâmicas para consultas meteorológicas
+     * @param {number} latitude - Latitude em decimal
+     * @param {number} longitude - Longitude em decimal
+     * @param {string} locationName - Nome da localização (opcional)
+     */
+    setLocation(latitude, longitude, locationName = null) {
+        if (typeof latitude !== 'number' || typeof longitude !== 'number') {
+            throw new Error('Latitude e longitude devem ser números');
+        }
+        
+        if (latitude < -90 || latitude > 90) {
+            throw new Error('Latitude deve estar entre -90 e 90');
+        }
+        
+        if (longitude < -180 || longitude > 180) {
+            throw new Error('Longitude deve estar entre -180 e 180');
+        }
+        
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.locationName = locationName || `${latitude.toFixed(2)}, ${longitude.toFixed(2)}`;
+        
+        console.log(`📍 Localização atualizada: ${this.locationName} (${this.latitude}, ${this.longitude})`);
+    }
+
+    /**
+     * Reseta para coordenadas padrão do ambiente
+     */
+    resetToDefaultLocation() {
+        this.latitude = this.defaultLatitude;
+        this.longitude = this.defaultLongitude;
+        this.locationName = this.defaultLocationName;
+        
+        console.log(`🏠 Localização resetada para padrão: ${this.locationName}`);
+    }
+
+    /**
+     * Obtém coordenadas atuais
+     * @returns {Object} Objeto com latitude, longitude e nome
+     */
+    getCurrentLocation() {
+        return {
+            latitude: this.latitude,
+            longitude: this.longitude,
+            locationName: this.locationName
+        };
+    }
+
+    /**
      * Busca dados meteorológicos atuais da Open-Meteo API
+     * @param {Object} customLocation - Coordenadas opcionais para usar (não altera instância)
      * @returns {Promise<Object>} Dados climáticos formatados
      */
-    async obterDadosClimaticos() {
+    async obterDadosClimaticos(customLocation = null) {
         try {
-            console.log('🌦️ Buscando dados meteorológicos da Open-Meteo API...');
+            // Usar coordenadas personalizadas ou da instância
+            const coords = customLocation || this.getCurrentLocation();
+            const { latitude, longitude, locationName } = coords;
+
+            console.log(`🌦️ Buscando dados meteorológicos da Open-Meteo API para: ${locationName}...`);
 
             // Parâmetros para a API Open-Meteo
             const params = {
-                latitude: this.latitude,
-                longitude: this.longitude,
+                latitude: latitude,
+                longitude: longitude,
                 current: [
                     'temperature_2m',
                     'relative_humidity_2m',
@@ -114,7 +173,7 @@ class OpenMeteoWeatherService {
                     latitude: response.latitude(),
                     longitude: response.longitude(),
                     elevation: response.elevation(),
-                    name: this.locationName
+                    name: locationName
                 }
             });
 
@@ -272,10 +331,12 @@ class OpenMeteoWeatherService {
 
     /**
      * Gera dados simulados quando a API está indisponível
+     * @param {Object} customLocation - Localização opcional para simulação
      * @returns {Object} Dados simulados
      */
-    obterDadosSimulados() {
+    obterDadosSimulados(customLocation = null) {
         const agora = new Date();
+        const location = customLocation || this.getCurrentLocation();
         
         return {
             temperatura: 22.5 + Math.random() * 8, // 22.5-30.5°C
@@ -306,9 +367,9 @@ class OpenMeteoWeatherService {
                 };
             }),
             localizacao: {
-                nome: this.locationName,
-                latitude: this.latitude,
-                longitude: this.longitude,
+                nome: location.locationName,
+                latitude: location.latitude,
+                longitude: location.longitude,
                 altitude: 760
             },
             ultimaAtualizacao: agora,
