@@ -38,7 +38,7 @@
 /* KPI card helpers */
 .kpi-card{
   cursor:pointer;
-  min-height:200px;
+  min-height:280px;
   display:flex;
   flex-direction:column;
   gap:0.75rem;
@@ -49,6 +49,12 @@
 .kpi-card:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 25px -3px rgba(0,0,0,0.12);
+}
+
+/* Estado de alerta para cards críticos */
+.kpi-card--alert {
+  border-left: 4px solid var(--danger);
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(255, 255, 255, 1) 15%);
 }
 
 .kpi-chip{
@@ -71,6 +77,30 @@
   font-weight: 700;
   color: var(--gray-900);
   margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Badge de alerta no valor */
+.kpi-alert-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: var(--danger);
+  color: white;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: bold;
+  animation: pulse-alert 2s infinite;
+}
+
+@keyframes pulse-alert {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
 }
 
 .kpi-content-subtitle {
@@ -79,11 +109,45 @@
   margin-bottom: 0.5rem;
 }
 
+/* Seção de detalhes expandidos */
+.kpi-detailed-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+.kpi-detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.25rem 0;
+}
+
+.kpi-detail-label {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+.kpi-detail-value {
+  font-size: 0.8rem;
+  color: var(--gray-700);
+  font-weight: 600;
+  text-align: right;
+  max-width: 60%;
+}
+
 .kpi-content-link {
   margin-top: auto;
   font-size: 0.875rem;
-  color: var(--gray-500);
-  font-weight: 500;
+  color: var(--primary);
+  font-weight: 600;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--gray-100);
 }
 
 .kpi-chip--yellow{background:#FFC72C;color:#1f2d3d}
@@ -262,6 +326,9 @@
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
 }
 
 .weather-card:hover {
@@ -657,7 +724,7 @@
     color: var(--gray-500);
     border-top: 1px solid var(--gray-200);
     padding-top: 0.75rem;
-    margin-top: 0.75rem;
+    margin-top: auto;
 }
 
 .weather-source,

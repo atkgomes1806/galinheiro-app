@@ -104,15 +104,44 @@ const DashboardPage = () => {
                     <div className="card kpi-card">
                         <div className="kpi-chip kpi-chip--blue">
                             <span>🐔</span>
-                            <span className="kpi-content-title">Galinhas Ativas</span>
+                            <span className="kpi-content-title">Plantel do Galinheiro</span>
                         </div>
                         <div>
-                            <div className="kpi-content-value">{sumario.galinhas.ativas}</div>
+                            <div className="kpi-content-value">{sumario.galinhas.ativas} Ativas</div>
                             <div className="kpi-content-subtitle">
-                                {sumario.galinhas.inativas > 0 ? `${sumario.galinhas.inativas} inativa(s)` : 'Todas ativas'}
+                                {sumario.galinhas.inativas > 0 ? `${sumario.galinhas.inativas} inativas` : 'Todas ativas'} • 
+                                Total: {sumario.galinhas.total}
                             </div>
                         </div>
-                        <div className="kpi-content-link">Gerenciar Galinhas →</div>
+                        
+                        {/* Seção expandida com detalhes */}
+                        <div className="kpi-detailed-info">
+                            <div className="kpi-detail-item">
+                                <span className="kpi-detail-label">📊 Taxa de Atividade:</span>
+                                <div className="kpi-detail-value" style={{ 
+                                    color: sumario.galinhas.ativas === sumario.galinhas.total ? 'var(--primary)' : 'var(--warning)'
+                                }}>
+                                    {((sumario.galinhas.ativas / sumario.galinhas.total) * 100).toFixed(1)}%
+                                </div>
+                            </div>
+                            <div className="kpi-detail-item">
+                                <span className="kpi-detail-label">🏆 Produtividade Média:</span>
+                                <div className="kpi-detail-value">
+                                    {sumario.ovos.mediaPostura7Dias} ovos/galinha/semana
+                                </div>
+                            </div>
+                            <div className="kpi-detail-item">
+                                <span className="kpi-detail-label">💪 Status de Saúde:</span>
+                                <div className="kpi-detail-value" style={{ 
+                                    color: sumario.saudeGeral.cor === 'green' ? 'var(--primary)' : 
+                                           sumario.saudeGeral.cor === 'red' ? 'var(--danger)' : 'var(--warning)' 
+                                }}>
+                                    {sumario.saudeGeral.status} ({sumario.saudeGeral.pontuacao}/100)
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="kpi-content-link">Gerenciar Plantel →</div>
                     </div>
                 </Link>
 
@@ -121,30 +150,90 @@ const DashboardPage = () => {
                     <div className="card kpi-card">
                         <div className="kpi-chip kpi-chip--primary">
                             <span>🥚</span>
-                            <span className="kpi-content-title">Produção (7 dias)</span>
+                            <span className="kpi-content-title">Produção de Ovos</span>
                         </div>
                         <div>
                             <div className="kpi-content-value">{sumario.ovos.ultimos7Dias} ovos</div>
-                            <div className="kpi-content-subtitle">Média: {sumario.ovos.mediaPostura7Dias} ovos/galinha</div>
+                            <div className="kpi-content-subtitle">
+                                Últimos 7 dias • {sumario.ovos.mediaPostura7Dias}/galinha
+                            </div>
                         </div>
-                        <div className="kpi-content-link">Ver Histórico →</div>
+                        
+                        {/* Seção expandida com detalhes */}
+                        <div className="kpi-detailed-info">
+                            <div className="kpi-detail-item">
+                                <span className="kpi-detail-label">📈 Produção Mensal:</span>
+                                <div className="kpi-detail-value">{sumario.ovos.ultimos30Dias} ovos (30d)</div>
+                            </div>
+                            <div className="kpi-detail-item">
+                                <span className="kpi-detail-label">📊 Tendência:</span>
+                                <div className="kpi-detail-value" style={{ 
+                                    color: sumario.ovos.mediaPostura7Dias >= sumario.ovos.mediaPostura30Dias ? 'var(--primary)' : 'var(--warning)'
+                                }}>
+                                    {sumario.ovos.mediaPostura7Dias >= sumario.ovos.mediaPostura30Dias ? '↗️ Crescendo' : '↘️ Declinando'}
+                                </div>
+                            </div>
+                            {sumario.ovos.topProducers.length > 0 && (
+                                <div className="kpi-detail-item">
+                                    <span className="kpi-detail-label">🏆 Melhor Produtora:</span>
+                                    <div className="kpi-detail-value">
+                                        {sumario.ovos.topProducers[0].nome} • {sumario.ovos.topProducers[0].total} ovos
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                        
+                        <div className="kpi-content-link">Histórico Completo →</div>
                     </div>
                 </Link>
 
                 {/* KPI: Tratamentos Ativos */}
                 <Link to="/tratamentos" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div className="card kpi-card">
+                    <div className={`card kpi-card ${sumario.tratamentos.vencidos > 0 ? 'kpi-card--alert' : ''}`}>
                         <div className="kpi-chip kpi-chip--treatment">
                             <span>💊</span>
-                            <span className="kpi-content-title">Tratamentos Ativos</span>
+                            <span className="kpi-content-title">Saúde & Tratamentos</span>
                         </div>
                         <div>
-                            <div className="kpi-content-value">{sumario.tratamentos.ativos}</div>
+                            <div className="kpi-content-value">
+                                {sumario.tratamentos.ativos} ativos
+                                {sumario.tratamentos.vencidos > 0 && (
+                                    <span className="kpi-alert-badge">!</span>
+                                )}
+                            </div>
                             <div className="kpi-content-subtitle">
-                                {sumario.tratamentos.emAlerta > 0 ? `⚠️ ${sumario.tratamentos.emAlerta} em alerta` : 'Tudo em dia'}
+                                {sumario.tratamentos.emAlerta > 0 ? `⚠️ ${sumario.tratamentos.emAlerta} necessitam atenção` : '✅ Todos em dia'}
                             </div>
                         </div>
-                        <div className="kpi-content-link">Gerenciar Tratamentos →</div>
+                        
+                        {/* Seção expandida com detalhes */}
+                        <div className="kpi-detailed-info">
+                            <div className="kpi-detail-item">
+                                <span className="kpi-detail-label">✅ Concluídos:</span>
+                                <div className="kpi-detail-value">{sumario.tratamentos.concluidos} tratamentos</div>
+                            </div>
+                            {sumario.tratamentos.vencidos > 0 && (
+                                <div className="kpi-detail-item">
+                                    <span className="kpi-detail-label">🚨 Vencidos:</span>
+                                    <div className="kpi-detail-value" style={{ color: 'var(--danger)', fontWeight: 700 }}>
+                                        {sumario.tratamentos.vencidos} urgentes
+                                    </div>
+                                </div>
+                            )}
+                            <div className="kpi-detail-item">
+                                <span className="kpi-detail-label">📊 Cobertura:</span>
+                                <div className="kpi-detail-value">
+                                    {sumario.galinhas.ativas > 0 
+                                        ? `${((sumario.tratamentos.ativos / sumario.galinhas.ativas) * 100).toFixed(0)}% do plantel`
+                                        : 'Nenhuma galinha'
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="kpi-content-link">
+                            {sumario.tratamentos.vencidos > 0 ? 'Ação Urgente →' : 'Gerenciar Saúde →'}
+                        </div>
                     </div>
                 </Link>
             </div>
