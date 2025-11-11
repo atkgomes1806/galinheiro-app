@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { obterSumarioGalinheiro } from '../../application/use-cases/obterSumarioGalinheiro';
 import { getAvatarColor, getInitial } from '../../utils';
-import EmbrapaWeatherCard from '../components/EmbrapaWeatherCard';
+import WeatherCard from '../components/WeatherCard';
 
 const DashboardPage = () => {
     const [sumario, setSumario] = useState(null);
@@ -96,8 +96,8 @@ const DashboardPage = () => {
 
             {/* KPIs Principais */}
             <div className="grid grid-cols-4 kpi-grid">
-                {/* Card: Clima no Galinheiro (API Embrapa) */}
-                <EmbrapaWeatherCard />
+                {/* Card: Clima no Galinheiro (Open-Meteo API) */}
+                <WeatherCard />
 
                 {/* KPI: Total de Galinhas */}
                 <Link to="/galinhas" style={{ textDecoration: 'none', color: 'inherit' }}>
