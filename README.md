@@ -29,6 +29,7 @@ galinheiro-app
 ├── docs/                         # 📚 Documentação técnica
 │   ├── REFACTORING_PLAN.md       # Plano detalhado da refatoração
 │   ├── GPS-INTEGRATION.md        # 🆕 Documentação da funcionalidade GPS
+│   ├── ICONS-IMPLEMENTATION.md   # 🎨 Documentação dos ícones e PWA
 │   ├── CODE-STUDY.md             # Estudos e análises do código
 │   └── STUDY.md                  # Estudos gerais do projeto
 ├── scripts/                      # 🛠️ Scripts de teste e utilitários
@@ -36,7 +37,16 @@ galinheiro-app
 │   ├── test-connection.js        # Teste de conectividade básica
 │   └── test-gps-integration.html # 🆕 Teste standalone da funcionalidade GPS
 ├── public/
-│   └── robots.txt                # Instruções para motores de busca
+│   ├── robots.txt                # Instruções para motores de busca
+│   └── assets/                   # 🎨 Recursos estáticos
+│       └── icons/                # Favicons e ícones PWA
+│           ├── favicon.ico       # Favicon principal
+│           ├── favicon-16x16.png # Favicon pequeno
+│           ├── favicon-32x32.png # Favicon médio
+│           ├── apple-touch-icon.png        # Ícone iOS
+│           ├── android-chrome-192x192.png  # Ícone Android
+│           ├── android-chrome-512x512.png  # Ícone Android HD
+│           └── site.webmanifest            # Manifest PWA
 └── src/
 └── src
     ├── main.jsx                  # Ponto de entrada da aplicação
@@ -291,6 +301,57 @@ Para documentação técnica detalhada, consulte:
 - [ ] **Notificações baseadas em localização** (alertas por região)
 - [ ] **Integração com mapas** visuais
 - [ ] **Precisão configurável** (alta vs economizar bateria)
+
+## 🎨 Ícones e Progressive Web App (PWA)
+
+O Galinheiro App possui um **conjunto completo de favicons** e configuração **PWA** para uma experiência nativa em todos os dispositivos.
+
+### ✨ Características dos Ícones
+
+#### 🖼️ Conjunto Completo de Favicons
+- **favicon.ico**: Ícone principal multi-tamanho (16x16, 32x32, 48x48)
+- **PNG Favicons**: Versões otimizadas para navegadores modernos
+- **Apple Touch Icon**: Ícone 180x180 para dispositivos iOS
+- **Android Chrome Icons**: 192x192 e 512x512 para Android
+- **Web App Manifest**: Configuração PWA completa
+
+#### 📱 Progressive Web App
+- **Instalável**: Pode ser instalado como app nativo no dispositivo
+- **Standalone**: Funciona como aplicação independente
+- **Responsive**: Interface otimizada para desktop e mobile
+- **Theme Color**: Cores personalizadas (#10b981 - verde primary)
+- **Offline Ready**: Preparado para funcionalidades offline futuras
+
+### 🚀 Como Instalar como PWA
+
+#### Desktop (Chrome/Edge)
+1. Abra o Galinheiro App no navegador
+2. Clique no ícone de "Instalar" na barra de endereços
+3. Confirme a instalação
+4. O app será adicionado ao menu iniciar/aplicativos
+
+#### Mobile (Android/iOS)
+1. Acesse o app no navegador mobile
+2. **Android**: Toque "Adicionar à tela inicial" no menu
+3. **iOS**: Toque "Compartilhar" → "Adicionar à Tela de Início"
+4. O ícone aparecerá na tela inicial como um app nativo
+
+### 🔍 Localizações dos Ícones
+```
+public/assets/icons/
+├── favicon.ico              # Favicon principal
+├── favicon-16x16.png        # Navegadores (16x16)
+├── favicon-32x32.png        # Navegadores (32x32)
+├── apple-touch-icon.png     # iOS Safari (180x180)
+├── android-chrome-192x192.png  # Android (192x192)
+├── android-chrome-512x512.png  # Android HD (512x512)
+└── site.webmanifest         # Configuração PWA
+```
+
+### 📚 Documentação Completa
+Para detalhes técnicos sobre implementação, formatos e configuração PWA, consulte:
+- **`docs/ICONS-IMPLEMENTATION.md`**: Guia completo de ícones e PWA
+- **`public/assets/icons/site.webmanifest`**: Configuração PWA
 
 ## 🎨 Padrões de CSS
 
