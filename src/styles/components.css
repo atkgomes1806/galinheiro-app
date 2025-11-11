@@ -36,8 +36,56 @@
 }
 
 /* KPI card helpers */
-.kpi-card{cursor:pointer;min-height:140px;display:flex;flex-direction:column;gap:0.75rem}
-.kpi-chip{display:inline-flex;align-items:center;gap:0.5rem;padding:0.5rem 0.75rem;border-radius:8px;width:fit-content}
+.kpi-card{
+  cursor:pointer;
+  min-height:200px;
+  display:flex;
+  flex-direction:column;
+  gap:0.75rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px -3px rgba(0,0,0,0.12);
+}
+
+.kpi-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:0.5rem;
+  padding:0.5rem 0.75rem;
+  border-radius:8px;
+  width:fit-content;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.kpi-content-title {
+  font-weight: 600;
+}
+
+.kpi-content-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 0.25rem;
+}
+
+.kpi-content-subtitle {
+  color: var(--gray-600);
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.kpi-content-link {
+  margin-top: auto;
+  font-size: 0.875rem;
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
 .kpi-chip--yellow{background:#FFC72C;color:#1f2d3d}
 .kpi-chip--primary{background:var(--primary);color:white}
 .kpi-chip--blue{background:#2980b9;color:white}

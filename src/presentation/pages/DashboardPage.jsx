@@ -104,15 +104,15 @@ const DashboardPage = () => {
                     <div className="card kpi-card">
                         <div className="kpi-chip kpi-chip--blue">
                             <span>🐔</span>
-                            <span style={{ fontWeight: 600 }}>Galinhas Ativas</span>
+                            <span className="kpi-content-title">Galinhas Ativas</span>
                         </div>
                         <div>
-                            <div style={{ fontSize: '1.5rem', fontWeight: 700 }}>{sumario.galinhas.ativas}</div>
-                            <div style={{ color: 'var(--gray-600)' }}>
+                            <div className="kpi-content-value">{sumario.galinhas.ativas}</div>
+                            <div className="kpi-content-subtitle">
                                 {sumario.galinhas.inativas > 0 ? `${sumario.galinhas.inativas} inativa(s)` : 'Todas ativas'}
                             </div>
                         </div>
-                        <div style={{ marginTop: 'auto', fontSize: '0.875rem', color: 'var(--gray-500)' }}>Gerenciar Galinhas →</div>
+                        <div className="kpi-content-link">Gerenciar Galinhas →</div>
                     </div>
                 </Link>
 
@@ -133,7 +133,7 @@ const DashboardPage = () => {
 
                 {/* KPI: Tratamentos Ativos */}
                 <Link to="/tratamentos" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div className={`card kpi-card`}>
+                    <div className="card kpi-card">
                         <div className="kpi-chip kpi-chip--treatment">
                             <span>💊</span>
                             <span className="kpi-content-title">Tratamentos Ativos</span>

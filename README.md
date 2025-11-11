@@ -4,46 +4,14 @@ Este projeto é uma aplicação React chamada "galinheiro-app", que consome dado
 
 ## ✨ Destaques Recentes
 
+- ✅ **Geolocalização GPS (Novembro 2025)**: Dados climáticos baseados na localização do usuário
 - ✅ **Organização Scripts (Novembro 2025)**: Pasta `/scripts/` centralizada com testes e utilitários
-- ✅ **Teste Comparativo OAuth vs Bearer**: Validação completa das credenciais da API Embrapa
 - ✅ **Refatoração Completa (Novembro 2025)**: Centralização de CSS e funções utilitárias
-- 🌍 **Integração API Embrapa**: Dados climáticos em tempo real no dashboard
-- � **Sistema de Design**: Classes CSS reutilizáveis e consistentes
+- 🌍 **Integração Open-Meteo API**: Dados climáticos em tempo real no dashboard
+- 🎨 **Sistema de Design**: Classes CSS reutilizáveis e consistentes
 - 📱 **Interface Moderna**: UI responsiva e acessível
 - 🏗️ **Arquitetura Limpa**: Separação clara de responsabilidades
 - 🚀 **Performance Otimizada**: CSS e JavaScript eficientes
-
-## ⚠️ **IMPORTANTE: Estrutura de Pastas**
-
-**ATENÇÃO**: O projeto está localizado em:
-```
-C:\Projetos\galinheiro-app\galinheiro-app\
-```
-
-**NÃO** em `C:\Projetos\galinheiro-app\` (sem a pasta duplicada).
-
-### 📂 Caminhos Corretos:
-- **Projeto**: `C:\Projetos\galinheiro-app\galinheiro-app\`
-- **Backend**: `C:\Projetos\galinheiro-app\galinheiro-app\backend\`
-- **Scripts**: `C:\Projetos\galinheiro-app\galinheiro-app\scripts\`
-
-### 🔧 Comandos com Caminho Correto:
-```bash
-# Navegar para o projeto
-cd "C:\Projetos\galinheiro-app\galinheiro-app"
-
-# Iniciar frontend
-cd "C:\Projetos\galinheiro-app\galinheiro-app"
-npm run dev
-
-# Iniciar backend
-cd "C:\Projetos\galinheiro-app\galinheiro-app\backend"
-npm start
-
-# Executar scripts
-cd "C:\Projetos\galinheiro-app\galinheiro-app"
-node scripts/test-embrapa-api.js
-```
 
 ## Estrutura do Projeto
 
@@ -57,29 +25,24 @@ galinheiro-app
 ├── .gitignore                    # Arquivos e pastas a serem ignorados pelo Git
 ├── .env.example                  # Exemplo de variáveis de ambiente
 ├── README.md                     # Documentação do projeto
-├── backend/                      # Servidor proxy para API Embrapa
-│   ├── server.js                 # Servidor Express
-│   ├── package.json              # Dependências do backend
-│   ├── .env                      # Variáveis de ambiente do backend
-│   └── src/
-│       ├── routes/               # Rotas do backend
-│       │   └── weather.js        # Endpoints de clima
-│       └── services/             # Serviços do backend
-│           └── embrapaAuth.js    # Autenticação OAuth 2.0
-├── docs/
+├── vercel.json                   # Configuração de deploy Vercel
+├── docs/                         # 📚 Documentação técnica
 │   ├── REFACTORING_PLAN.md       # Plano detalhado da refatoração
-│   └── TESTES_CLIMAPI_REAL.md    # Log dos testes da API Embrapa
-├── scripts/                      # 🆕 Scripts de teste e utilitários
+│   ├── GPS-INTEGRATION.md        # 🆕 Documentação da funcionalidade GPS
+│   ├── CODE-STUDY.md             # Estudos e análises do código
+│   └── STUDY.md                  # Estudos gerais do projeto
+├── scripts/                      # 🛠️ Scripts de teste e utilitários
 │   ├── README.md                 # Documentação dos scripts
 │   ├── test-connection.js        # Teste de conectividade básica
-│   ├── test-embrapa-api.js       # Teste comparativo OAuth vs Bearer
-│   ├── test-real-api.js          # Teste detalhado com Bearer Token
-│   └── start-backend.ps1         # Script PowerShell para iniciar backend
-├── public
+│   └── test-gps-integration.html # 🆕 Teste standalone da funcionalidade GPS
+├── public/
 │   └── robots.txt                # Instruções para motores de busca
+└── src/
 └── src
     ├── main.jsx                  # Ponto de entrada da aplicação
     ├── App.jsx                   # Componente principal da aplicação
+    ├── hooks                     # 🆕 Hooks customizados
+    │   └── useGeolocation.js     # Hook para geolocalização GPS
     ├── styles
     │   ├── globals.css           # Estilos globais e variáveis CSS
     │   └── components.css        # Classes CSS reutilizáveis centralizadas
@@ -128,9 +91,8 @@ galinheiro-app
         │   ├── galinhaInjector.js
         │   ├── registroOvoInjector.js
         │   └── tratamentoInjector.js
-        ├── embrapa                # Integração API Embrapa
-        │   ├── EmbrapaApiClient.js        # Cliente OAuth 2.0
-        │   └── EmbrapaWeatherService.js   # Serviço de clima
+        ├── openmeteo              # 🆕 Integração Open-Meteo Weather API
+        │   └── OpenMeteoWeatherService.js   # Serviço de clima com GPS
         └── supabase               # Implementações de infraestrutura
             ├── client.js
             ├── GalinhaRepositorySupabase.js
@@ -145,9 +107,7 @@ O projeto inclui uma pasta `/scripts/` com ferramentas para desenvolvimento e va
 ### 📂 Arquivos Disponíveis
 
 - **`test-connection.js`**: Teste de conectividade básica do projeto
-- **`test-embrapa-api.js`**: � Teste comparativo OAuth 2.0 vs Bearer Token
-- **`test-real-api.js`**: Teste detalhado com token Bearer da API Embrapa
-- **`start-backend.ps1`**: Script PowerShell para iniciar o backend facilmente
+- **`test-gps-integration.html`**: 📍 Teste standalone da funcionalidade GPS
 - **`README.md`**: Documentação completa dos scripts
 
 ### 🔧 Como Usar os Scripts
@@ -156,22 +116,181 @@ O projeto inclui uma pasta `/scripts/` com ferramentas para desenvolvimento e va
 # Testar conectividade básica
 node scripts/test-connection.js
 
-# Comparar OAuth vs Bearer Token (recomendado)
-node scripts/test-embrapa-api.js
-
-# Teste detalhado da API com Bearer
-node scripts/test-real-api.js
+# Testar GPS (abrir no navegador)
+# Abrir scripts/test-gps-integration.html diretamente no browser
 ```
 
-### 🎯 Resultado dos Testes Recentes
+### 🎯 Funcionalidades dos Scripts
 
-**Teste OAuth vs Bearer Token (9/11/2025)**:
-- ✅ **OAuth 2.0**: Funcionando perfeitamente (Status 200)
-- ❌ **Bearer Token**: Expirado (Status 401)
-- ✅ **API Embrapa**: 19 variáveis disponíveis
-- ✅ **Credenciais**: Consumer Key/Secret validados
+**Teste de Conectividade**:
+- ✅ Verifica dependências do projeto
+- ✅ Testa configurações básicas
+- ✅ Valida estrutura de arquivos
 
-**Conclusão**: O backend atual com OAuth 2.0 está otimizado e não necessita mudanças.
+**Teste GPS**:
+- ✅ Verifica suporte do navegador para geolocalização
+- ✅ Testa solicitação de permissão GPS
+- ✅ Valida reverse geocoding
+- ✅ Testa cache localStorage
+
+```
+
+## 📍 Funcionalidade de Geolocalização GPS
+
+O Galinheiro App agora possui funcionalidade completa de **geolocalização GPS**, permitindo aos usuários obter dados climáticos específicos para sua localização atual.
+
+### ✨ Características da Funcionalidade GPS
+
+#### 🛰️ Hook useGeolocation
+- **Localização**: `src/hooks/useGeolocation.js`
+- **Solicitação de permissão GPS** automática
+- **Cache inteligente** com validade de 24 horas
+- **Reverse geocoding** para nomes de localização (BigDataCloud API)
+- **Tratamento de erros** e timeout (10 segundos)
+- **Estados de carregamento** e permissões
+- **Fallback automático** para localização padrão
+
+#### 🌦️ Integração com Dados Climáticos
+- **Open-Meteo Weather API** com suporte para coordenadas dinâmicas
+- **Dados climáticos personalizados** baseados na localização do usuário
+- **Atualização automática** quando localização muda
+- **Comparação** entre localização atual e padrão
+
+#### 🎨 Interface do Usuário
+- **Botão GPS** integrado no WeatherCard (ícone 📍)
+- **Indicadores visuais** de GPS ativo/inativo
+- **Estados de carregamento** específicos ("📍 Obtendo localização...")
+- **Feedback de erros** intuitivo e ações corretivas
+- **Design responsivo** para desktop e mobile
+
+### 🚀 Como Usar a Funcionalidade GPS
+
+#### Para Usuários Finais
+1. **Ativar GPS**: Clique no ícone 📍 no card de clima
+2. **Permitir Localização**: Aceite a solicitação do navegador
+3. **Dados Atualizados**: O clima será automaticamente atualizado para sua localização
+4. **Expandir Detalhes**: Clique no card para ver coordenadas e endereço completo
+5. **Desativar**: Clique novamente em 📍 para voltar à localização padrão
+
+#### Estados Visuais
+- 📍 **Cinza**: GPS inativo (usando localização padrão)
+- 📍 **Verde/Ativo**: GPS funcionando com sua localização
+- 📍 **Piscando**: Carregando/solicitando localização
+- ❌ **Erro**: Falha na obtenção de localização
+
+### 🔧 Implementação Técnica
+
+#### Para Desenvolvedores
+```javascript
+// Usar o hook de geolocalização
+import { useGeolocation } from './hooks/useGeolocation';
+
+const MyComponent = () => {
+    const {
+        coordinates,       // { latitude, longitude }
+        locationName,     // "São Paulo, SP"
+        loading,          // Estado de carregamento
+        error,           // Mensagens de erro
+        hasPermission,   // Permissão concedida
+        isLocationCached, // Localização em cache
+        requestLocation, // Solicitar GPS
+        clearLocation   // Limpar localização
+    } = useGeolocation();
+    
+    return (
+        <div>
+            {coordinates ? (
+                <p>📍 {locationName || `${coordinates.latitude}, ${coordinates.longitude}`}</p>
+            ) : (
+                <button onClick={requestLocation}>Usar minha localização</button>
+            )}
+        </div>
+    );
+};
+```
+
+#### Obter Dados Climáticos com GPS
+```javascript
+import { obterDadosClimaPorGPS } from './application/use-cases/obterDadosClima';
+
+// Com coordenadas específicas
+const dadosClima = await obterDadosClimaPorGPS(-23.5505, -46.6333);
+
+// Usando o hook
+const { coordinates } = useGeolocation();
+if (coordinates) {
+    const dadosClima = await obterDadosClimaPorGPS(
+        coordinates.latitude, 
+        coordinates.longitude
+    );
+}
+```
+
+### ⚙️ Configurações e APIs
+
+#### Parâmetros GPS
+- **Precisão alta** habilitada (`enableHighAccuracy: true`)
+- **Timeout**: 10 segundos máximo
+- **Cache**: 5 minutos para coordenadas, 24h para dados completos
+
+#### APIs Utilizadas
+- **Open-Meteo**: Dados meteorológicos baseados em coordenadas
+- **BigDataCloud**: Reverse geocoding gratuito para nomes de localização
+- **Browser Geolocation API**: Acesso ao GPS do dispositivo
+
+#### Cache Local
+- **Localização**: `localStorage.getItem('galinheiro_user_location')`
+- **Permissões**: `localStorage.getItem('galinheiro_location_permission')`
+- **Validade**: 24 horas com verificação automática
+
+### 🛡️ Tratamento de Erros e Fallbacks
+
+#### Tipos de Erro
+1. **PERMISSION_DENIED**: Usuário negou permissão → Usar localização padrão
+2. **POSITION_UNAVAILABLE**: GPS indisponível → Tentar novamente ou usar padrão
+3. **TIMEOUT**: Demorou mais que 10s → Fallback automático
+4. **NETWORK_ERROR**: Erro de rede → Cache local ou padrão
+
+#### Estratégias de Fallback
+- ❌ **GPS falhou** → Automaticamente usa localização padrão
+- ❌ **Reverse geocoding falhou** → Exibe coordenadas numéricas
+- ❌ **Cache inválido** → Nova solicitação transparente
+- ❌ **API indisponível** → Dados em cache ou mensagem de erro
+
+### 🧪 Testes e Validação
+
+#### Arquivo de Teste Standalone
+- **Local**: `scripts/test-gps-integration.html`
+- **Funcionalidades**: Teste completo sem dependências do app
+- **Verificações**:
+  - ✅ Suporte do navegador para geolocalização
+  - ✅ Solicitação e recebimento de coordenadas
+  - ✅ Reverse geocoding funcionando
+  - ✅ Cache localStorage operacional
+  - ✅ Tratamento de erros
+
+#### Como Testar
+1. **Abra** `scripts/test-gps-integration.html` no navegador
+2. **Clique** em "🧭 Solicitar Localização"
+3. **Aceite** a permissão do navegador
+4. **Verifique** se todos os testes passaram
+5. **Teste cenários** de erro negando permissão
+
+### 📚 Documentação Completa
+
+Para documentação técnica detalhada, consulte:
+- **`docs/GPS-INTEGRATION.md`**: Guia completo de implementação
+- **`scripts/test-gps-integration.html`**: Teste standalone
+- **`src/hooks/useGeolocation.js`**: Código fonte documentado
+
+### 🔮 Futuras Melhorias GPS
+
+- [ ] **Múltiplas localizações salvas** pelo usuário
+- [ ] **Histórico de localizações** utilizadas
+- [ ] **Comparação climática** entre diferentes localizações
+- [ ] **Notificações baseadas em localização** (alertas por região)
+- [ ] **Integração com mapas** visuais
+- [ ] **Precisão configurável** (alta vs economizar bateria)
 
 ## 🎨 Padrões de CSS
 
@@ -276,38 +395,20 @@ VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
-### API Embrapa - Dados Climáticos (Opcional)
+### Localização Padrão (Opcional)
 ```bash
-VITE_EMBRAPA_API_URL=https://api.cnptia.embrapa.br/climapi/v1
-VITE_EMBRAPA_TOKEN_URL=https://api.cnptia.embrapa.br/token
-VITE_EMBRAPA_CONSUMER_KEY=your_consumer_key
-VITE_EMBRAPA_CONSUMER_SECRET=your_consumer_secret
-
-# Localização do seu galinheiro
-VITE_LOCATION_LATITUDE=-23.5505
-VITE_LOCATION_LONGITUDE=-46.6333
-VITE_LOCATION_NAME=São Paulo
+# Coordenadas padrão para dados climáticos
+VITE_DEFAULT_LATITUDE=-23.5505
+VITE_DEFAULT_LONGITUDE=-46.6333
+VITE_DEFAULT_LOCATION_NAME=São Paulo
 ```
 
-**Como obter credenciais Embrapa:**
-1. Acesse: https://api.cnptia.embrapa.br
-2. Registre-se e crie uma aplicação
-3. Obtenha Consumer Key e Consumer Secret
-4. Configure as coordenadas do seu galinheiro
+**Nota**: A funcionalidade GPS permite obter dados climáticos para qualquer localização, mas você pode configurar coordenadas padrão como fallback.
 
 ## Executando a Aplicação
 
-### ⚠️ **LEMBRETE DE CAMINHO**
-Todos os comandos devem ser executados a partir de:
-```
-C:\Projetos\galinheiro-app\galinheiro-app\
-```
-
 ### Frontend (React)
 ```bash
-# Navegar para a pasta correta
-cd "C:\Projetos\galinheiro-app\galinheiro-app"
-
 # Instalar dependências (primeira vez)
 npm install
 
@@ -316,27 +417,6 @@ npm run dev
 ```
 
 A aplicação estará disponível em `http://localhost:3000`.
-
-### Backend (Servidor Proxy)
-```bash
-# Opção 1: Script PowerShell (recomendado)
-cd "C:\Projetos\galinheiro-app\galinheiro-app"
-PowerShell -ExecutionPolicy Bypass -File "scripts\start-backend.ps1"
-
-# Opção 2: Manual
-cd "C:\Projetos\galinheiro-app\galinheiro-app\backend"
-npm install  # primeira vez
-npm start
-```
-
-O servidor backend estará disponível em `http://localhost:3002`.
-
-### 🔧 Ordem de Inicialização
-1. **Primeiro**: Abra um terminal e navegue para `C:\Projetos\galinheiro-app\galinheiro-app\backend`
-2. **Execute**: `npm start` (backend na porta 3002)
-3. **Segundo**: Abra outro terminal e navegue para `C:\Projetos\galinheiro-app\galinheiro-app`
-4. **Execute**: `npm run dev` (frontend na porta 3000)
-5. **Verificação**: Acesse http://localhost:3000
 
 ## Contribuição
 
@@ -378,17 +458,27 @@ Antes de enviar um PR, certifique-se de que:
 - **Frontend**: React 18 com Hooks
 - **Build Tool**: Vite
 - **Backend**: Supabase (PostgreSQL + Auth)
-- **APIs Externas**: Embrapa ClimAPI (dados agrometeorológicos)
+- **APIs Climáticas**: Open-Meteo Weather API (dados meteorológicos globais)
+- **Geolocalização**: Browser Geolocation API + BigDataCloud (reverse geocoding)
 - **Autenticação**: OAuth 2.0 Client Credentials
 - **Estilização**: CSS Modules + CSS Custom Properties
 - **Roteamento**: React Router v6
-- **Gerenciamento de Estado**: React Hooks (useState, useEffect)
+- **Gerenciamento de Estado**: React Hooks (useState, useEffect, custom hooks)
 - **Arquitetura**: Clean Architecture
 - **Versionamento**: Git
+- **Cache**: localStorage para geolocalização e dados climáticos
 
-## 🌤️ Integração com API Embrapa ClimAPI
+## 🌤️ Integração com Open-Meteo Weather API
 
-O dashboard exibe dados climáticos em tempo real obtidos da **API ClimAPI da Embrapa** (Empresa Brasileira de Pesquisa Agropecuária).
+O dashboard exibe dados climáticos em tempo real obtidos da **Open-Meteo Weather API**, uma API meteorológica gratuita e de código aberto com cobertura global.
+
+### 🆕 Funcionalidade GPS Integrada
+
+O sistema agora permite usar **sua localização atual** para dados climáticos personalizados:
+- 📍 **Clique no ícone GPS** no card de clima
+- 🌍 **Permita acesso à localização** no navegador  
+- 🌦️ **Dados atualizados automaticamente** para sua região
+- 🔄 **Alterne entre localização atual e padrão** a qualquer momento
 
 ### Por que monitorar o clima?
 
@@ -399,61 +489,89 @@ O clima tem impacto direto na saúde e produtividade das galinhas:
 
 ### O que é exibido
 
-- 🌡️ **Temperatura atual** em tempo real
+- 🌡️ **Temperatura atual** e sensação térmica
 - 💧 **Umidade relativa** do ar
-- ✅ **Avaliação automática** das condições (Ideal, Frio, Quente, Crítico)
+- 💨 **Velocidade e direção do vento**
+- 🕒 **Previsão próximas horas** (3 horas seguintes)
+- 📅 **Previsão próximos dias** (até 7 dias)
+- ✅ **Avaliação automática** das condições (Ideal, Atenção, Crítico)
 - ⚠️ **Alertas inteligentes** quando condições exigem ação
-- � **Recomendações práticas** para correção
+- 💡 **Recomendações práticas** para manejo do galinheiro
 
 ### Funcionamento Técnico
 
-1. **Autenticação OAuth 2.0**: Client Credentials Grant
-2. **Modelo GFS**: Dados de previsão numérica do tempo
-3. **Variáveis utilizadas**:
-   - `tmp2m`: Temperatura a 2 metros do solo (°C)
-   - `rh2m`: Umidade relativa a 2 metros (%)
-4. **Cache inteligente**: Dados atualizados a cada 30 minutos
-5. **Token automático**: Renovação transparente a cada hora
+1. **API Gratuita**: Sem necessidade de chaves ou autenticação
+2. **Cobertura Global**: Dados para qualquer localização mundial
+3. **Modelos Meteorológicos**: GFS, ECMWF, GEM (alta precisão)
+4. **Variáveis utilizadas**:
+   - Temperatura e sensação térmica (°C)
+   - Umidade relativa (%)
+   - Velocidade do vento (km/h)
+   - Direção do vento e precipitação
+5. **Cache inteligente**: Dados atualizados conforme necessário
+6. **Geolocalização**: Coordenadas GPS para dados locais precisos
 
 ### Arquitetura da Integração
 
 ```
-EmbrapaWeatherCard (Presentation)
+WeatherCard (Presentation) + useGeolocation Hook
     ↓
-obterDadosClimaEmbrapa (Application/Use Case)
+obterDadosClima / obterDadosClimaPorGPS (Application/Use Cases)
     ↓
-EmbrapaWeatherService (Infrastructure)
+OpenMeteoWeatherService (Infrastructure)
     ↓
-EmbrapaApiClient (Infrastructure - OAuth 2.0)
+Open-Meteo Weather API (Externa - GPS ou coordenadas padrão)
     ↓
-API ClimAPI Embrapa
+BigDataCloud API (Reverse Geocoding - opcional)
 ```
 
-### Configuração
+### Vantagens da Open-Meteo
 
-Veja a seção [Configuração](#configuração) acima para obter e configurar suas credenciais.
+- ✅ **Gratuita**: Sem limites de requisições
+- ✅ **Precisão**: Múltiplos modelos meteorológicos
+- ✅ **Cobertura**: Dados globais em tempo real
+- ✅ **Performance**: API rápida e confiável
+- ✅ **Código Aberto**: Transparente e documentada
+- ✅ **GPS**: Suporte nativo para coordenadas dinâmicas
 
 ### Tratamento de Erros
 
 - Se a API estiver indisponível, o card exibe mensagem de erro
 - Botão "Tentar Novamente" permite forçar atualização
+- Sistema de fallback automático para localização padrão
 - Cache local evita múltiplas requisições desnecessárias
+- Timeout configurável para requisições GPS
 
 ### Referências
 
-- **Documentação da API**: https://api.cnptia.embrapa.br/docs
-- **Registrar aplicação**: https://api.cnptia.embrapa.br
-- **Modelo GFS**: NCEP Global Forecast System
+- **API Open-Meteo**: https://open-meteo.com/
+- **Documentação**: https://open-meteo.com/en/docs
+- **BigDataCloud (Geocoding)**: https://bigdatacloud.com/
 
 ##  Próximos Passos
 
+### 🧪 Funcionalidades Gerais
 - [ ] Implementar testes automatizados (Jest + React Testing Library)
 - [ ] Adicionar TypeScript para melhor type safety
 - [ ] Criar sistema de notificações em tempo real
 - [ ] Implementar PWA (Progressive Web App)
 - [ ] Adicionar gráficos e dashboards avançados
 - [ ] Otimizar performance com lazy loading
-- [ ] Histórico de dados climáticos (gráficos de temperatura/umidade)
-- [ ] Expandir testes automatizados para API Embrapa
-- [ ] Implementar monitoramento de uptime da API
+
+### 📍 Melhorias GPS e Clima
+- [ ] **Histórico de localizações** utilizadas pelo usuário
+- [ ] **Múltiplas localizações salvas** com nomes personalizados
+- [ ] **Comparação climática** entre diferentes regiões
+- [ ] **Notificações baseadas em localização** (alertas específicos por região)
+- [ ] **Integração com mapas** visuais (Google Maps/OpenStreetMap)
+- [ ] **Precisão configurável** (alta precisão vs economia de bateria)
+- [ ] **Histórico de dados climáticos** com gráficos temporais
+- [ ] **Previsão estendida** (até 15 dias)
+- [ ] **Alertas climáticos avançados** (geadas, tempestades, etc.)
+
+### 🔧 Infraestrutura
+- [ ] Expandir testes automatizados para APIs climáticas
+- [ ] Implementar monitoramento de uptime das APIs
 - [ ] Adicionar alertas por email/SMS para condições críticas
+- [ ] Cache inteligente com sincronização offline
+- [ ] Compressão e otimização de dados meteorológicos
