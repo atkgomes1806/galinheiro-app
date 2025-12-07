@@ -44,98 +44,107 @@ A estrutura do projeto é organizada seguindo princípios de Arquitetura Limpa:
 
 ```
 galinheiro-app
-├── index.html                    # Arquivo HTML principal
-├── package.json                  # Dependências e configurações do npm
-├── vite.config.js               # Configuração do Vite
-├── .gitignore                    # Arquivos e pastas a serem ignorados pelo Git
-├── .env.example                  # Exemplo de variáveis de ambiente
-├── README.md                     # Documentação do projeto
-├── vercel.json                   # Configuração de deploy Vercel
-├── docs/                         # 📚 Documentação técnica
-│   ├── REFACTORING_PLAN.md       # Plano detalhado da refatoração
-│   ├── GPS-INTEGRATION.md        # 🆕 Documentação da funcionalidade GPS
-│   ├── ICONS-IMPLEMENTATION.md   # 🎨 Documentação dos ícones e PWA
-│   ├── CODE-STUDY.md             # Estudos e análises do código
-│   └── STUDY.md                  # Estudos gerais do projeto
-├── scripts/                      # 🛠️ Scripts de teste e utilitários
-│   ├── README.md                 # Documentação dos scripts
-│   ├── test-connection.js        # Teste de conectividade básica
-│   └── test-gps-integration.html # 🆕 Teste standalone da funcionalidade GPS
+├── index.html                      # Arquivo HTML principal
+├── package.json                    # Dependências e configurações do npm
+├── vite.config.js                  # Configuração do Vite
+├── .gitignore                      # Arquivos e pastas ignorados pelo Git
+├── .env.example                    # Exemplo de variáveis de ambiente
+├── README.md                       # Documentação do projeto
+├── vercel.json                     # Configuração de deploy Vercel
+├── docs/                           # 📚 Documentação técnica
+│   ├── ARCHITECTURE-ANALYSIS.md    # Análise estratégica completa
+│   ├── CORRECTIONS-SUMMARY.md      # Resumo das correções
+│   ├── FILES-GUIDE.md              # Guia de arquivos modificados
+│   ├── FINAL-REPORT.md             # Relatório final das correções
+│   ├── NEXT-STEPS.md               # Roadmap de próximos passos
+│   ├── REFACTORING_PLAN.md         # Plano detalhado da refatoração
+│   ├── GPS-INTEGRATION.md          # Documentação da funcionalidade GPS
+│   ├── ICONS-IMPLEMENTATION.md     # Documentação dos ícones e PWA
+│   ├── CODE-STUDY.md               # Estudos e análises do código
+│   └── STUDY.md                    # Estudos gerais do projeto
+├── scripts/                        # 🛠️ Scripts de teste e utilitários
+│   ├── README.md                   # Documentação dos scripts
+│   ├── test-connection.js          # Teste de conectividade básica
+│   └── test-gps-integration.html   # Teste standalone da funcionalidade GPS
 ├── public/
-│   ├── robots.txt                # Instruções para motores de busca
-│   └── assets/                   # 🎨 Recursos estáticos
-│       └── icons/                # Favicons e ícones PWA
-│           ├── favicon.ico       # Favicon principal
-│           ├── favicon-16x16.png # Favicon pequeno
-│           ├── favicon-32x32.png # Favicon médio
-│           ├── apple-touch-icon.png        # Ícone iOS
-│           ├── android-chrome-192x192.png  # Ícone Android
-│           ├── android-chrome-512x512.png  # Ícone Android HD
-│           └── site.webmanifest            # Manifest PWA
+│   ├── robots.txt                  # Instruções para motores de busca
+│   └── assets/                     # 🎨 Recursos estáticos
+│       └── icons/                  # Favicons e ícones PWA
+│           ├── favicon.ico
+│           ├── favicon-16x16.png
+│           ├── favicon-32x32.png
+│           ├── apple-touch-icon.png
+│           ├── android-chrome-192x192.png
+│           ├── android-chrome-512x512.png
+│           └── site.webmanifest
 └── src/
-└── src
-    ├── main.jsx                  # Ponto de entrada da aplicação
-    ├── App.jsx                   # Componente principal da aplicação
-    ├── hooks                     # 🆕 Hooks customizados
-    │   └── useGeolocation.js     # Hook para geolocalização GPS
-    ├── styles
-    │   ├── globals.css           # Estilos globais e variáveis CSS
-    │   └── components.css        # Classes CSS reutilizáveis centralizadas
-    ├── utils
-    │   └── index.js              # Funções utilitárias centralizadas
-    ├── presentation
-    │   ├── components            # Componentes da interface
-    │   │   ├── TimeSeriesChart.jsx      # 🆕 Gráfico de série temporal com tooltips
-    │   │   ├── CalendarHeatmap.jsx      # 🆕 Heatmap mensal com % de hens
-    │   │   ├── WeatherCard.jsx          # Card de clima com GPS
-    │   │   ├── GalinhasList.jsx         # Lista de galinhas
-    │   │   ├── GalinhaForm.jsx          # Formulário de galinha
-    │   │   ├── TratamentosList.jsx      # Lista de tratamentos
-    │   │   ├── TratamentoForm.jsx       # Formulário de tratamento
-    │   │   ├── RegistroOvoForm.jsx      # Formulário de registro de ovos
-    │   │   └── RequireAuth.jsx          # Componente de autenticação
-    │   ├── pages                  # Páginas da aplicação
-    │   │   ├── DashboardPage.jsx     # Dashboard principal
-    │   │   ├── GalinhasPage.jsx      # Gestão de galinhas
-    │   │   ├── TratamentosPage.jsx   # Gestão de tratamentos
-    │   │   ├── HistoricoPosturaPage.jsx # Histórico de ovos
-    │   │   └── LoginPage.jsx         # Página de login
-    │   └── routes.jsx              # Definição das rotas
-    ├── application
-    │   ├── use-cases              # Casos de uso da aplicação
-    │   │   ├── listarGalinhas.js
-    │   │   ├── criarGalinha.js
-    │   │   ├── atualizarGalinha.js
-    │   │   ├── removerGalinha.js
-    │   │   ├── listarTratamentos.js
-    │   │   ├── criarTratamento.js
-    │   │   ├── concluirTratamento.js
-    │   │   ├── listarRegistrosOvos.js
-    │   │   ├── registrarOvo.js
-    │   │   └── obterSumarioGalinheiro.js
-    │   └── services               # Injeção de dependências
-    │       ├── galinhaInjector.js
-    │       ├── registroOvoInjector.js
-    │       └── tratamentoInjector.js
-    ├── domain
-    │   ├── entities               # Entidades de domínio
-    │   │   └── Galinha.js
-    │   └── repositories           # Interfaces de repositório
-    │       ├── GalinhaRepository.js
-    │       ├── RegistroOvoRepository.js
-    │       └── TratamentoRepository.js
-    └── infrastructure
-        ├── config                 # Configurações de injeção
-        │   ├── galinhaInjector.js
-        │   ├── registroOvoInjector.js
-        │   └── tratamentoInjector.js
-        ├── openmeteo              # 🆕 Integração Open-Meteo Weather API
-        │   └── OpenMeteoWeatherService.js   # Serviço de clima com GPS
-        └── supabase               # Implementações de infraestrutura
-            ├── client.js
-            ├── GalinhaRepositorySupabase.js
-            ├── RegistroOvoRepositorySupabase.js
-            └── TratamentoRepositorySupabase.js
+  ├── main.jsx                    # Ponto de entrada da aplicação
+  ├── App.jsx                     # Componente principal
+  ├── hooks/                      # Hooks customizados
+  │   └── useGeolocation.js       # Geolocalização GPS
+  ├── theme/                      # 🎨 Tema centralizado
+  │   └── heatmapColorScheme.js   # Cores e thresholds do heatmap
+  ├── styles/                     # CSS centralizado
+  │   ├── globals.css
+  │   ├── components.css
+  │   └── calendario.css
+  ├── utils/
+  │   └── index.js                # Funções utilitárias
+  ├── presentation/
+  │   ├── components/             # Componentes de UI
+  │   │   ├── TimeSeriesChart.jsx
+  │   │   ├── CalendarHeatmap.jsx
+  │   │   ├── WeatherCard.jsx
+  │   │   ├── GalinhasList.jsx
+  │   │   ├── GalinhaForm.jsx
+  │   │   ├── TratamentosList.jsx
+  │   │   ├── TratamentoForm.jsx
+  │   │   ├── RegistroOvoForm.jsx
+  │   │   └── RequireAuth.jsx
+  │   ├── pages/
+  │   │   ├── DashboardPage.jsx
+  │   │   ├── GalinhasPage.jsx
+  │   │   ├── TratamentosPage.jsx
+  │   │   ├── HistoricoPosturaPage.jsx
+  │   │   └── LoginPage.jsx
+  │   └── routes.jsx
+  ├── application/
+  │   ├── use-cases/              # Casos de uso
+  │   │   ├── listarGalinhas.js
+  │   │   ├── criarGalinha.js
+  │   │   ├── atualizarGalinha.js
+  │   │   ├── removerGalinha.js
+  │   │   ├── listarTratamentos.js
+  │   │   ├── criarTratamento.js
+  │   │   ├── concluirTratamento.js
+  │   │   ├── listarRegistrosOvos.js
+  │   │   ├── registrarOvo.js
+  │   │   └── obterSumarioGalinheiro.js
+  │   └── services/               # Serviços e DI
+  │       ├── DashboardService.js
+  │       ├── galinhaInjector.js
+  │       ├── registroOvoInjector.js
+  │       └── tratamentoInjector.js
+  ├── domain/
+  │   ├── entities/
+  │   │   └── Galinha.js
+  │   └── repositories/
+  │       ├── GalinhaRepository.js
+  │       ├── RegistroOvoRepository.js
+  │       └── TratamentoRepository.js
+  └── infrastructure/
+    ├── config/
+    │   ├── index.js
+    │   ├── galinhaInjector.js
+    │   ├── registroOvoInjector.js
+    │   └── tratamentoInjector.js
+    ├── openmeteo/
+    │   └── OpenMeteoWeatherService.js
+    └── supabase/
+      ├── client.js
+      ├── GalinhaRepositorySupabase.js
+      ├── RegistroOvoRepositorySupabase.js
+      └── TratamentoRepositorySupabase.js
 ```
 
 ## 🧪 Scripts de Teste e Utilitários
