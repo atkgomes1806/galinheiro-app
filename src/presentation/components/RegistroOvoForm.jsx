@@ -20,15 +20,15 @@ const RegistroOvoForm = ({ galinhas, onRegistroCriado }) => {
     
     const [loading, setLoading] = useState(false);
 
-    // Define a data padrão como hoje
+    // Define a data padrão como hoje (usando timezone local)
     useEffect(() => {
-        const hoje = new Date().toISOString().split('T')[0];
+        const hoje = getDataLocalFormatada(new Date());
         setDataPostura(hoje);
     }, []);
 
     const limparFormulario = () => {
         setGalinhaId('');
-        const hoje = new Date().toISOString().split('T')[0];
+        const hoje = getDataLocalFormatada(new Date());
         setDataPostura(hoje);
         setPesoGramas('');
         setQualidadeCasca('');
@@ -303,6 +303,17 @@ const RegistroOvoForm = ({ galinhas, onRegistroCriado }) => {
 function formatDisplayDate(dateStr) {
     const [year, month, day] = dateStr.split('-');
     return `${day}/${month}`;
+}
+
+/**
+ * Converte data JS para formato YYYY-MM-DD usando timezone local
+ * Evita offset de timezone ao salvar no banco
+ */
+function getDataLocalFormatada(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
 export default RegistroOvoForm;

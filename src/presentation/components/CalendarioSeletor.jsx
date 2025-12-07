@@ -189,7 +189,8 @@ const CalendarioSeletor = ({ onDatasConfirmadas, onCancelar, initialMonth = new 
 };
 
 /**
- * Formata data para string YYYY-MM-DD
+ * Formata data para string YYYY-MM-DD usando timezone local
+ * Evita offset de timezone ao salvar no banco
  */
 function formatDateString(date) {
     const year = date.getFullYear();
