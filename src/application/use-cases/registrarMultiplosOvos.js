@@ -68,7 +68,8 @@ export async function registrarMultiplosOvos(galinhaId, detalhesOvos, repositori
             // Importante: quantidade agora é sempre 1 (uma galinha só põe 1 ovo por dia)
             const dadosNormalizados = {
                 galinha_id: galinhaId.trim(),
-                data_postura: dataPostura,
+                // Usa meio-dia para evitar offset de timezone em colunas timestamp
+                data_postura: `${dataPostura}T12:00:00Z`,
                 quantidade: 1, // Sempre 1 ovo por data
                 peso_gramas: pesoGramas,
                 qualidade_casca: qualidadeCasca

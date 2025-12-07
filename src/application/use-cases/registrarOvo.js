@@ -45,7 +45,8 @@ export async function registrarOvo(dados, repositorio = registroOvoRepository) {
         // Normaliza os dados
         const dadosNormalizados = {
             galinha_id: dados.galinha_id.trim(),
-            data_postura: dados.data_postura,
+            // Usa meio-dia para evitar offset de timezone em colunas timestamp
+            data_postura: `${dados.data_postura}T12:00:00Z`,
             quantidade: quantidade,
             peso_gramas: dados.peso_gramas ? parseFloat(dados.peso_gramas) : null,
             qualidade_casca: dados.qualidade_casca || null

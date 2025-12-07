@@ -1,4 +1,5 @@
 import { galinhaRepository, registroOvoRepository, tratamentoRepository } from '../../infrastructure/config';
+import { toDateLocalNoTZ } from '../../utils';
 
 /**
  * Use Case: Obter Sumário Completo do Galinheiro
@@ -32,7 +33,7 @@ export async function obterSumarioGalinheiro() {
         seteDiasAtras.setDate(hoje.getDate() - 7);
 
         const registrosUltimos7Dias = registrosOvos.filter(registro => {
-            const dataPostura = new Date(registro.data_postura);
+            const dataPostura = toDateLocalNoTZ(registro.data_postura);
             return dataPostura >= seteDiasAtras && dataPostura <= hoje;
         });
 
@@ -96,7 +97,7 @@ export async function obterSumarioGalinheiro() {
         trintaDiasAtras.setDate(hoje.getDate() - 30);
 
         const registrosUltimos30Dias = registrosOvos.filter(registro => {
-            const dataPostura = new Date(registro.data_postura);
+            const dataPostura = toDateLocalNoTZ(registro.data_postura);
             return dataPostura >= trintaDiasAtras && dataPostura <= hoje;
         });
 

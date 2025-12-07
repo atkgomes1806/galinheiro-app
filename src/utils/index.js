@@ -1,6 +1,29 @@
 // src/utils/index.js
+// Datas: helpers timezone-safe (evitam perder 1 dia ao converter)
+export const toDateLocalNoTZ = (dateStr) => {
+    // Se a string já tem tempo, apenas cria Date direto
+    if (dateStr && dateStr.includes('T')) {
+        return new Date(dateStr);
+    }
+    // Força horário meio-dia para evitar offset negativo de timezone
+    return new Date(`${dateStr}T12:00:00`);
+};
+
 export const formatDate = (date) => {
-    return new Date(date).toLocaleDateString('pt-BR');
+    if (!date) return '';
+    // date pode ser Date ou string; usa helper para não perder dia
+    const d = date instanceof Date ? date : toDateLocalNoTZ(date);
+    return d.toLocaleDateString('pt-BR');
+};
+
+export const formatDateBRFromString = (dateStr) => {
+    if (!dateStr) return '';
+    // Prioriza substring do formato YYYY-MM-DD para evitar offset
+    if (!dateStr.includes('T') && dateStr.includes('-')) {
+        const [y, m, d] = dateStr.split('-');
+        return `${d}/${m}/${y}`;
+    }
+    return formatDate(dateStr);
 };
 
 export const capitalizeFirstLetter = (string) => {

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { listarRegistrosOvos } from '../../application/use-cases/listarRegistrosOvos';
 import { listarGalinhas } from '../../application/use-cases/listarGalinhas';
+import { removerRegistroOvo } from '../../application/use-cases/removerRegistroOvo';
+import { formatDateBRFromString } from '../../utils';
 import RegistroOvoForm from '../components/RegistroOvoForm';
 
 const HistoricoPosturaPage = () => {
@@ -43,10 +45,28 @@ const HistoricoPosturaPage = () => {
 
     const carregarRegistros = async () => {
         try {
+            setLoading(true);
+            setError(null);
+
             const registrosData = await listarRegistrosOvos(filtroGalinhaId);
             setRegistros(registrosData);
         } catch (err) {
+            setError(err.message);
             console.error('Erro ao carregar registros:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRemoverRegistro = async (id) => {
+        if (!id) return;
+        const confirmar = window.confirm('Deseja remover este registro de ovo?');
+        if (!confirmar) return;
+        try {
+            await removerRegistroOvo(id);
+            setRegistros((prev) => prev.filter((r) => r.id !== id));
+        } catch (err) {
+            alert(`Erro ao remover: ${err.message}`);
         }
     };
 
@@ -151,6 +171,7 @@ const HistoricoPosturaPage = () => {
                                 <th>Quantidade</th>
                                 <th>Peso (g)</th>
                                 <th>Qualidade da Casca</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -160,7 +181,7 @@ const HistoricoPosturaPage = () => {
                                 return (
                                     <tr key={registro.id}>
                                         <td>
-                                            {new Date(registro.data_postura).toLocaleDateString('pt-BR')}
+                                            {formatDateBRFromString(registro.data_postura)}
                                         </td>
                                         <td>{registro.galinhas?.nome || 'N/A'}</td>
                                         <td>{registro.galinhas?.raca || 'Não especificada'}</td>
@@ -174,6 +195,14 @@ const HistoricoPosturaPage = () => {
                                             <span className={`badge ${badgeClass}`}>
                                                 {registro.qualidade_casca || 'N/A'}
                                             </span>
+                                        </td>
+                                        <td>
+                                            <button
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => handleRemoverRegistro(registro.id)}
+                                            >
+                                                Excluir
+                                            </button>
                                         </td>
                                     </tr>
                                 );
