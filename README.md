@@ -82,8 +82,12 @@ galinheiro-app
   ├── App.jsx                     # Componente principal
   ├── hooks/                      # Hooks customizados
   │   └── useGeolocation.js       # Geolocalização GPS
-  ├── theme/                      # 🎨 Tema centralizado
-  │   └── heatmapColorScheme.js   # Cores e thresholds do heatmap
+  ├── theme/                      # 🎨 Tema centralizado (tokens em JS)
+  │   ├── tokens.js               # Paleta base, tipografia, espaçamentos, sombras
+  │   ├── charts.js               # Paletas de gráficos (heatmap e séries temporais)
+  │   ├── components.js           # Tokens para cards, botões e badges
+  │   ├── index.js                # Barrel export dos tokens
+  │   └── heatmapColorScheme.js   # Reexport de helpers do heatmap (compatibilidade)
   ├── styles/                     # CSS centralizado
   │   ├── globals.css
   │   ├── components.css
@@ -393,6 +397,12 @@ Para detalhes técnicos sobre implementação, formatos e configuração PWA, co
 ## Padrões de CSS
 
 O projeto utiliza um sistema de CSS centralizado para garantir consistência visual:
+
+### Tema (Design Tokens em JS)
+- **Local**: `src/theme/` (`tokens.js`, `charts.js`, `components.js`, `index.js`)
+- **Uso**: importa tokens em JS para gráficos e UI, evitando hardcode de cores/espacamentos
+- **Compat**: `heatmapColorScheme.js` reexporta helpers para manter caminhos legados
+- **CSS alinhado**: variáveis `--primary`, `--gray-*`, `--danger-50` refletem os mesmos valores do tema
 
 ### Estrutura de Estilos
 - **`src/styles/globals.css`**: Variáveis CSS, resets globais, estilos base e componentes gráficos
