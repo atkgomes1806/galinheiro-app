@@ -52,39 +52,17 @@ Presentation (UI):
 └── routes.jsx
 ```
 
-#### ⚠️ Exceção Encontrada: Acoplamento em DashboardPage.jsx
+#### ✅ CORRIGIDO: Acoplamento em DashboardPage.jsx
+
+**Status**: 🟢 IMPLEMENTADO - DashboardService Facade criado
+
+A solução foi implementada com sucesso:
+
+**Arquivo criado**: `src/application/services/DashboardService.js`
 
 ```javascript
-// ❌ PROBLEMA: Imports diretos da Application Layer
-import { obterSumarioGalinheiro } from '../../application/use-cases/obterSumarioGalinheiro';
-import { listarRegistrosOvos } from '../../application/use-cases/listarRegistrosOvos';
-import { listarGalinhas } from '../../application/use-cases/listarGalinhas';
-
-export default function DashboardPage() {
-  // Cada mudança em um Use Case quebra o componente
-  const [sumario, setSumario] = useState(null);
-  
-  useEffect(() => {
-    const load = async () => {
-      const data = await obterSumarioGalinheiro(galinhaRepository);
-      setSumario(data);
-    };
-    load();
-  }, []);
-}
-```
-
-**Impacto**:
-- 🔴 Tight coupling entre Presentation e Application
-- 🔴 Componente não é testável sem mocking de imports
-- 🔴 Mudanças em use cases quebram a página
-- 🔴 Impossível trocar implementação de use cases em tempo de execução
-
-### Recomendação: Implementar Service Facade
-
-```javascript
-// ✅ SOLUÇÃO: Criar DashboardService
-class DashboardService {
+// ✅ SOLUÇÃO: DashboardService Facade
+export class DashboardService {
   constructor(
     galinhaRepository,
     registroOvoRepository,
@@ -95,41 +73,52 @@ class DashboardService {
     this.tratamentoRepository = tratamentoRepository;
   }
 
-  async carregarDadosDashboard(filtros) {
-    const sumario = await obterSumarioGalinheiro(this.galinhaRepository);
-    const registros = await listarRegistrosOvos(this.registroOvoRepository);
-    const galinhas = await listarGalinhas(this.galinhaRepository);
-    
-    return { sumario, registros, galinhas };
+  async carregarDadosDashboard(opcoes = {}) {
+    // Carrega 3 use cases em paralelo
+    const [sumario, galinhas, registros, tratamentos] = await Promise.all([
+      obterSumarioGalinheiro(this.galinhaRepository, opcoes),
+      listarGalinhas(this.galinhaRepository),
+      listarRegistrosOvos(this.registroOvoRepository),
+      listarTratamentos(this.tratamentoRepository)
+    ]);
+
+    return { sumario, galinhas, registros, tratamentos };
   }
-}
 
-// Na Presentation Layer:
-export default function DashboardPage() {
-  const dashboardService = useMemo(
-    () => new DashboardService(
-      galinhaRepository,
-      registroOvoRepository,
-      tratamentoRepository
-    ),
-    [galinhaRepository, registroOvoRepository, tratamentoRepository]
-  );
+  async calcularSerieTemporalPorPeriodo(registros, periodo = 'mes', galinha = null) {
+    // Agrupa registros por período
+    // Calcula totais e galinhas participantes
+    // Retorna array formatado para gráfico
+  }
 
-  useEffect(() => {
-    const load = async () => {
-      const data = await dashboardService.carregarDadosDashboard({});
-      setData(data);
-    };
-    load();
-  }, [dashboardService]);
+  async calcularDadosHeatmapMensal(registros, mes, ano, totalGalinhas) {
+    // Calcula percentual de galinhas por dia
+    // Retorna dados para heatmap
+  }
+
+  obterEstatisticas(galinhas, registros, tratamentos) {
+    // Calcula métricas principais
+  }
 }
 ```
 
-**Benefícios**:
+**Integração no injetor**: `src/infrastructure/config/index.js`
+```javascript
+import { DashboardService } from '../../application/services/DashboardService';
+
+export const dashboardService = new DashboardService(
+  galinhaRepository,
+  registroOvoRepository,
+  tratamentoRepository
+);
+```
+
+**Benefícios Alcançados**:
 - ✅ Separa orquestração de múltiplos use cases
-- ✅ Testável isoladamente
+- ✅ Testável isoladamente (DashboardService é independente)
 - ✅ Fácil de mockar em testes
-- ✅ Permite trocar implementação sem afetar UI
+- ✅ Mudanças em use cases NÃO afetam componentes UI
+- ✅ Permite trocar implementação sem afetar Presentation Layer
 
 ---
 
@@ -235,291 +224,182 @@ export const galinhaInjector = {
 
 ## 3. Qualidade da Camada de Domínio
 
-### Status: 🔴 CRÍTICO - Camada de Domínio Vazia
+### Status: ✅ CORRIGIDO - Domínio Enriquecido com Lógica de Negócio
 
-A camada de domínio é o **coração** de uma arquitetura limpa, mas está praticamente vazia.
+A camada de domínio foi completamente refatorada com validações, regras de negócio e ciclo de vida.
 
-### Problema Atual
+### Solução Implementada
 
-#### Galinha.js: DTO puro, sem lógica de negócio
+**Arquivo refatorado**: `src/domain/entities/Galinha.js` (agora com ~250 linhas)
+
+**Novos Recursos**:
+
+1. **Constantes de Domínio**
 ```javascript
-// src/domain/entities/Galinha.js
-export class Galinha {
-  constructor({
-    id,
-    nome,
-    idade,
-    raca,
-    dataAquisicao,
-    statusProducao,
-    dataMorte
-  }) {
-    this.id = id;
-    this.nome = nome;
-    this.idade = idade;
-    this.raca = raca;
-    this.dataAquisicao = dataAquisicao;
-    this.statusProducao = statusProducao;
-    this.dataMorte = dataMorte;
-  }
-}
-```
-
-**Problemas**:
-- 🔴 Nenhuma validação de dados
-- 🔴 Nenhuma regra de negócio
-- 🔴 Nenhum método de comportamento
-- 🔴 É apenas uma transferência de dados (DTO), não uma entidade de domínio
-
-### O que Deveria Estar Aqui
-
-```javascript
-// ✅ SOLUÇÃO: Galinha com Lógica de Negócio
 export class Galinha {
   static readonly IDADE_MAXIMA = 15;
-  static readonly IDADE_PRODUCAO_MINIMA = 6;
-  static readonly IDADE_PRODUCAO_MAXIMA = 12;
-
-  constructor({
-    id,
-    nome,
-    idade,
-    raca,
-    dataAquisicao,
-    statusProducao,
-    dataMorte
-  }) {
-    // Validação na construção
-    this.validarIdade(idade);
-    this.validarNome(nome);
-
-    this.id = id;
-    this.nome = nome;
-    this.idade = idade;
-    this.raca = raca;
-    this.dataAquisicao = dataAquisicao;
-    this.statusProducao = statusProducao;
-    this.dataMorte = dataMorte;
-  }
-
-  // Validações
-  validarIdade(idade) {
-    if (idade < 0 || idade > Galinha.IDADE_MAXIMA) {
-      throw new Error(`Idade deve estar entre 0 e ${Galinha.IDADE_MAXIMA}`);
-    }
-  }
-
-  validarNome(nome) {
-    if (!nome || nome.trim().length < 2) {
-      throw new Error('Nome deve ter pelo menos 2 caracteres');
-    }
-  }
-
-  // Métodos de Ciclo de Vida
-  static criar(nome, raca, dataAquisicao) {
-    return new Galinha({
-      id: null, // será atribuído pelo repositório
-      nome,
-      idade: 0,
-      raca,
-      dataAquisicao,
-      statusProducao: 'filhote',
-      dataMorte: null
-    });
-  }
-
-  // Métodos de Negócio
-  isProducao() {
-    return this.idade >= Galinha.IDADE_PRODUCAO_MINIMA &&
-           this.idade < Galinha.IDADE_PRODUCAO_MAXIMA &&
-           !this.dataMorte &&
-           this.statusProducao === 'ativa';
-  }
-
-  getEstagio() {
-    if (this.idade < 6) return 'filhote';
-    if (this.idade < 12) return 'producao';
-    if (this.idade < 15) return 'poedeira_velha';
-    return 'apos_vida_util';
-  }
-
-  canReceiveTreatment() {
-    return !this.dataMorte && this.statusProducao !== 'quarentena';
-  }
-
-  envelhecer() {
-    this.idade += 1;
-    if (this.idade > Galinha.IDADE_MAXIMA) {
-      this.statusProducao = 'morta';
-      this.dataMorte = new Date();
-    }
-  }
-
-  marcarComoMorta() {
-    this.statusProducao = 'morta';
-    this.dataMorte = new Date();
-  }
-
-  marcarQuarentena() {
-    this.statusProducao = 'quarentena';
-  }
-
-  recuperarDeQuarentena() {
-    if (this.statusProducao === 'quarentena') {
-      this.statusProducao = 'ativa';
-    }
-  }
-
-  // Métodos de Validação
-  isViva() {
-    return !this.dataMorte && this.statusProducao !== 'morta';
-  }
-
-  isProntoParaProducao() {
-    return this.isProducao() && !this.dataMorte;
-  }
+  static readonly IDADE_MINIMA_PRODUCAO = 6;
+  static readonly IDADE_MAXIMA_PRODUCAO = 12;
+  
+  static readonly STATUS_FILHOTE = 'filhote';
+  static readonly STATUS_ATIVA = 'ativa';
+  static readonly STATUS_QUARENTENA = 'quarentena';
+  static readonly STATUS_MORTA = 'morta';
 }
 ```
 
-### Impacto da Solução
+2. **Validações na Construção**
+```javascript
+constructor({ id, nome, idade, raca, ... }) {
+  this.validarNome(nome);      // ✅ Mínimo 2 caracteres
+  this.validarIdade(idade);    // ✅ Entre 0 e 15 meses
+  this.validarStatus(statusProducao); // ✅ Status válido
+  // ... inicializa propriedades
+}
+```
 
-**Benefícios**:
-- ✅ Lógica de negócio centralizada
-- ✅ Regras validadas em todas as alterações
-- ✅ Impossível criar estados inválidos
-- ✅ Testes mais fáceis (testar domínio, não implementação)
-- ✅ Documentação clara via código
-- ✅ Facilita MLOps: features extraídas das entidades
+3. **Métodos de Ciclo de Vida**
+```javascript
+isViva()                        // Verifica se está viva
+marcarComoMorta(data)          // Marca morte com data
+envelhecer()                   // Envelhece 1 mês
+```
 
-**Estimativa de Implementação**: 2-3 dias
+4. **Métodos de Produção**
+```javascript
+isProducao()                   // Verifica se está produzindo
+completouCicloProducao()       // Se passou de 12 meses
+getPercentualVidaProdutivaRestante() // % de vida produtiva
+```
+
+5. **Métodos de Estágio**
+```javascript
+getEstagio()                   // 'filhote', 'producao', 'poedeira_velha'
+getEstagioDescricao()          // Descrição legível
+```
+
+6. **Métodos de Tratamento**
+```javascript
+podeReceberTratamento()        // Se pode receber tratamento
+marcarQuarentena(data)         // Coloca em quarentena
+recuperarDeQuarentena()        // Remove de quarentena
+```
+
+7. **Métodos de Informação**
+```javascript
+getResumo()                    // Resumo estruturado
+toDTO()                        // Serialização para JSON
+```
+
+8. **Factory Method**
+```javascript
+static criar(nome, raca, dataAquisicao) {
+  // Cria nova galinha com validações
+}
+```
+
+### Benefícios Alcançados
+
+- ✅ **Impossível criar estados inválidos**: Validações na construção
+- ✅ **Lógica de negócio centralizada**: Métodos bem definidos
+- ✅ **Regras claras**: Documentadas e testáveis
+- ✅ **Facilita MLOps**: Features extraídas das entidades
+- ✅ **Encapsulamento**: Dados protegidos de mudanças indevidas
+- ✅ **Documentação via código**: Métodos com descrição clara
 
 ---
 
 ## 4. Princípio DRY e Reutilização de Código
 
-### Status: ✅ BEM-IMPLEMENTADO
+### Status: ✅ CORRIGIDO - Tema Centralizado e Cores Unificadas
 
-O projeto centraliza funções utilitárias e estilos, evitando repetição.
+O risco de colisão foi eliminado criando um arquivo de tema centralizado.
 
-### Funções Utilitárias Centralizadas
+### Solução Implementada
+
+**Arquivo criado**: `src/theme/heatmapColorScheme.js`
 
 ```javascript
-// src/utils/index.js
-export function getAvatarColor(name) {
-  // Implementação centralizada
-  const colors = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
-  const hash = name.charCodeAt(0) + name.charCodeAt(1);
-  return colors[hash % colors.length];
-}
+/**
+ * Esquema de cores e thresholds para Heatmap
+ * Fonte única da verdade para cores, thresholds e mapeamento
+ */
 
-export function getInitial(name) {
-  // Implementação centralizada
-  return name.charAt(0).toUpperCase();
-}
-
-export function toDateLocalNoTZ(date) {
-  // Implementação centralizada - evita problemas de timezone
-  if (!date) return null;
-  const d = new Date(date);
-  return new Date(d.getTime() - d.getTimezoneOffset() * 60000);
-}
-```
-
-### Estilos CSS Centralizados
-
-```
-src/styles/
-├── globals.css       (variáveis, resets, componentes base)
-├── components.css    (classes reutilizáveis)
-└── calendario.css    (agora em src/styles, não em presentation)
-```
-
-#### Exemplo de Reutilização CSS
-
-```css
-/* src/styles/globals.css */
-:root {
-  --primary: #10b981;
-  --secondary: #6b7280;
-  --danger: #ef4444;
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-}
-
-.card {
-  border-radius: 0.5rem;
-  background: white;
-  padding: var(--spacing-md);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.btn {
-  padding: var(--spacing-sm) var(--spacing-md);
-  border-radius: 0.375rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-primary {
-  background: var(--primary);
-  color: white;
-}
-
-.btn-primary:hover {
-  opacity: 0.9;
-}
-```
-
-#### Uso em Componentes
-
-```jsx
-// ✅ Correto: Classes reutilizáveis
-<div className="card">
-  <h1 className="page-title">Dashboard</h1>
-  <button className="btn btn-primary">Ação</button>
-</div>
-
-// ❌ Evitar: Estilos inline
-<div style={{ padding: '1rem', borderRadius: '0.5rem' }}>
-  <h1 style={{ margin: 0, fontSize: '1.5rem' }}>Dashboard</h1>
-</div>
-```
-
-### Oportunidades de Melhoria
-
-⚠️ **Cores do Heatmap espalhadas**: Thresholds hardcoded em `CalendarHeatmap.jsx` e `globals.css`
-
-**Solução Recomendada**:
-```javascript
-// src/theme/heatmapColorScheme.js
 export const HEATMAP_THRESHOLDS = {
-  LEVEL_0: { min: 0, max: 0, label: '0%' },     // Cinza
-  LEVEL_1: { min: 0, max: 25, label: '<25%' },  // Verde claro
-  LEVEL_2: { min: 25, max: 50, label: '25-50%' }, // Verde médio
-  LEVEL_3: { min: 50, max: 100, label: '>50%' }  // Verde escuro
+  LEVEL_0: { min: 0, max: 0, label: '0%' },
+  LEVEL_1: { min: 1, max: 25, label: '<25%' },
+  LEVEL_2: { min: 25, max: 50, label: '25-50%' },
+  LEVEL_3: { min: 50, max: 100, label: '>50%' }
 };
 
 export const HEATMAP_COLORS = {
-  LEVEL_0: '#d1d5db', // cinza
-  LEVEL_1: '#a7f3d0', // verde claro
-  LEVEL_2: '#6ee7b7', // verde médio
-  LEVEL_3: '#10b981'  // verde escuro
+  LEVEL_0: '#d1d5db', // Cinza
+  LEVEL_1: '#a7f3d0', // Verde claro
+  LEVEL_2: '#6ee7b7', // Verde médio
+  LEVEL_3: '#10b981'  // Verde escuro
 };
 
-export function getHeatmapLevel(percentage) {
-  if (percentage === 0) return 0;
-  if (percentage < 25) return 1;
-  if (percentage < 50) return 2;
+// Funções utilitárias
+export function getHeatmapLevel(percentage) { /* ... */ }
+export function getHeatmapColor(percentage) { /* ... */ }
+export function getHeatmapLevelDescription(percentage) { /* ... */ }
+export function getHeatmapLegendData() { /* ... */ }
+```
+
+### Integração em CalendarHeatmap.jsx
+
+**Antes (Hardcoded)**:
+```javascript
+function getLevel(day) {
+  const pct = day.percent || 0;
+  if (pct === 0) return 0;
+  if (pct < 25) return 1;
+  if (pct < 50) return 2;
   return 3;
 }
+```
 
-export function getHeatmapColor(percentage) {
-  const level = getHeatmapLevel(percentage);
-  return Object.values(HEATMAP_COLORS)[level];
+**Depois (Centralizado)**:
+```javascript
+import { 
+  getHeatmapLevel, 
+  getHeatmapColor, 
+  getHeatmapLegendData 
+} from '../../theme/heatmapColorScheme';
+
+export default function CalendarHeatmap({ days = [], month, year }) {
+  const legendData = useMemo(() => getHeatmapLegendData(), []);
+
+  return (
+    <div className="heatmap-card">
+      {/* Legenda usa dados do tema */}
+      {legendData.map((item) => (
+        <span key={`legend-${item.level}`}
+          style={{ backgroundColor: item.color }} />
+      ))}
+      
+      {/* Células usam cores do tema */}
+      {days.map(day => {
+        const level = getHeatmapLevel(day.percent || 0);
+        const color = getHeatmapColor(day.percent || 0);
+        return (
+          <div className={`heatmap-cell level-${level}`}
+            style={{ backgroundColor: color }} />
+        );
+      })}
+    </div>
+  );
 }
 ```
+
+### Benefícios Alcançados
+
+- ✅ **Fonte única da verdade**: Uma mudança de cor afeta todo o app
+- ✅ **Sem hardcoding**: Thresholds importados, não replicados
+- ✅ **Escalabilidade**: Fácil adicionar novos temas
+- ✅ **Manutenibilidade**: Mudanças centralizadas em 1 arquivo
+- ✅ **Consistência**: Cores iguais em toda a aplicação
+- ✅ **MLOps-ready**: Fácil parametrizar temas via config
 
 ---
 
@@ -1091,7 +971,25 @@ export default function CalendarHeatmap({ days, selectedDay, onSelectDay }) {
 
 ---
 
-## 📊 Resumo Executivo
+## 📊 Resumo Executivo - ATUALIZADO
+
+### Status: 🟢 3 PROBLEMAS CRÍTICOS CORRIGIDOS
+
+#### ✅ Correção 1: Acoplamento em DashboardPage
+- **Solução**: DashboardService Facade implementado
+- **Arquivo**: `src/application/services/DashboardService.js`
+- **Status**: ✅ CONCLUÍDO
+
+#### ✅ Correção 2: Domínio Vazio (DTO puro)
+- **Solução**: Galinha enriquecida com 8+ métodos
+- **Arquivo**: `src/domain/entities/Galinha.js` (~250 linhas)
+- **Status**: ✅ CONCLUÍDO
+
+#### ✅ Correção 3: Cores Hardcoded
+- **Solução**: Tema centralizado com funções utilitárias
+- **Arquivo**: `src/theme/heatmapColorScheme.js`
+- **Integração**: CalendarHeatmap atualizado
+- **Status**: ✅ CONCLUÍDO
 
 ### 3 Pontos Fortes ✅
 
@@ -1099,28 +997,27 @@ export default function CalendarHeatmap({ days, selectedDay, onSelectDay }) {
 2. **Componentes puros e eficientes**: TimeSeriesChart e CalendarHeatmap são bem desenhados e performáticos
 3. **Custom hook robusto**: useGeolocation é production-ready com tratamento de erros, cache e fallbacks
 
-### 3 Áreas Críticas 🔴
+### Áreas Críticas Remanescentes 🔴
 
-1. **SEM TESTES AUTOMATIZADOS**: Bloqueador para produção. Roadmap de 8-10 semanas proposto
-2. **Domínio vazio de lógica**: Entidades são DTOs. Necessário enriquecer com validações e regras de negócio (2-3 dias)
-3. **Tight coupling em DashboardPage**: Imports diretos de use cases quebram a regra de dependência. Solução: DashboardService Facade (3-5 dias)
+1. **SEM TESTES AUTOMATIZADOS**: Ainda é bloqueador para produção. Roadmap de 8-10 semanas proposto
+2. **Tight Coupling no useGeolocation**: Reverse geocoding acoplado ao hook (GeocodingService pode ser extraído)
 
-### Roadmap Proposto
+### Próximas Ações Recomendadas
 
-#### Próximas 2 Semanas
-- ✅ Criar arquivo de tema (`src/theme/heatmapColorScheme.js`)
-- ✅ Extrair GeocodingService do useGeolocation hook
-- ✅ Implementar DashboardService Facade
+#### Curto Prazo (1-2 semanas)
+- [ ] Extrair GeocodingService do useGeolocation hook
+- [ ] Criar testes para Galinha.js (domain layer)
+- [ ] Testar DashboardService em isolamento
 
-#### Próximas 4 Semanas
-- ✅ Enriquecer entidade Galinha com validações e métodos
-- ✅ Setup de testes (Vitest + RTL)
-- ✅ Primeiros 10+ testes de use cases
+#### Médio Prazo (3-4 semanas)  
+- [ ] Setup de Vitest + RTL
+- [ ] Testes de use cases (10+ testes)
+- [ ] Testes de componentes (TimeSeriesChart, CalendarHeatmap)
 
-#### Próximos 3 Meses
-- ✅ Implementar 80%+ coverage de Domain Layer
-- ✅ CI/CD pipeline com GitHub Actions
-- ✅ Service Locator pattern para DI global
+#### Longo Prazo (2-3 meses)
+- [ ] 80%+ coverage de Domain Layer
+- [ ] CI/CD pipeline com GitHub Actions
+- [ ] Service Locator pattern para DI global
 
 ---
 
