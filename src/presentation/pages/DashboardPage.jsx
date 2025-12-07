@@ -31,12 +31,23 @@ const DashboardPage = () => {
     }, []);
 
     useEffect(() => {
-        if (!registrosOvos || registrosOvos.length === 0) return;
-        const { serie, total, mediaDiaria, heatmap } = calcularSerie(registrosOvos, filtroGalinha, filtroAno, filtroMes);
+        if (!registrosOvos || registrosOvos.length === 0) {
+            setSerieTemporal([]);
+            setResumoPeriodo({ total: 0, mediaDiaria: 0 });
+            setHeatmapDias([]);
+            return;
+        }
+        const { serie, total, mediaDiaria, heatmap } = calcularSerie(
+            registrosOvos,
+            filtroGalinha,
+            filtroAno,
+            filtroMes,
+            galinhas
+        );
         setSerieTemporal(serie);
         setResumoPeriodo({ total, mediaDiaria });
         setHeatmapDias(heatmap);
-    }, [registrosOvos, filtroGalinha, filtroAno, filtroMes]);
+    }, [registrosOvos, filtroGalinha, filtroAno, filtroMes, galinhas]);
 
     const carregarSumario = async () => {
         try {
@@ -67,7 +78,7 @@ const DashboardPage = () => {
 
     // avatar helpers foram centralizados em src/utils/index.js
 
-    const calcularSerie = (registros, galinhaId, ano, mes) => {
+    const calcularSerie = (registros, galinhaId, ano, mes, galinhasList = []) => {
         const filtered = registros.filter((r) => {
             const d = toDateLocalNoTZ(r.data_postura);
             const sameYear = d.getFullYear() === Number(ano);
@@ -101,14 +112,14 @@ const DashboardPage = () => {
             return { label: String(dia).padStart(2, '0'), value: total };
         });
 
-        const heatmap = buildHeatmapDays(diasNoMes, ano, mes, filtered);
+        const heatmap = buildHeatmapDays(diasNoMes, ano, mes, filtered, galinhasList, galinhaId);
 
         const total = serie.reduce((acc, p) => acc + p.value, 0);
         const diasConsiderados = diasNoMes;
         return { serie, total, mediaDiaria: (total / diasConsiderados).toFixed(2), heatmap };
     };
 
-    const buildHeatmapDays = (diasNoMes, ano, mes, registros) => {
+    const buildHeatmapDays = (diasNoMes, ano, mes, registros, galinhasList = [], galinhaId) => {
         const firstDay = new Date(ano, mes - 1, 1);
         const startWeekday = firstDay.getDay(); // 0 domingo
         const days = [];
@@ -118,12 +129,30 @@ const DashboardPage = () => {
             days.push({ label: '', value: 0 });
         }
 
+        const totalAtivas = galinhaId === 'todas' ? getTotalGalinhasAtivas(galinhasList) : 1;
+
         for (let dia = 1; dia <= diasNoMes; dia++) {
             const dateStr = `${ano}-${String(mes).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
             const matching = registros.filter((r) => toDateLocalNoTZ(r.data_postura).getDate() === dia);
             const value = matching.reduce((acc, r) => acc + (r.quantidade || 0), 0);
             const peso = matching.reduce((acc, r) => acc + (r.peso_gramas || 0), 0);
-            days.push({ label: dia, value, peso: peso > 0 ? peso.toFixed(1) : null, date: dateStr });
+            const hens = Array.from(
+                new Set(
+                    matching
+                        .map((r) => resolveHenName(r))
+                        .filter(Boolean)
+                )
+            );
+            const percent = totalAtivas > 0 ? Math.min(100, (hens.length / totalAtivas) * 100) : 0;
+
+            days.push({
+                label: dia,
+                value,
+                peso: peso > 0 ? peso.toFixed(1) : null,
+                date: dateStr,
+                galinhas: hens,
+                percent
+            });
         }
 
         // completar para múltiplos de 7
@@ -520,5 +549,16 @@ const DashboardPage = () => {
         </div>
     );
 };
+
+function getTotalGalinhasAtivas(lista = []) {
+    if (!Array.isArray(lista) || lista.length === 0) return 0;
+    const ativas = lista.filter((g) => g.ativa !== false && g.status !== 'inativa');
+    return ativas.length > 0 ? ativas.length : lista.length;
+}
+
+function resolveHenName(registro) {
+    if (!registro) return null;
+    return registro.galinha_nome || registro.nome_galinha || registro?.galinhas?.nome || registro.nome || null;
+}
 
 export default DashboardPage;

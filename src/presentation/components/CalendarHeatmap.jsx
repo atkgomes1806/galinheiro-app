@@ -10,13 +10,14 @@ const CalendarHeatmap = ({ days = [], month, year }) => {
             <div className="heatmap-legend">
                 <span>{monthLabel}</span>
                 <div className="legend-scale">
-                    <span>0</span>
+                    <span>0%</span>
                     <div className="legend-bar">
                         <span className="legend-stop level-0"></span>
                         <span className="legend-stop level-1"></span>
                         <span className="legend-stop level-2"></span>
+                        <span className="legend-stop level-3"></span>
                     </div>
-                    <span>peso</span>
+                    <span>100%</span>
                 </div>
             </div>
             <div className="heatmap-grid">
@@ -27,11 +28,12 @@ const CalendarHeatmap = ({ days = [], month, year }) => {
                     <div key={wIdx} className="heatmap-week">
                         {week.map((day, dIdx) => {
                             const level = getLevel(day);
+                            const tooltip = buildTooltip(day);
                             return (
                                 <div
                                     key={`${wIdx}-${dIdx}`}
                                     className={`heatmap-cell level-${level}`}
-                                    title={day.date ? `${formatDateBRFromString(day.date)}: ${day.value || 0} ovo(s)${day.peso ? ` | ${day.peso}g` : ''}` : ''}
+                                    title={tooltip}
                                 >
                                     {day.label || ''}
                                 </div>
@@ -44,11 +46,24 @@ const CalendarHeatmap = ({ days = [], month, year }) => {
     );
 };
 
+function buildTooltip(day) {
+    if (!day || !day.date) return '';
+    const dateLabel = formatDateBRFromString(day.date);
+    const percentLabel = day.percent !== undefined ? `${Math.round(day.percent)}%` : '';
+    const hensList = day.galinhas?.length ? day.galinhas.join(', ') : '';
+    const eggsLabel = `${day.value || 0} ovo(s)`;
+    const percentText = percentLabel ? ` - ${percentLabel} das galinhas` : '';
+    const hensText = hensList ? `\n${hensList}` : '';
+    return `${dateLabel}: ${eggsLabel}${percentText}${hensText}`;
+}
+
 function getLevel(day) {
     if (!day || !day.date) return 0;
-    if (day.value === 0) return 0;
-    if (day.peso && day.peso >= 60) return 2;
-    return 1;
+    const pct = day.percent || 0;
+    if (pct === 0) return 0;
+    if (pct < 25) return 1;
+    if (pct < 50) return 2;
+    return 3;
 }
 
 function chunkIntoWeeks(days) {

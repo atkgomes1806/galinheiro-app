@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 const TimeSeriesChart = ({ data = [], height = 240, color = 'var(--primary)' }) => {
     if (!data || data.length === 0) {
         return <div className="timeseries-empty">Sem dados para o período selecionado.</div>;
     }
+
+    const [tooltip, setTooltip] = useState(null);
 
     const paddingX = 24;
     const paddingY = 20;
@@ -46,7 +48,12 @@ const TimeSeriesChart = ({ data = [], height = 240, color = 'var(--primary)' }) 
                 />
                 {/* Pontos */}
                 {points.map((p, idx) => (
-                    <g key={idx}>
+                    <g
+                        key={idx}
+                        onMouseEnter={() => setTooltip({ x: p.x, y: p.y, item: data[idx] })}
+                        onMouseLeave={() => setTooltip(null)}
+                        className="timeseries-point-hit"
+                    >
                         <circle cx={p.x} cy={p.y} r="2.2" fill={color} />
                         <text x={p.x} y={p.y - 6} className="timeseries-point-label">
                             {data[idx].value}
@@ -65,6 +72,21 @@ const TimeSeriesChart = ({ data = [], height = 240, color = 'var(--primary)' }) 
                     </text>
                 ))}
             </svg>
+
+            {tooltip && tooltip.item && (
+                <div
+                    className="timeseries-tooltip"
+                    style={{ left: tooltip.x, top: tooltip.y - 10 }}
+                >
+                    <div className="tooltip-line"><strong>{tooltip.item.label}</strong></div>
+                    <div className="tooltip-line">{tooltip.item.value} ovo(s)</div>
+                    {tooltip.item.galinhas?.length > 0 && (
+                        <div className="tooltip-line small">
+                            {tooltip.item.galinhas.join(', ')}
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
