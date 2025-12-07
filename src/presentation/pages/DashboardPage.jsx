@@ -6,6 +6,7 @@ import { listarGalinhas } from '../../application/use-cases/listarGalinhas';
 import { getAvatarColor, getInitial, toDateLocalNoTZ } from '../../utils';
 import WeatherCard from '../components/WeatherCard';
 import TimeSeriesChart from '../components/TimeSeriesChart';
+import CalendarHeatmap from '../components/CalendarHeatmap';
 
 const DashboardPage = () => {
     const [sumario, setSumario] = useState(null);
@@ -21,6 +22,7 @@ const DashboardPage = () => {
     const [filtroMes, setFiltroMes] = useState(''); // vazio = visão anual
     const [serieTemporal, setSerieTemporal] = useState([]);
     const [resumoPeriodo, setResumoPeriodo] = useState({ total: 0, mediaDiaria: 0 });
+    const [heatmapDias, setHeatmapDias] = useState([]);
     const [fabExpanded, setFabExpanded] = useState(false);
 
     useEffect(() => {
@@ -30,9 +32,10 @@ const DashboardPage = () => {
 
     useEffect(() => {
         if (!registrosOvos || registrosOvos.length === 0) return;
-        const { serie, total, mediaDiaria } = calcularSerie(registrosOvos, filtroGalinha, filtroAno, filtroMes);
+        const { serie, total, mediaDiaria, heatmap } = calcularSerie(registrosOvos, filtroGalinha, filtroAno, filtroMes);
         setSerieTemporal(serie);
         setResumoPeriodo({ total, mediaDiaria });
+        setHeatmapDias(heatmap);
     }, [registrosOvos, filtroGalinha, filtroAno, filtroMes]);
 
     const carregarSumario = async () => {
@@ -85,7 +88,7 @@ const DashboardPage = () => {
 
             const total = serie.reduce((acc, p) => acc + p.value, 0);
             const diasAno = 365;
-            return { serie, total, mediaDiaria: (total / diasAno).toFixed(2) };
+            return { serie, total, mediaDiaria: (total / diasAno).toFixed(2), heatmap: [] };
         }
 
         // visão mensal: dias do mês selecionado
@@ -98,9 +101,37 @@ const DashboardPage = () => {
             return { label: String(dia).padStart(2, '0'), value: total };
         });
 
+        const heatmap = buildHeatmapDays(diasNoMes, ano, mes, filtered);
+
         const total = serie.reduce((acc, p) => acc + p.value, 0);
         const diasConsiderados = diasNoMes;
-        return { serie, total, mediaDiaria: (total / diasConsiderados).toFixed(2) };
+        return { serie, total, mediaDiaria: (total / diasConsiderados).toFixed(2), heatmap };
+    };
+
+    const buildHeatmapDays = (diasNoMes, ano, mes, registros) => {
+        const firstDay = new Date(ano, mes - 1, 1);
+        const startWeekday = firstDay.getDay(); // 0 domingo
+        const days = [];
+
+        // preencher espaços antes do dia 1
+        for (let i = 0; i < startWeekday; i++) {
+            days.push({ label: '', value: 0 });
+        }
+
+        for (let dia = 1; dia <= diasNoMes; dia++) {
+            const dateStr = `${ano}-${String(mes).padStart(2, '0')}-${String(dia).padStart(2, '0')}`;
+            const matching = registros.filter((r) => toDateLocalNoTZ(r.data_postura).getDate() === dia);
+            const value = matching.reduce((acc, r) => acc + (r.quantidade || 0), 0);
+            const peso = matching.reduce((acc, r) => acc + (r.peso_gramas || 0), 0);
+            days.push({ label: dia, value, peso: peso > 0 ? peso.toFixed(1) : null, date: dateStr });
+        }
+
+        // completar para múltiplos de 7
+        while (days.length % 7 !== 0) {
+            days.push({ label: '', value: 0 });
+        }
+
+        return days;
     };
 
     if (loading) {
@@ -378,7 +409,9 @@ const DashboardPage = () => {
                     </div>
                 </div>
 
-                <TimeSeriesChart data={serieTemporal} />
+                {filtroMes
+                    ? <CalendarHeatmap days={heatmapDias} month={filtroMes || ''} year={filtroAno} />
+                    : <TimeSeriesChart data={serieTemporal} />}
             </div>
 
             {/* Seção: Top Performers */}

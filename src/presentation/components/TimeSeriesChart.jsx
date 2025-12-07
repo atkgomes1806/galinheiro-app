@@ -7,7 +7,8 @@ const TimeSeriesChart = ({ data = [], height = 240, color = 'var(--primary)' }) 
 
     const paddingX = 24;
     const paddingY = 20;
-    const width = 100;
+    const baseSegment = 10; // largura mínima entre pontos
+    const width = Math.max(120, paddingX * 2 + baseSegment * Math.max(1, data.length - 1));
     const maxVal = Math.max(...data.map((d) => d.value), 1);
     const stepX = data.length > 1 ? (width - paddingX * 2) / (data.length - 1) : 0;
 
@@ -31,7 +32,7 @@ const TimeSeriesChart = ({ data = [], height = 240, color = 'var(--primary)' }) 
                 <polyline
                     fill="none"
                     stroke={color}
-                    strokeWidth="2.5"
+                    strokeWidth="1.6"
                     points={polylinePoints}
                     strokeLinejoin="round"
                     strokeLinecap="round"

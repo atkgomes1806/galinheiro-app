@@ -52,3 +52,20 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .timeseries-x-label{font-size:9px;text-anchor:middle;fill:var(--gray-500);}
 .timeseries-empty{padding:12px;color:var(--gray-500);font-size:14px;}
 @media (max-width:768px){.timeseries-header{flex-direction:column;align-items:flex-start;}.timeseries-filters{width:100%;}}
+
+/* Heatmap mensal */
+.heatmap-card{margin-top:12px;}
+.heatmap-legend{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;font-size:14px;color:var(--gray-700);}
+.legend-scale{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--gray-500);}
+.legend-bar{display:flex;gap:2px;align-items:center;}
+.legend-stop{width:18px;height:10px;border-radius:2px;display:inline-block;}
+.legend-stop.level-0{background:#f1f5f9;border:1px solid #e2e8f0;}
+.legend-stop.level-1{background:#a7f3d0;}
+.legend-stop.level-2{background:#34d399;}
+.heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:12px;}
+.heatmap-weekday{color:var(--gray-500);text-align:center;}
+.heatmap-week{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.heatmap-cell{aspect-ratio:1;border-radius:6px;border:1px solid #e2e8f0;font-size:11px;color:var(--gray-700);display:flex;align-items:center;justify-content:center;}
+.heatmap-cell.level-0{background:#f8fafc;color:transparent;}
+.heatmap-cell.level-1{background:#a7f3d0;color:#065f46;font-weight:600;}
+.heatmap-cell.level-2{background:#34d399;color:white;font-weight:700;}
