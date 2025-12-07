@@ -48,8 +48,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 .timeseries-summary h2{margin:4px 0 0;font-size:22px;}
 .timeseries-chart{width:100%;overflow-x:auto;}
 .timeseries-chart svg{width:100%;height:260px;}
-.timeseries-point-label{font-size:8px;text-anchor:middle;fill:var(--gray-500);}
-.timeseries-x-label{font-size:9px;text-anchor:middle;fill:var(--gray-500);}
+.timeseries-point-label{font-size:10px;text-anchor:middle;fill:var(--gray-700);font-weight:600;}
+.timeseries-x-label{font-size:10px;text-anchor:middle;fill:var(--gray-500);}
 .timeseries-empty{padding:12px;color:var(--gray-500);font-size:14px;}
 @media (max-width:768px){.timeseries-header{flex-direction:column;align-items:flex-start;}.timeseries-filters{width:100%;}}
 
