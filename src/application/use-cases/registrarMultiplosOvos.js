@@ -75,7 +75,7 @@ export async function registrarMultiplosOvos(galinhaId, detalhesOvos, repositori
             };
 
             // Inserir no banco
-            const novoRegistro = await repositorio.criar(dadosNormalizados);
+            const novoRegistro = await repositorio.createRegistro(dadosNormalizados);
             resultado.sucesso++;
             resultado.registros.push(novoRegistro);
 
