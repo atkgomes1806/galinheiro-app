@@ -1,119 +1,88 @@
-# 📜 Scripts e Testes - Galinheiro App
+# 📜 Scripts e Testes – Galinheiro App
 
-Esta pasta contém scripts auxiliares e arquivos de teste para o projeto Galinheiro App.
+Esta pasta contém scripts utilitários e arquivos de teste rápido (smoke / sandbox) para funcionalidades do projeto. O foco atual está em integrações com Supabase e geolocalização (Open-Meteo + Reverse Geocoding). Conteúdo legado relacionado a backend antigo/Embrapa será removido gradualmente.
 
-## 🧪 Arquivos de Teste
+## 🗂️ Visão Geral dos Arquivos Atuais
+
+| Arquivo | Tipo | Status | Descrição rápida |
+|---------|------|--------|------------------|
+| `test-connection.js` | Node | Ativo | Smoke test de leitura nas tabelas Supabase (`galinhas`, `registros_ovos`, `tratamentos`). |
+| `test-gps-integration.html` | HTML | Ativo | Sandbox manual para testar geolocalização, reverse geocoding (BigDataCloud) e cache localStorage. |
+| `test-backend-only.js` | Node | Legado | Inicializa backend antigo e valida endpoint de clima. Mantido provisoriamente para referência. |
+| `start-backend.ps1` | PowerShell | Legado | Script de conveniência para subir backend descontinuado. |
+| `README.md` | Markdown | Ativo | Este documento. |
+
+## ✅ Scripts Ativos
 
 ### `test-connection.js`
-**Objetivo**: Teste de conectividade básica do projeto
-- Verifica se o backend responde corretamente
-- Testa endpoints básicos da aplicação
-- Valida conexão entre frontend e backend
-- **Uso**: `node scripts/test-connection.js`
-
-### `test-embrapa-api.js`
-**Objetivo**: Teste comparativo OAuth 2.0 vs Bearer Token
-- Testa autenticação OAuth 2.0
-- Testa token Bearer direto
-- Compara performance e confiabilidade
-- **Uso**: `node scripts/test-embrapa-api.js`
-
-### `test-fallback-strategy.js` 🆕
-**Objetivo**: Teste da estratégia de fallback Bearer → OAuth
-- Simula Bearer Token válido e inválido
-- Demonstra fallback automático para OAuth
-- Testa endpoint do backend com fallback
-- **Uso**: `node scripts/test-fallback-strategy.js`
-
-### `test-real-api.js` 
-**Objetivo**: Teste completo da API usando token Bearer real
-- Testa health check da API
-- Lista todas as variáveis disponíveis
-- Obtém dados reais de temperatura e umidade de São Paulo
-- Demonstra que a API funciona 100% com token Bearer
-- **Uso**: `node scripts/test-real-api.js`
-
-## 🔧 Scripts de Automação
-
-### `start-backend.ps1`
-**Objetivo**: Script PowerShell para iniciar o backend facilmente
-- Navega automaticamente para o diretório do backend
-- Verifica se as dependências estão instaladas
-- Valida arquivo .env
-- Inicia o servidor backend na porta 3002
-- **Uso**: `PowerShell -ExecutionPolicy Bypass -File "scripts/start-backend.ps1"`
-
-## 🚀 Como Usar
-
-### 1. Testar Conectividade Básica
-```bash
-cd C:\Projetos\galinheiro-app\galinheiro-app
+Objetivo: validar rapidamente se a configuração Supabase (chaves / URL) está funcional.
+Testes executados:
+- Seleção das primeiras 5 galinhas.
+- Seleção dos primeiros registros de ovos com join simples.
+- Seleção de tratamentos.
+Execução:
+```powershell
 node scripts/test-connection.js
 ```
+Possíveis erros esperados:
+- Falha de autenticação (verificar variáveis de ambiente ou arquivo de configuração do cliente).
+- Tabelas ausentes (rodar migrações ou criar manualmente).
 
-### 2. Testar Estratégia de Fallback (recomendado) 🆕
-```bash
-cd C:\Projetos\galinheiro-app\galinheiro-app
-node scripts/test-fallback-strategy.js
-```
+### `test-gps-integration.html`
+Uso: abrir diretamente no navegador (duplo clique) ou servir via Vite para evitar restrições locais.
+Funcionalidades validadas:
+- Suporte do browser a `navigator.geolocation`.
+- Solicitação de coordenadas com alta precisão.
+- Reverse geocoding (BigDataCloud API).
+- Armazenamento e limpeza de cache em `localStorage`.
+Checklist manual:
+1. Permitir geolocalização quando solicitado.
+2. Confirmar precisão (< 100m desejável em desktop / < 30m em mobile GPS).
+3. Verificar endereço retornado (cidade / subdivisão / país).
+4. Testar persistência do cache e limpeza.
 
-### 3. Testar Comparativo OAuth vs Bearer
-```bash
-cd C:\Projetos\galinheiro-app\galinheiro-app
-node scripts/test-embrapa-api.js
-```
+## 🧩 Conteúdo Legado (Manutenção Temporária)
+Os arquivos abaixo referem-se a uma fase anterior com backend custom e integração Embrapa. Planejado para remoção após migração total para fontes abertas (Open-Meteo) e Supabase.
 
-### 4. Testar API Real (Token Bearer)  
-```bash
-cd C:\Projetos\galinheiro-app\galinheiro-app
-node scripts/test-real-api.js
-```
+- `test-backend-only.js`: dependente de diretório `backend` que não faz parte da estrutura corrente.
+- `start-backend.ps1`: script de inicialização de servidor Node antigo.
 
-### 3. Iniciar Backend
+Se precisar repetir testes históricos, consulte documentação em `docs/TESTES_CLIMAPI_REAL.md` e `docs/BACKEND_PROXY_IMPLEMENTATION.md`.
+
+## 🚀 Execução Rápida (Windows PowerShell)
 ```powershell
-cd C:\Projetos\galinheiro-app\galinheiro-app
-PowerShell -ExecutionPolicy Bypass -File "scripts/start-backend.ps1"
-```
+# Teste Supabase
+node scripts/test-connection.js
 
-### 4. Iniciar Frontend (separadamente)
-```bash
-cd C:\Projetos\galinheiro-app\galinheiro-app
+# Abrir sandbox GPS (opcional via dev server)
 npm run dev
+# Depois acessar: http://localhost:5173/scripts/test-gps-integration.html (se exposto) ou abrir o arquivo direto.
 ```
 
-## 📋 Resultados Esperados
+## 🛠️ Boas Práticas ao Adicionar Novos Scripts
+- Nome descritivo: `acao-detalhe.js` (ex: `seed-galinhas.js`).
+- Evitar credenciais hardcoded: usar variáveis de ambiente ou módulo de configuração.
+- Saída clara: usar ícones simples (✅ ❌ ⚠️) para status.
+- Idempotência: permitir reexecução sem corromper dados.
+- Documentar intenção no topo do arquivo.
 
-### ✅ API Real Funcionando
-- **Temperature**: Status 200 ✅ (14.6°C de São Paulo)
-- **Humidity**: Status 200 ✅ (87% de São Paulo)  
-- **Health Check**: Status 204 ✅
-- **Variables**: Status 200 ✅ (19 variáveis disponíveis)
+## 🔐 Segurança & Dados Sensíveis
+- Nunca commitar tokens ou chaves privadas.
+- Verificar antes de compartilhar logs: podem conter IDs internos.
+- Para reproduções externas, criar scripts de mock em vez de expor tabelas reais.
 
-### 🎯 Dashboard Operacional
-- Card de clima mostrando dados reais da Embrapa
-- Atualização automática a cada 30 minutos
-- Avaliação das condições para o galinheiro
-- Fallback para dados simulados se API falhar
+## 📚 Referências Relacionadas
+- `docs/GPS-INTEGRATION.md` – Detalhes do hook e lógica de geolocalização.
+- `docs/ICONS-IMPLEMENTATION.md` – PWA e icons.
+- `docs/TESTES_CLIMAPI_REAL.md` – Histórico de testes (legado Embrapa).
+- `docs/CORS_PROBLEM.md` – Incidentes anteriores e solução (legado).
 
-## 🔑 Credenciais
-
-### Token Bearer (Funciona)
-```
-724ecc90-70b1-36c1-b573-c5b01d6173ea
-```
-
-### OAuth 2.0 (Limitado)
-- **Consumer Key**: `Gu1cl2cXpRt8mPwOw0IjntwrnZsa`
-- **Consumer Secret**: `4kVqfR7tip5lm2rPKfKuj3gofFoa`
-- **Status**: Autentica OK, mas dados retornam 403 Forbidden
-
-## 📚 Documentação Relacionada
-
-- `docs/TESTES_CLIMAPI_REAL.md` - Log completo de todos os testes realizados
-- `docs/BACKEND_PROXY_IMPLEMENTATION.md` - Implementação do backend proxy
-- `docs/CORS_PROBLEM.md` - Resolução de problemas de CORS
+## 🔮 Próximos Passos Sugeridos
+- Script de seed inicial Supabase (`seed-inicial.js`).
+- Script de exportação CSV (produção de ovos mensal).
+- Script de limpeza de registros de teste (`purge-test-data.js`).
+- Automação de verificação de integridade (counts esperados vs reais).
 
 ---
-
-*Scripts criados e testados em 9 de novembro de 2025*
-*API ClimAPI da Embrapa - Dados climáticos reais para agricultura*
+Atualizado em: 20/11/2025
+Estado: Foco atual em Supabase + GPS. Backend custom descontinuado.
