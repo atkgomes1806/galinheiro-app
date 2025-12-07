@@ -4,6 +4,9 @@ Este projeto é uma aplicação React chamada "galinheiro-app", que consome dado
 
 ## ✨ Destaques Recentes
 
+- ✅ **Gráficos de Séries Temporais (Dezembro 2025)**: Dashboard com visualização de produção mensal/anual
+- ✅ **Heatmap Mensal (Dezembro 2025)**: Calendário com cores baseadas em % de galinhas produzindo
+- ✅ **Tooltips Interativos (Dezembro 2025)**: Informações ao passar o mouse sobre pontos do gráfico e heatmap
 - ✅ **Geolocalização GPS (Novembro 2025)**: Dados climáticos baseados na localização do usuário
 - ✅ **Organização Scripts (Novembro 2025)**: Pasta `/scripts/` centralizada com testes e utilitários
 - ✅ **Refatoração Completa (Novembro 2025)**: Centralização de CSS e funções utilitárias
@@ -60,12 +63,15 @@ galinheiro-app
     │   └── index.js              # Funções utilitárias centralizadas
     ├── presentation
     │   ├── components            # Componentes da interface
-    │   │   ├── GalinhasList.jsx      # Lista de galinhas
-    │   │   ├── GalinhaForm.jsx       # Formulário de galinha
-    │   │   ├── TratamentosList.jsx   # Lista de tratamentos
-    │   │   ├── TratamentoForm.jsx    # Formulário de tratamento
-    │   │   ├── RegistroOvoForm.jsx   # Formulário de registro de ovos
-    │   │   └── RequireAuth.jsx       # Componente de autenticação
+    │   │   ├── TimeSeriesChart.jsx      # 🆕 Gráfico de série temporal com tooltips
+    │   │   ├── CalendarHeatmap.jsx      # 🆕 Heatmap mensal com % de hens
+    │   │   ├── WeatherCard.jsx          # Card de clima com GPS
+    │   │   ├── GalinhasList.jsx         # Lista de galinhas
+    │   │   ├── GalinhaForm.jsx          # Formulário de galinha
+    │   │   ├── TratamentosList.jsx      # Lista de tratamentos
+    │   │   ├── TratamentoForm.jsx       # Formulário de tratamento
+    │   │   ├── RegistroOvoForm.jsx      # Formulário de registro de ovos
+    │   │   └── RequireAuth.jsx          # Componente de autenticação
     │   ├── pages                  # Páginas da aplicação
     │   │   ├── DashboardPage.jsx     # Dashboard principal
     │   │   ├── GalinhasPage.jsx      # Gestão de galinhas
@@ -353,18 +359,52 @@ Para detalhes técnicos sobre implementação, formatos e configuração PWA, co
 - **`docs/ICONS-IMPLEMENTATION.md`**: Guia completo de ícones e PWA
 - **`public/assets/icons/site.webmanifest`**: Configuração PWA
 
-## 🎨 Padrões de CSS
+## Padrões de CSS
 
 O projeto utiliza um sistema de CSS centralizado para garantir consistência visual:
 
 ### Estrutura de Estilos
-- **`src/styles/globals.css`**: Variáveis CSS, resets globais e estilos base
+- **`src/styles/globals.css`**: Variáveis CSS, resets globais, estilos base e componentes gráficos
 - **`src/styles/components.css`**: Classes reutilizáveis para componentes
+
+### Novos Estilos para Gráficos (Dezembro 2025)
+
+#### Time Series Chart
+```css
+.timeseries-chart          /* Container com overflow-x */
+.timeseries-point-hit      /* Cursor pointer nos pontos */
+.timeseries-tooltip        /* Tooltip com dark theme */
+.timeseries-point-label    /* Labels dos valores */
+.timeseries-x-label        /* Labels do eixo X */
+```
+
+**Funcionalidades**:
+- ✨ Gráfico com série temporal anual/mensal
+- 🎯 Pontos interativos com hover
+- 💬 Tooltips com data, valor e nomes de galinhas
+- 📊 Linha com área preenchida
+- 🎨 Cores tema verde primary
+
+#### Calendar Heatmap
+```css
+.heatmap-card              /* Container do heatmap */
+.heatmap-legend            /* Legenda com escala 0-100% */
+.heatmap-cell.level-0/1/2/3 /* 4 níveis de intensidade */
+.legend-stop               /* Indicadores de cor na legenda */
+```
+
+**Funcionalidades**:
+- 📅 Calendário mensal com 7 dias por semana
+- 🎯 Cores baseadas em % de galinhas produzindo (0%, 25%, 50%, 100%)
+- 💬 Tooltips com dia, total de ovos, % participação e nomes de galinhas
+- 🖱️ Cursor pointer e visual interativo
+- 🌿 Paleta de cores verde em 4 intensidades
 
 ### Convenções de Nomenclatura
 - **Classes semânticas**: Nomes descritivos (`.card`, `.btn-primary`, `.page-header`)
 - **Modificadores**: Sufixos para variações (`.btn-outline`, `.badge-warning`)
 - **Estados**: Prefixos para estados (`.nav-item-active`, `.fab-rotate`)
+- **Componentes específicos**: Prefixo do componente (`.timeseries-*`, `.heatmap-*`)
 
 ### Classes Principais
 ```css
@@ -378,6 +418,10 @@ O projeto utiliza um sistema de CSS centralizado para garantir consistência vis
 
 /* Navegação */
 .app-nav, .nav-item, .nav-item-active
+
+/* Gráficos (Novo) */
+.timeseries-chart, .timeseries-tooltip
+.heatmap-card, .heatmap-cell, .heatmap-legend
 
 /* Componentes específicos */
 .kpi-card, .avatar, .badge, .fab-root
@@ -415,6 +459,84 @@ O projeto utiliza um sistema de CSS centralizado para garantir consistência vis
 
 ### Plano Detalhado
 Para mais detalhes sobre a refatoração, consulte `docs/REFACTORING_PLAN.md`.
+
+## 📊 Melhorias do Dashboard - Dezembro 2025
+
+### Gráficos de Série Temporal
+O dashboard agora exibe a **evolução da postura das galinhas** com dois modos de visualização:
+
+#### Visão Anual (Gráfico de Linha)
+- 📈 **Produção por mês** ao longo do ano
+- 📊 Linha com preenchimento de área (visual agradável)
+- 🎯 Pontos interativos com valores
+- 💬 **Tooltips ao passar o mouse** mostrando:
+  - Mês
+  - Total de ovos
+  - Nomes das galinhas que produziram
+
+#### Visão Mensal (Heatmap)
+- 📅 **Calendário mensal** com células coloridas
+- 🎨 **4 cores** representando % de galinhas produzindo:
+  - Cinza claro: 0% (nenhuma galinha produziu)
+  - Verde claro: <25% (poucas galinhas)
+  - Verde médio: 25-50% (metade do plantel)
+  - Verde escuro: >50% (maioria produzindo)
+- 💬 **Tooltips com informações detalhadas**:
+  - Data do dia
+  - Total de ovos
+  - Percentual de galinhas do plantel que participaram
+  - Nomes das galinhas que produziram
+
+### Filtros Disponíveis
+- **Galinha**: Selecione uma galinha específica ou "Todas"
+- **Ano**: Escolha o ano para análise
+- **Período**: Visualize ano inteiro ou mês específico
+
+### Resumo de Dados
+- **Total no período**: Soma de todos os ovos
+- **Média diária**: Ovos por dia (calculada automaticamente)
+
+### Componentes Utilizados
+- **TimeSeriesChart**: Gráfico de série temporal customizado em SVG
+- **CalendarHeatmap**: Calendário mensal com cores dinâmicas
+- **DashboardPage**: Lógica de cálculo e agregação de dados
+
+### Funcionamento Técnico
+
+#### Cálculo da Série Temporal
+```javascript
+// Anual: 12 meses
+const serie = [
+  { label: "01", value: 45 },  // Janeiro: 45 ovos
+  { label: "02", value: 52 },  // Fevereiro: 52 ovos
+  // ...
+]
+
+// Mensal: dias do mês
+const serie = [
+  { label: "01", value: 3 },   // 1º: 3 ovos
+  { label: "02", value: 4 },   // 2º: 4 ovos
+  // ...
+]
+```
+
+#### Cálculo do Heatmap
+```javascript
+// Para cada dia do mês:
+{
+  label: 15,                    // Número do dia
+  value: 8,                     // Total de ovos
+  percent: 66,                  // % de galinhas que produziram
+  galinhas: ["Amelinha", "Marisol"], // Nomes das galinhas
+  date: "2025-12-15"           // Data formatada
+}
+```
+
+**Lógica de Percentual**:
+- Conta quantas galinhas diferentes produziram naquele dia
+- Divide pelo total de galinhas ativas no periodo
+- Multiplica por 100 para obter percentual
+- Resultado de 0-100% mapeia para cores level-0 até level-3
 
 ## 🏗️ Arquitetura e Melhores Práticas
 
@@ -615,11 +737,33 @@ BigDataCloud API (Reverse Geocoding - opcional)
 - [ ] Implementar testes automatizados (Jest + React Testing Library)
 - [ ] Adicionar TypeScript para melhor type safety
 - [ ] Criar sistema de notificações em tempo real
-- [ ] Implementar PWA (Progressive Web App)
-- [ ] Adicionar gráficos e dashboards avançados
 - [ ] Otimizar performance com lazy loading
 
+### 📊 Melhorias nos Gráficos
+- [ ] **Comparação anual**: Visualizar múltiplos anos lado a lado
+- [ ] **Filtros por raça de galinha**: Análise por tipo de galinha
+- [ ] **Gráficos adicionais**: Pizza (top produtoras), barras (semanal)
+- [ ] **Export de dados**: Baixar gráficos em PDF/PNG
+- [ ] **Análise de tendências**: Linha de tendência no gráfico temporal
+
 ### 📍 Melhorias GPS e Clima
+- [ ] **Histórico de localizações** utilizadas pelo usuário
+- [ ] **Múltiplas localizações salvas** com nomes personalizados
+- [ ] **Comparação climática** entre diferentes regiões
+- [ ] **Notificações baseadas em localização** (alertas específicos por região)
+- [ ] **Integração com mapas** visuais (Google Maps/OpenStreetMap)
+- [ ] **Precisão configurável** (alta precisão vs economia de bateria)
+- [ ] **Histórico de dados climáticos** com gráficos temporais
+- [ ] **Previsão estendida** (até 15 dias)
+- [ ] **Alertas climáticos avançados** (geadas, tempestades, etc.)
+
+### 🔧 Infraestrutura
+- [ ] Expandir testes automatizados para APIs climáticas
+- [ ] Implementar monitoramento de uptime das APIs
+- [ ] Adicionar alertas por email/SMS para condições críticas
+- [ ] Cache inteligente com sincronização offline
+- [ ] Compressão e otimização de dados meteorológicos
+
 - [ ] **Histórico de localizações** utilizadas pelo usuário
 - [ ] **Múltiplas localizações salvas** com nomes personalizados
 - [ ] **Comparação climática** entre diferentes regiões
