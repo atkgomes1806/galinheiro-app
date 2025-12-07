@@ -4,6 +4,7 @@ Este projeto é uma aplicação React chamada "galinheiro-app", que consome dado
 
 ## ✨ Destaques Recentes
 
+- ✅ **Correções Arquiteturais (Dezembro 2025)**: DashboardService Facade + Domínio enriquecido + Tema centralizado
 - ✅ **Gráficos de Séries Temporais (Dezembro 2025)**: Dashboard com visualização de produção mensal/anual
 - ✅ **Heatmap Mensal (Dezembro 2025)**: Calendário com cores baseadas em % de galinhas produzindo
 - ✅ **Tooltips Interativos (Dezembro 2025)**: Informações ao passar o mouse sobre pontos do gráfico e heatmap
@@ -15,6 +16,27 @@ Este projeto é uma aplicação React chamada "galinheiro-app", que consome dado
 - 📱 **Interface Moderna**: UI responsiva e acessível
 - 🏗️ **Arquitetura Limpa**: Separação clara de responsabilidades
 - 🚀 **Performance Otimizada**: CSS e JavaScript eficientes
+
+### 📋 Últimas Melhorias Arquiteturais
+
+#### 1. DashboardService Facade
+- ✅ Orquestra múltiplos use cases de forma centralizada
+- ✅ Desacopla componentes UI da Application Layer
+- ✅ Arquivo: `src/application/services/DashboardService.js`
+
+#### 2. Entidade Galinha Enriquecida
+- ✅ Adiciona validações, ciclo de vida e regras de negócio
+- ✅ Transforma DTO puro em entidade de domínio robusta
+- ✅ Arquivo: `src/domain/entities/Galinha.js` (~250 linhas)
+
+#### 3. Tema Centralizado para Heatmap
+- ✅ Fonte única da verdade para cores e thresholds
+- ✅ Elimina hardcoding de valores espalhados no código
+- ✅ Arquivo: `src/theme/heatmapColorScheme.js`
+
+**Para detalhes completos**, consulte:
+- 📊 `docs/ARCHITECTURE-ANALYSIS.md` - Análise estratégica completa
+- 📋 `docs/CORRECTIONS-SUMMARY.md` - Resumo das 3 correções
 
 ## Estrutura do Projeto
 
