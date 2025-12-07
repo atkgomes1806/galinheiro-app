@@ -1,18 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { obterSumarioGalinheiro } from '../../application/use-cases/obterSumarioGalinheiro';
-import { getAvatarColor, getInitial } from '../../utils';
+import { listarRegistrosOvos } from '../../application/use-cases/listarRegistrosOvos';
+import { listarGalinhas } from '../../application/use-cases/listarGalinhas';
+import { getAvatarColor, getInitial, toDateLocalNoTZ } from '../../utils';
 import WeatherCard from '../components/WeatherCard';
+import TimeSeriesChart from '../components/TimeSeriesChart';
 
 const DashboardPage = () => {
     const [sumario, setSumario] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [registrosOvos, setRegistrosOvos] = useState([]);
+    const [galinhas, setGalinhas] = useState([]);
+
+    // Filtros gráfico
+    const anoAtual = new Date().getFullYear();
+    const [filtroGalinha, setFiltroGalinha] = useState('todas');
+    const [filtroAno, setFiltroAno] = useState(anoAtual);
+    const [filtroMes, setFiltroMes] = useState(''); // vazio = visão anual
+    const [serieTemporal, setSerieTemporal] = useState([]);
+    const [resumoPeriodo, setResumoPeriodo] = useState({ total: 0, mediaDiaria: 0 });
     const [fabExpanded, setFabExpanded] = useState(false);
 
     useEffect(() => {
         carregarSumario();
+        carregarDadosRegistros();
     }, []);
+
+    useEffect(() => {
+        if (!registrosOvos || registrosOvos.length === 0) return;
+        const { serie, total, mediaDiaria } = calcularSerie(registrosOvos, filtroGalinha, filtroAno, filtroMes);
+        setSerieTemporal(serie);
+        setResumoPeriodo({ total, mediaDiaria });
+    }, [registrosOvos, filtroGalinha, filtroAno, filtroMes]);
 
     const carregarSumario = async () => {
         try {
@@ -28,7 +49,59 @@ const DashboardPage = () => {
         }
     };
 
+    const carregarDadosRegistros = async () => {
+        try {
+            const [regs, gals] = await Promise.all([
+                listarRegistrosOvos(),
+                listarGalinhas()
+            ]);
+            setRegistrosOvos(regs || []);
+            setGalinhas(gals || []);
+        } catch (err) {
+            console.error('Erro ao carregar registros/galinhas:', err);
+        }
+    };
+
     // avatar helpers foram centralizados em src/utils/index.js
+
+    const calcularSerie = (registros, galinhaId, ano, mes) => {
+        const filtered = registros.filter((r) => {
+            const d = toDateLocalNoTZ(r.data_postura);
+            const sameYear = d.getFullYear() === Number(ano);
+            const sameHen = galinhaId === 'todas' || r.galinha_id === galinhaId;
+            const sameMonth = !mes || d.getMonth() + 1 === Number(mes);
+            return sameYear && sameHen && sameMonth;
+        });
+
+        if (!mes) {
+            // visão anual: 12 meses
+            const serie = Array.from({ length: 12 }, (_, idx) => {
+                const month = idx + 1;
+                const total = filtered
+                    .filter((r) => toDateLocalNoTZ(r.data_postura).getMonth() + 1 === month)
+                    .reduce((acc, r) => acc + (r.quantidade || 0), 0);
+                return { label: String(month).padStart(2, '0'), value: total };
+            });
+
+            const total = serie.reduce((acc, p) => acc + p.value, 0);
+            const diasAno = 365;
+            return { serie, total, mediaDiaria: (total / diasAno).toFixed(2) };
+        }
+
+        // visão mensal: dias do mês selecionado
+        const diasNoMes = new Date(ano, mes, 0).getDate();
+        const serie = Array.from({ length: diasNoMes }, (_, idx) => {
+            const dia = idx + 1;
+            const total = filtered
+                .filter((r) => toDateLocalNoTZ(r.data_postura).getDate() === dia)
+                .reduce((acc, r) => acc + (r.quantidade || 0), 0);
+            return { label: String(dia).padStart(2, '0'), value: total };
+        });
+
+        const total = serie.reduce((acc, p) => acc + p.value, 0);
+        const diasConsiderados = diasNoMes;
+        return { serie, total, mediaDiaria: (total / diasConsiderados).toFixed(2) };
+    };
 
     if (loading) {
         return (
@@ -56,6 +129,26 @@ const DashboardPage = () => {
     if (!sumario) {
         return null;
     }
+
+    const anosDisponiveis = Array.from(new Set(registrosOvos.map((r) => toDateLocalNoTZ(r.data_postura).getFullYear())));
+    if (!anosDisponiveis.includes(filtroAno)) anosDisponiveis.push(filtroAno);
+    anosDisponiveis.sort((a, b) => b - a);
+
+    const meses = [
+        { value: '', label: 'Ano inteiro' },
+        { value: 1, label: 'Jan' },
+        { value: 2, label: 'Fev' },
+        { value: 3, label: 'Mar' },
+        { value: 4, label: 'Abr' },
+        { value: 5, label: 'Mai' },
+        { value: 6, label: 'Jun' },
+        { value: 7, label: 'Jul' },
+        { value: 8, label: 'Ago' },
+        { value: 9, label: 'Set' },
+        { value: 10, label: 'Out' },
+        { value: 11, label: 'Nov' },
+        { value: 12, label: 'Dez' }
+    ];
 
     return (
         <div>
@@ -236,6 +329,56 @@ const DashboardPage = () => {
                         </div>
                     </div>
                 </Link>
+            </div>
+
+            {/* Série temporal de postura */}
+            <div className="card timeseries-card">
+                <div className="timeseries-header">
+                    <div>
+                        <h3>Evolução da Postura</h3>
+                        <p>Produção agregada por período para monitorar desempenho.</p>
+                    </div>
+                    <div className="timeseries-filters">
+                        <div className="filter-group">
+                            <label>Galinha</label>
+                            <select value={filtroGalinha} onChange={(e) => setFiltroGalinha(e.target.value)}>
+                                <option value="todas">Todas</option>
+                                {galinhas.map((g) => (
+                                    <option key={g.id} value={g.id}>{g.nome}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="filter-group">
+                            <label>Ano</label>
+                            <select value={filtroAno} onChange={(e) => setFiltroAno(Number(e.target.value))}>
+                                {anosDisponiveis.map((ano) => (
+                                    <option key={ano} value={ano}>{ano}</option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="filter-group">
+                            <label>Período</label>
+                            <select value={filtroMes} onChange={(e) => setFiltroMes(e.target.value)}>
+                                {meses.map((m) => (
+                                    <option key={m.value ?? 'ano'} value={m.value}>{m.label}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="timeseries-summary">
+                    <div>
+                        <span className="label">Total no período</span>
+                        <h2>{resumoPeriodo.total} ovos</h2>
+                    </div>
+                    <div>
+                        <span className="label">Média diária</span>
+                        <h2>{resumoPeriodo.mediaDiaria} ovos/dia</h2>
+                    </div>
+                </div>
+
+                <TimeSeriesChart data={serieTemporal} />
             </div>
 
             {/* Seção: Top Performers */}
