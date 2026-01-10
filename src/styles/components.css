@@ -725,9 +725,7 @@
 @media (max-width:640px){
     .weather-daily-rain{grid-column:1/-1;margin-top:0.25rem;}
 }
-    font-size: 0.75rem;
-    color: var(--secondary);
-}
+ 
 
 /* Recomendações */
 .weather-recommendations {
