@@ -8,6 +8,7 @@ import LoginPage from './presentation/pages/LoginPage';
 import RequireAuth from './presentation/components/RequireAuth';
 import React, { useState, useEffect } from 'react';
 import { isAuthenticated, logout } from './utils';
+import { COLORS, LAYOUT, TYPOGRAPHY } from './theme';
 
 function AppNav() {
   const navigate = useNavigate();
@@ -28,29 +29,10 @@ function AppNav() {
     navigate('/login');
   };
 
-  // estilos base para nav items
-  const baseItemStyle = {
-    color: 'white',
-    textDecoration: 'none',
-    padding: '0.5rem 0.75rem',
-    borderRadius: '0',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '0.5rem'
-  };
-
-  // estilo quando ativo: fundo off-white, canto direito arredondado criando a "aba" fluida
-  const activeItemStyle = {
-    background: '#F7F7F7',
-    color: '#1f2d3d',
-    borderRadius: '0 12px 12px 0',
-    padding: '0.5rem 0.9rem'
-  };
-
   return (
     <nav className="app-nav">
       <div className="nav-inner">
-        <h2 style={{ margin: 0, color: 'white' }}>🐔 Galinheiro App</h2>
+        <h2 style={{ margin: 0, color: COLORS.primaryLight, fontFamily: TYPOGRAPHY.fontFamily }}>🐔 Galinheiro App</h2>
         <div className="nav-items">
           <NavLink to="/" className={({isActive}) => `nav-item${isActive ? ' nav-item-active' : ''}`} end>
             <span style={{ color: 'inherit' }}>Dashboard</span>
@@ -84,11 +66,11 @@ function AppNav() {
 function App() {
   return (
     <Router>
-      <div style={{ fontFamily: 'Arial, sans-serif' }}>
+      <div style={{ fontFamily: TYPOGRAPHY.fontFamily }}>
         <AppNav />
 
         {/* Conteúdo */}
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1rem' }}>
+        <div style={{ maxWidth: LAYOUT.containerMaxWidth, margin: '0 auto', padding: '0 1rem' }}>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route path="/" element={<RequireAuth><DashboardPage /></RequireAuth>} />

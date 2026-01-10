@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { TIME_SERIES_PALETTE } from '../../theme';
 
-const TimeSeriesChart = ({ data = [], height = 240, color = 'var(--primary)' }) => {
+const TimeSeriesChart = ({ data = [], height = 240, color = TIME_SERIES_PALETTE.line }) => {
     if (!data || data.length === 0) {
         return <div className="timeseries-empty">Sem dados para o período selecionado.</div>;
     }
@@ -22,7 +23,9 @@ const TimeSeriesChart = ({ data = [], height = 240, color = 'var(--primary)' }) 
 
     const polylinePoints = points.map((p) => `${p.x},${p.y}`).join(' ');
 
-    const areaFill = 'rgba(16,185,129,0.15)'; // verde translúcido
+    const palette = TIME_SERIES_PALETTE;
+    const lineColor = color || palette.line;
+    const areaFill = palette.fill;
 
     return (
         <div className="timeseries-chart">
@@ -40,7 +43,7 @@ const TimeSeriesChart = ({ data = [], height = 240, color = 'var(--primary)' }) 
                 {/* Linha */}
                 <polyline
                     fill="none"
-                    stroke={color}
+                    stroke={lineColor}
                     strokeWidth="2"
                     points={polylinePoints}
                     strokeLinejoin="round"
@@ -54,7 +57,7 @@ const TimeSeriesChart = ({ data = [], height = 240, color = 'var(--primary)' }) 
                         onMouseLeave={() => setTooltip(null)}
                         className="timeseries-point-hit"
                     >
-                        <circle cx={p.x} cy={p.y} r="2.2" fill={color} />
+                        <circle cx={p.x} cy={p.y} r="2.2" fill={lineColor} />
                         <text x={p.x} y={p.y - 6} className="timeseries-point-label">
                             {data[idx].value}
                         </text>

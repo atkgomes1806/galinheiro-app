@@ -24,15 +24,14 @@ Este projeto é uma aplicação React chamada "galinheiro-app", que consome dado
 - ✅ Desacopla componentes UI da Application Layer
 - ✅ Arquivo: `src/application/services/DashboardService.js`
 
-#### 2. Entidade Galinha Enriquecida
-- ✅ Adiciona validações, ciclo de vida e regras de negócio
-- ✅ Transforma DTO puro em entidade de domínio robusta
-- ✅ Arquivo: `src/domain/entities/Galinha.js` (~250 linhas)
-
-#### 3. Tema Centralizado para Heatmap
+#### 2. Tema Centralizado para Heatmap e Gráficos
 - ✅ Fonte única da verdade para cores e thresholds
 - ✅ Elimina hardcoding de valores espalhados no código
 - ✅ Arquivo: `src/theme/heatmapColorScheme.js`
+
+#### 3. Tokens de Design em Uso
+- ✅ Paleta e espaçamentos em JS usados nos gráficos e layout
+- ✅ Arquivos: `src/theme/tokens.js`, `src/theme/charts.js`, `src/theme/components.js`
 
 **Para detalhes completos**, consulte:
 - 📊 `docs/ARCHITECTURE-ANALYSIS.md` - Análise estratégica completa

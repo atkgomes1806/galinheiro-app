@@ -1,0 +1,275 @@
+/* =====================================================
+   Otimizações Mobile-First - Galinheiro App
+   ===================================================== */
+
+/* Suporte touch mínimo de 44-48px em iOS */
+@media (max-width: 768px) {
+  /* Aumentar área de toque para buttons */
+  .btn,
+  .nav-item,
+  .fab-btn,
+  .fab-action-btn,
+  button,
+  input[type="button"],
+  input[type="submit"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Inputs otimizados para mobile */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important; /* Previne zoom automático em iOS */
+    padding: 12px 16px;
+    min-height: 44px;
+  }
+
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 36px;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234b5563' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 20px;
+    padding-right: 36px;
+  }
+
+  /* Prevenir bounce em iOS */
+  body {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* Text selection apenas onde necessário */
+  input,
+  textarea {
+    -webkit-user-select: text;
+    user-select: text;
+  }
+
+  /* Remover zoom ao toque */
+  a,
+  button {
+    -webkit-touch-callout: none;
+  }
+
+  /* Scroll suave em elementos com overflow */
+  .timeseries-chart,
+  .weather-daily-grid,
+  .records-table {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Melhorar performance com GPU */
+  .card,
+  .modal-content,
+  .fab-btn,
+  .btn {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+/* Otimizações para telas muito pequenas (< 480px) */
+@media (max-width: 480px) {
+  /* Remover hover effects em touch devices */
+  .card:hover,
+  .kpi-card:hover {
+    transform: none;
+  }
+
+  /* Ajustar espaçamento vertical */
+  .container {
+    padding: 0.5rem;
+  }
+
+  /* Stack vertical para layouts complexos */
+  .form-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Melhorar legibilidade */
+  .page-title,
+  h2,
+  h3 {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Cards compactos */
+  .card {
+    padding: 0.75rem;
+  }
+
+  .kpi-card {
+    min-height: auto;
+    padding: 0.75rem;
+  }
+
+  /* Formulários otimizados */
+  .form-container {
+    padding: 0.75rem;
+  }
+
+  .form-group {
+    margin-bottom: 0.75rem;
+  }
+
+  /* Botões em tela cheia */
+  .btn-full {
+    width: 100%;
+    display: block;
+  }
+
+  /* Modal otimizado */
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+
+  .modal-content {
+    width: 100% !important;
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 0.5rem;
+  }
+
+  /* FAB posicionamento seguro */
+  .fab-root {
+    bottom: 0.75rem;
+    right: 0.75rem;
+  }
+
+  .fab-btn {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+    min-height: 50px;
+  }
+
+  /* Grid responsivo agressivo */
+  .grid,
+  .grid-cols-2,
+  .grid-cols-3,
+  .grid-cols-4 {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem;
+  }
+
+  /* Tables em mobile */
+  table {
+    font-size: 0.8125rem;
+  }
+
+  /* Menus/Lists */
+  .nav-items {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  /* Charts responsivos */
+  .timeseries-chart svg {
+    height: 200px;
+  }
+
+  /* Heatmap compacto */
+  .heatmap-cell {
+    min-width: 24px;
+    font-size: 8px;
+  }
+
+  /* Weather card compacto */
+  .weather-main-data {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .weather-hourly-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Badges e chips */
+  .badge,
+  .kpi-chip {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.5rem;
+  }
+}
+
+/* Landscape mode (< 600px altura) */
+@media (max-height: 600px) and (orientation: landscape) {
+  .nav-item {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+  }
+
+  .card,
+  .form-container {
+    padding: 0.75rem;
+  }
+
+  h2,
+  h3 {
+    margin: 0.5rem 0;
+  }
+}
+
+/* iPhone X safe area support */
+@supports (padding: max(0px)) {
+  @media (max-width: 480px) {
+    body {
+      padding-left: max(0px, env(safe-area-inset-left));
+      padding-right: max(0px, env(safe-area-inset-right));
+      padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
+
+    .fab-root {
+      bottom: max(1rem, env(safe-area-inset-bottom));
+      right: max(1rem, env(safe-area-inset-right));
+    }
+
+    .app-nav {
+      padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+  }
+}
+
+/* Prefers reduced motion - respeitar preferências do usuário */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark mode support (futuro) */
+@media (prefers-color-scheme: dark) {
+  /* Opcional: suportar modo escuro no futuro */
+}
+
+/* Print styles (para se necessário imprimir) */
+@media print {
+  .fab-root,
+  .nav-item,
+  .btn-retry {
+    display: none;
+  }
+
+  body {
+    background: white;
+  }
+
+  .card {
+    page-break-inside: avoid;
+  }
+}

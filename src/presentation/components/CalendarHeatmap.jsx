@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { formatDateBRFromString } from '../../utils';
+import { CARD } from '../../theme';
 import {
   getHeatmapLevel,
   getHeatmapColor,
@@ -13,7 +14,10 @@ const CalendarHeatmap = ({ days = [], month, year }) => {
   const legendData = useMemo(() => getHeatmapLegendData(), []);
 
   return (
-    <div className="heatmap-card">
+    <div
+      className="heatmap-card"
+      style={{ background: CARD.background, borderRadius: CARD.radius, boxShadow: CARD.shadow, padding: CARD.padding }}
+    >
       <div className="heatmap-legend">
         <span>{monthLabel}</span>
         <div className="legend-scale">
