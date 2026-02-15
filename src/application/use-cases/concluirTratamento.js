@@ -15,14 +15,22 @@ export async function concluirTratamento(id, notasResultado = '', repositorio = 
     }
 
     try {
+        const repositorioFinal =
+            notasResultado &&
+            typeof notasResultado === 'object' &&
+            typeof notasResultado.atualizarTratamento === 'function'
+                ? notasResultado
+                : repositorio;
+
+        const notasFinal = repositorioFinal === notasResultado ? '' : notasResultado;
         const dataConclusao = new Date().toISOString().split('T')[0];
         const dadosAtualizacao = {
             concluido: 'true', // No Supabase, concluido é text, não boolean
             data_fim_real: dataConclusao,
-            notas_resultado: notasResultado?.trim() || null
+            notas_resultado: notasFinal?.trim() || null
         };
 
-        const tratamentoConcluido = await repositorio.atualizarTratamento(id, dadosAtualizacao);
+        const tratamentoConcluido = await repositorioFinal.atualizarTratamento(id, dadosAtualizacao);
         return tratamentoConcluido;
     } catch (error) {
         console.error('Erro ao concluir tratamento:', error.message);
