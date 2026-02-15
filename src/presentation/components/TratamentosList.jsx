@@ -134,10 +134,10 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
                                     </div>
                                 )}
 
-                                {tratamento.concluido === 'true' && tratamento.notas_resultado && (
+                                {tratamento.concluido === 'true' && tratamento.comentarios_tratamento && (
                                     <div className="card-result">
                                         <strong className="card-result-title">Resultado:</strong>
-                                        <p className="card-result-text">{tratamento.notas_resultado}</p>
+                                        <p className="card-result-text">{tratamento.comentarios_tratamento}</p>
                                     </div>
                                 )}
                             </div>
