@@ -26,7 +26,7 @@ export async function concluirTratamento(id, notasResultado = '', repositorio = 
         const dataConclusao = new Date().toISOString().split('T')[0];
         const dadosAtualizacao = {
             concluido: 'true', // No Supabase, concluido é text, não boolean
-            data_fim_real: dataConclusao,
+            data_conclusao: dataConclusao,
             notas_resultado: notasFinal?.trim() || null
         };
 

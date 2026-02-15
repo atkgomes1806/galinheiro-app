@@ -125,11 +125,11 @@ const TratamentosList = ({ tratamentos, onTratamentoConcluido, filtroStatus }) =
                                     </div>
                                 )}
 
-                                {tratamento.concluido === 'true' && tratamento.data_fim_real && (
+                                {tratamento.concluido === 'true' && tratamento.data_conclusao && (
                                     <div className="card-section-item">
                                         <span className="card-section-title">Concluído em:</span>
                                         <span className="card-section-value">
-                                            {new Date(tratamento.data_fim_real).toLocaleDateString('pt-BR')}
+                                            {new Date(tratamento.data_conclusao).toLocaleDateString('pt-BR')}
                                         </span>
                                     </div>
                                 )}
