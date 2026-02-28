@@ -1,7 +1,13 @@
 ﻿import React from 'react';
 import { removerGalinha } from '../../application/use-cases/removerGalinha';
 
-const GalinhasList = ({ galinhas, onGalinhaRemovida, onEditarGalinha }) => {
+const GalinhasList = ({
+    galinhas,
+    totalOriginal = 0,
+    onGalinhaRemovida,
+    onEditarGalinha,
+    modoVisualizacao = 'cards'
+}) => {
     const handleRemover = async (id, nome) => {
         const confirmacao = window.confirm('Tem certeza que deseja remover a galinha "' + nome + '"?');
         if (!confirmacao) return;
@@ -52,6 +58,20 @@ const GalinhasList = ({ galinhas, onGalinhaRemovida, onEditarGalinha }) => {
         return status.replace(/^'|'$/g, '');
     };
 
+    const getStatusReprodutivoLabel = (status) => {
+        const map = {
+            laying: { label: '🟢 Em Postura', badge: 'badge-success' },
+            broody: { label: '🔴 Em Choco', badge: 'badge-danger' },
+            molting: { label: '🟡 Em Muda', badge: 'badge-warning' }
+        };
+        return map[status || 'laying'] || map.laying;
+    };
+
+    const getStatusProducaoTexto = (status) => {
+        const normalizado = normalizeStatus(status).toLowerCase();
+        return normalizado === 'inativa' ? '⚫ Inativa' : '✅ Ativa';
+    };
+
     if (!galinhas || galinhas.length === 0) {
         return (
             <div>
@@ -62,38 +82,46 @@ const GalinhasList = ({ galinhas, onGalinhaRemovida, onEditarGalinha }) => {
     }
 
     return (
-        <div>
-            <h2 className="h2-mb-1-5">Lista de Galinhas ({galinhas.length})</h2>
-            <div className="grid grid-cols-3 grid-gap-1-5">
+        <div className="stage2-list-container">
+            <h2 className="h2-mb-1-5">Lista de Galinhas ({galinhas.length}{totalOriginal > galinhas.length ? ` de ${totalOriginal}` : ''})</h2>
+            <div className={modoVisualizacao === 'list' ? 'stage2-hens-list' : 'grid grid-cols-3 grid-gap-1-5'}>
                 {galinhas.map((galinha) => (
-                    <div key={galinha.id} className="card">
-                        <div className="card-header">
+                    <div key={galinha.id} className={`card stage2-hen-card ${modoVisualizacao === 'list' ? 'stage2-hen-card--list' : ''}`}>
+                        <div className="stage2-hen-card-top">
                             <div>
-                                <h3 className="h3-card">{galinha.nome}</h3>
-                                <p className="p-muted">
-                                    {galinha.raca || 'Raça não especificada'}
+                                <h3 className="h3-card stage2-hen-name">{galinha.nome}</h3>
+                                <p className="p-muted">{galinha.raca || 'Raça não especificada'}</p>
+                                <p className="p-muted stage2-hen-meta">
+                                    {calcularIdade(galinha.data_nascimento)} • {getStatusProducaoTexto(galinha.status)}
                                 </p>
                             </div>
-                            <span className={'badge ' + getStatusBadge(galinha.status || 'Ativa')}>
-                                {normalizeStatus(galinha.status)}
-                            </span>
-                        </div>
-                        
-                        <div className="card-section">
-                            <div className="card-section-title">
-                                Data de Nascimento
+                            <div className="stage2-hen-badges">
+                                <span className={'badge ' + getStatusBadge(galinha.status || 'Ativa')}>
+                                    {normalizeStatus(galinha.status)}
+                                </span>
+                                <span className={`badge ${getStatusReprodutivoLabel(galinha.status_reprodutivo).badge}`}>
+                                    {getStatusReprodutivoLabel(galinha.status_reprodutivo).label}
+                                </span>
                             </div>
-                            <p className="card-section-value">
-                                {formatarData(galinha.data_nascimento)}
-                            </p>
-                            <div className="card-section-title">
-                                Idade
-                            </div>
-                            <p className="card-section-value">
-                                {calcularIdade(galinha.data_nascimento)}
-                            </p>
                         </div>
-                        
+
+                        <div className="stage2-hen-summary">
+                            <div className="stage2-hen-summary-item">
+                                <span className="text-label">Nascimento</span>
+                                <span className="text-value">{formatarData(galinha.data_nascimento)}</span>
+                            </div>
+                            <div className="stage2-hen-summary-item">
+                                <span className="text-label">Início do status</span>
+                                <span className="text-value">{formatarData(galinha.data_inicio_status)}</span>
+                            </div>
+                            <div className="stage2-hen-summary-item">
+                                <span className="text-label">Notas</span>
+                                <span className="text-value stage2-hen-note-text">
+                                    {galinha.notas_status ? galinha.notas_status : 'Sem observações'}
+                                </span>
+                            </div>
+                        </div>
+
                         <div className="card-actions">
                             <button onClick={() => handleEditar(galinha)} className="btn btn-secondary">
                                 Editar
