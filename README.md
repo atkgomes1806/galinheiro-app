@@ -4,8 +4,11 @@ Este projeto é uma aplicação React chamada "galinheiro-app", que consome dado
 
 ## ✨ Destaques Recentes
 
-- ✅ **Dashboard 2.0 - Etapa 1 (Fevereiro 2026)**: Hero section com saudação dinâmica, KPIs modernizados e alertas hierarquizados
-- ✅ **Status Reprodutivo (Fevereiro 2026)**: Controle de postura/choco/muda no cadastro de galinhas + widget de acompanhamento no dashboard
+- ✅ **GALINHAS 2.0 - Etapas 1-4 Concluídas (Fevereiro 2026)**: Modernização completa da interface e UX
+  - **Etapa 1**: Dashboard 2.0 com hero section, KPIs modernos e status reprodutivo
+  - **Etapa 2**: Página de Galinhas com abas, filtros avançados e visualizações duais
+  - **Etapa 3**: Histórico de Postura com timeline, filtros de período e top produtoras
+  - **Etapa 4**: Tratamentos com Kanban board por criticidade (vencido/atenção/em dia)
 - ✅ **Correções Arquiteturais (Dezembro 2025)**: DashboardService Facade + Domínio enriquecido + Tema centralizado
 - ✅ **Gráficos de Séries Temporais (Dezembro 2025)**: Dashboard com visualização de produção mensal/anual
 - ✅ **Heatmap Mensal (Dezembro 2025)**: Calendário com cores baseadas em % de galinhas produzindo
@@ -91,24 +94,28 @@ galinheiro-app
   │   ├── index.js                # Barrel export dos tokens
   │   └── heatmapColorScheme.js   # Reexport de helpers do heatmap (compatibilidade)
   ├── styles/                     # CSS centralizado
-  │   ├── globals.css
-  │   ├── components.css
-  │   └── calendario.css
+  │   ├── globals.css             # Estilos globais e variáveis CSS
+  │   ├── components.css          # Componentes reutilizáveis + estilos por etapa:
+  │   │                           #   - stage2-* (Galinhas: abas, filtros, cards)
+  │   │                           #   - stage3-* (Histórico: timeline, resumos)
+  │   │                           #   - stage4-* (Tratamentos: kanban, criticidade)
+  │   ├── calendario.css          # Estilos do calendário/heatmap
+  │   └── mobile.css              # Otimizações mobile
   ├── utils/
   │   └── index.js                # Funções utilitárias
   ├── presentation/
   │   ├── components/             # Componentes de UI
-  │   │   ├── TimeSeriesChart.jsx
-  │   │   ├── CalendarHeatmap.jsx
-  │   │   ├── WeatherCard.jsx
-  │   │   ├── ChickenStatusSelector.jsx
-  │   │   ├── ReproductiveStatusWidget.jsx
-  │   │   ├── GalinhasList.jsx
-  │   │   ├── GalinhaForm.jsx
-  │   │   ├── TratamentosList.jsx
-  │   │   ├── TratamentoForm.jsx
-  │   │   ├── RegistroOvoForm.jsx
-  │   │   └── RequireAuth.jsx
+  │   │   ├── TimeSeriesChart.jsx         # Gráfico de séries temporais
+  │   │   ├── CalendarHeatmap.jsx         # Calendário com heatmap
+  │   │   ├── WeatherCard.jsx             # Card de clima
+  │   │   ├── ChickenStatusSelector.jsx   # Seletor de status reprodutivo (Etapa 1)
+  │   │   ├── ReproductiveStatusWidget.jsx # Widget de status reprodutivo (Etapa 1)
+  │   │   ├── GalinhasList.jsx            # Lista de galinhas com dual view (Etapa 2)
+  │   │   ├── GalinhaForm.jsx             # Formulário de galinhas
+  │   │   ├── TratamentosList.jsx         # Lista de tratamentos
+  │   │   ├── TratamentoForm.jsx          # Formulário de tratamentos
+  │   │   ├── RegistroOvoForm.jsx         # Formulário de ovos
+  │   │   └── RequireAuth.jsx             # Autenticação
   │   ├── pages/
   │   │   ├── DashboardPage.jsx
   │   │   ├── GalinhasPage.jsx
@@ -541,8 +548,119 @@ WHERE status_reprodutivo IS NULL;
 ```
 
 ### Documentação relacionada
-- Planejamento UX/UI: `docs/GALINHAS2.0.md`
+- Planejamento UX/UI completo: `docs/GALINHAS2.0.md`
+- Script de migração SQL: `docs/SUPABASE_MIGRATION.sql`
+- Guia de correção de erros: `docs/FIX_COLUMN_ERROR.md`
 - Resumo técnico das correções: `docs/CORRECTIONS-SUMMARY.md`
+
+### Página de Galinhas (Etapa 2)
+Reestruturação completa da página de gerenciamento do plantel:
+
+#### Sistema de Abas
+- 📊 **Visão Geral**: Visualização e filtros do plantel
+- ➕ **Adicionar**: Formulário de cadastro isolado
+
+#### Barra de Ferramentas
+- 🔍 **Busca inteligente**: Filtra por nome, raça ou idade
+- 🏷️ **Filtro por status reprodutivo**: Laying / Broody / Molting / Todos
+- ✅ **Filtro por status do plantel**: Ativa / Inativa / Todas
+- 🔄 **Ordenação**: Nome (A-Z / Z-A), Idade (mais nova / mais velha)
+- 👁️ **Modo de visualização**: Cards (grade) ou Lista compacta
+
+#### Cards de Estatísticas
+- Total de galinhas cadastradas
+- Galinhas ativas no plantel
+- Em choco (status reprodutivo)
+- Em muda (fase de repouso)
+
+#### Visualizações Duais
+**Modo Cards (padrão)**:
+- Layout em grade responsivo
+- Cards visuais com foto e informações principais
+- Badges de status coloridas
+- Ações rápidas (editar, histórico)
+
+**Modo Lista Compacta**:
+- Visualização densa para plantéis grandes
+- Informações essenciais inline
+- Rápida navegação e busca visual
+
+### Histórico de Postura (Etapa 3)
+Dashboard analítico para acompanhamento de produção:
+
+#### Sistema de Abas
+- 📊 **Visão Geral**: Análises e métricas do período
+- 📝 **Registrar**: Formulário de registro de ovos
+
+#### Filtros de Período
+- 📅 **7 dias**: Última semana
+- 📅 **30 dias**: Último mês
+- 📅 **Todos**: Histórico completo
+
+#### Cards de Resumo
+- 📝 **Total de Registros**: Quantidade de lançamentos
+- 🥚 **Total de Ovos**: Soma do período
+- 📊 **Média Diária**: Ovos por dia
+- 🎯 **% da Meta**: Progresso em relação à meta mensal
+
+#### Top Produtoras
+Ranking das galinhas mais produtivas no período selecionado:
+- 🥇 Posição no ranking
+- 🐔 Nome e raça
+- 🥚 Total de ovos
+- 📈 Percentual do total
+
+#### Visualização Timeline
+Histórico agrupado por data com:
+- Data e dia da semana
+- Total de ovos coletados
+- Lista de galinhas que produziram
+- Média de peso (se informado)
+
+### Tratamentos (Etapa 4)
+Sistema Kanban para gestão crítica de tratamentos veterinários:
+
+#### Sistema de Abas
+- 📊 **Visão Geral**: Dashboard Kanban + filtros
+- ➕ **Novo Tratamento**: Formulário de cadastro
+
+#### Cards de Resumo por Criticidade
+- 🚨 **Crítico**: Tratamentos vencidos (alerta vermelho)
+- ⚠️ **Atenção**: Vencimento nos próximos 3 dias (alerta laranja)
+- ✅ **Em Dia**: Tratamentos ativos sem urgência (verde)
+- ✔️ **Concluídos**: Total de tratamentos finalizados
+
+#### Visualização Kanban (3 Colunas)
+**Coluna Crítico (Vencidos)**:
+- Banner vermelho destacado "VENCIDO HÁ X DIAS"
+- Informações da galinha e tipo de tratamento
+- Datas de início e fim (destacadas)
+- Botão crítico "CONCLUIR AGORA"
+
+**Coluna Atenção (Próximos 3 dias)**:
+- Alerta amarelo com contagem regressiva
+- Dados do tratamento e galinha
+- Datas de início e fim previsto
+- Botão de conclusão laranja
+
+**Coluna Em Dia (Ativos sem urgência)**:
+- Cards verdes organizados
+- Informações completas do tratamento
+- Contador de dias restantes
+- Botão de conclusão padrão
+
+#### Cards de Tratamento Aprimorados
+- 💊 Tipo de tratamento em destaque
+- 🐔 Nome da galinha com ícone
+- 📅 Datas organizadas em blocos visuais
+- 📝 Descrição e observações
+- ✓ Botões de ação contextuais por urgência
+
+#### Filtros Disponíveis
+- **Status**: Ativos / Concluídos / Todos
+- **Galinha**: Filtro por galinha específica
+- Kanban visível apenas para tratamentos ativos
+- Lista tradicional para concluídos e visualização geral
 
 ### Gráficos de Série Temporal
 O dashboard agora exibe a **evolução da postura das galinhas** com dois modos de visualização:
@@ -682,6 +800,58 @@ npm run dev
 ```
 
 A aplicação estará disponível em `http://localhost:3000`.
+
+## 📦 Releases e Histórico de Versões
+
+### GALINHAS 2.0 - Modernização UX/UI (Fevereiro 2026)
+
+#### Etapa 4 - Tratamentos Kanban (commit `6a206c0`)
+**Data**: 27/02/2026  
+**Arquivos alterados**: 2 (747 adições, 89 remoções)
+- Sistema de abas (Visão Geral / Novo Tratamento)
+- Cards de resumo por criticidade (Crítico/Atenção/Em Dia/Concluídos)
+- Visualização Kanban em 3 colunas organizadas por urgência
+- Cards de tratamento aprimorados com hierarquia visual
+- 419 linhas de CSS stage4-* com gradientes e responsividade
+
+#### Etapa 3 - Histórico com Timeline (commit `f726ec5`)
+**Data**: 27/02/2026  
+**Arquivos alterados**: 2 (470 adições, 117 remoções)
+- Sistema de abas (Visão Geral / Registrar)
+- Filtros de período (7 dias / 30 dias / Todos)
+- Cards de resumo (Registros, Ovos, Média, Meta)
+- Top produtoras do período selecionado
+- Visualização timeline com agrupamento por data
+- Estilos stage3-* para timeline e cards
+
+#### Etapa 2 - Galinhas com Filtros (commit `0d33e8d`)
+**Data**: 27/02/2026  
+**Arquivos alterados**: 2 (modificações em GalinhasPage e components.css)
+- Sistema de abas (Visão Geral / Adicionar)
+- Busca por nome, raça ou idade
+- Filtros por status reprodutivo e plantel
+- Ordenação (nome A-Z/Z-A, idade)
+- Toggle de visualização (Cards / Lista compacta)
+- Cards de estatísticas do plantel
+- Estilos stage2-* para toolbar e cards
+
+#### Etapa 1 - Dashboard 2.0 (commit `fa36731`)
+**Data**: Fevereiro 2026  
+**Arquivos alterados**: Múltiplos (Dashboard, Galinha.js, GalinhaForm, components)
+- Hero section com saudação contextual
+- KPIs modernizados com hierarquia visual
+- Sistema de alertas em níveis (crítico/atenção/informativo)
+- Status reprodutivo (laying/broody/molting)
+- Widget ReproductiveStatusWidget no dashboard
+- ChickenStatusSelector no formulário
+- Migração Supabase (3 colunas novas na tabela galinhas)
+
+### Correções Arquiteturais (Dezembro 2025)
+- DashboardService Facade implementado
+- Tema centralizado (tokens em JS)
+- Refatoração CSS completa
+- Gráficos de séries temporais
+- Heatmap com tooltips interativos
 
 ## Contribuição
 
