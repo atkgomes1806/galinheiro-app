@@ -7,6 +7,7 @@ import { getAvatarColor, getInitial, toDateLocalNoTZ } from '../../utils';
 import WeatherCard from '../components/WeatherCard';
 import TimeSeriesChart from '../components/TimeSeriesChart';
 import CalendarHeatmap from '../components/CalendarHeatmap';
+import ReproductiveStatusWidget from '../components/ReproductiveStatusWidget';
 
 const DashboardPage = () => {
     const [sumario, setSumario] = useState(null);
@@ -14,8 +15,9 @@ const DashboardPage = () => {
     const [error, setError] = useState(null);
     const [registrosOvos, setRegistrosOvos] = useState([]);
     const [galinhas, setGalinhas] = useState([]);
+    const [fabExpanded, setFabExpanded] = useState(false);
 
-    // Filtros gráfico
+    // Filtros do gráfico
     const anoAtual = new Date().getFullYear();
     const [filtroGalinha, setFiltroGalinha] = useState('todas');
     const [filtroAno, setFiltroAno] = useState(anoAtual);
@@ -23,7 +25,14 @@ const DashboardPage = () => {
     const [serieTemporal, setSerieTemporal] = useState([]);
     const [resumoPeriodo, setResumoPeriodo] = useState({ total: 0, mediaDiaria: 0 });
     const [heatmapDias, setHeatmapDias] = useState([]);
-    const [fabExpanded, setFabExpanded] = useState(false);
+
+    // Função para saudação dinâmica
+    const getSaudacao = () => {
+        const hora = new Date().getHours();
+        if (hora < 12) return { emoji: '☀️', texto: 'Bom dia' };
+        if (hora < 18) return { emoji: '🌤️', texto: 'Boa tarde' };
+        return { emoji: '🌙', texto: 'Boa noite' };
+    };
 
     useEffect(() => {
         carregarSumario();
@@ -212,184 +221,203 @@ const DashboardPage = () => {
 
     return (
         <div>
-            <header className="card page-header">
-                <h1 className="page-title">Dashboard do Galinheiro 🐔</h1>
-                <p className="page-subtitle">Visão geral atualizada do seu galinheiro</p>
-            </header>
+            {/* Hero Section com Saudação Dinâmica */}
+            <div className="hero-section">
+                <div className="hero-greeting">
+                    <span className="hero-emoji">{getSaudacao().emoji}</span>
+                    <div className="hero-text">
+                        <h1 className="hero-title">{getSaudacao().texto}!</h1>
+                        <p className="hero-subtitle">Aqui está o resumo do seu galinheiro</p>
+                    </div>
+                </div>
+                
+                {sumario && (
+                    <div className="hero-quick-stats">
+                        <div className="hero-stat">
+                            <span className="hero-stat-icon">🐔</span>
+                            <div>
+                                <div className="hero-stat-value">{sumario.galinhas.ativas}</div>
+                                <div className="hero-stat-label">Galinhas ativas</div>
+                            </div>
+                        </div>
+                        <div className="hero-stat">
+                            <span className="hero-stat-icon">🥚</span>
+                            <div>
+                                <div className="hero-stat-value">{sumario.ovos.ultimos7Dias}</div>
+                                <div className="hero-stat-label">Ovos (7 dias)</div>
+                            </div>
+                        </div>
+                        {sumario.tratamentos.emAlerta > 0 ? (
+                            <div className="hero-stat hero-stat--alert">
+                                <span className="hero-stat-icon">⚠️</span>
+                                <div>
+                                    <div className="hero-stat-value">{sumario.tratamentos.emAlerta}</div>
+                                    <div className="hero-stat-label">Precisam atenção</div>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="hero-stat hero-stat--success">
+                                <span className="hero-stat-icon">✅</span>
+                                <div>
+                                    <div className="hero-stat-value">Tudo certo</div>
+                                    <div className="hero-stat-label">Sem pendências</div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
 
             {/* ALERTA CRÍTICO - Máxima Prioridade */}
             {sumario.tratamentos.emAlerta > 0 && (
-                <div className="card alert-card">
-                    <div className="alert-card-header">
-                        <div className="alert-card-content">
-                            <span className="alert-icon">⚠️</span>
-                            <div>
-                                <h3 className="alert-title">Atenção: Tratamentos Requerem Ação!</h3>
-                                <p className="alert-text">
-                                    {sumario.tratamentos.vencidos > 0 && (
-                                        <span className="alert-highlight">
-                                            {sumario.tratamentos.vencidos} tratamento(s) vencido(s)
-                                        </span>
-                                    )}
-                                    {sumario.tratamentos.vencidos > 0 && sumario.tratamentos.emAlerta > sumario.tratamentos.vencidos && ' • '}
-                                    {sumario.tratamentos.emAlerta > sumario.tratamentos.vencidos && (
-                                        <span>
-                                            {sumario.tratamentos.emAlerta - sumario.tratamentos.vencidos} próximo(s) do vencimento
-                                        </span>
-                                    )}
-                                </p>
-                            </div>
-                        </div>
-                        <Link to="/tratamentos" className="btn btn-danger">
-                            Ver Tratamentos →
-                        </Link>
+                <div className={`alert-banner ${sumario.tratamentos.vencidos > 0 ? 'alert-banner--critical' : 'alert-banner--warning'}`}>
+                    <div className="alert-banner-icon">
+                        {sumario.tratamentos.vencidos > 0 ? '🚨' : '⚠️'}
                     </div>
+                    <div className="alert-banner-content">
+                        <h3 className="alert-banner-title">
+                            {sumario.tratamentos.vencidos > 0 ? 'Ação Urgente Necessária!' : 'Atenção: Tratamentos Requerem Acompanhamento'}
+                        </h3>
+                        <p className="alert-banner-text">
+                            {sumario.tratamentos.vencidos > 0 && (
+                                <strong>{sumario.tratamentos.vencidos} tratamento(s) vencido(s)</strong>
+                            )}
+                            {sumario.tratamentos.vencidos > 0 && sumario.tratamentos.emAlerta > sumario.tratamentos.vencidos && ' • '}
+                            {sumario.tratamentos.emAlerta > sumario.tratamentos.vencidos && (
+                                <span>
+                                    {sumario.tratamentos.emAlerta - sumario.tratamentos.vencidos} próximo(s) do vencimento
+                                </span>
+                            )}
+                        </p>
+                    </div>
+                    <Link to="/tratamentos" className="alert-banner-btn">
+                        {sumario.tratamentos.vencidos > 0 ? 'Resolver Agora →' : 'Ver Tratamentos →'}
+                    </Link>
+                </div>
+            )}
+
+            {/* Alertas de Atenção (não críticos) */}
+            {sumario.tratamentos.emAlerta === 0 && sumario.ovos.ultimos7Dias === 0 && sumario.galinhas.ativas > 0 && (
+                <div className="alert-banner alert-banner--info">
+                    <div className="alert-banner-icon">💡</div>
+                    <div className="alert-banner-content">
+                        <h3 className="alert-banner-title">Nenhum ovo registrado nos últimos 7 dias</h3>
+                        <p className="alert-banner-text">
+                            Você tem {sumario.galinhas.ativas} galinhas ativas. Não esqueça de registrar a produção!
+                        </p>
+                    </div>
+                    <Link to="/historico" className="alert-banner-btn">
+                        Registrar Ovos →
+                    </Link>
                 </div>
             )}
 
             {/* KPIs Principais */}
-            <div className="grid grid-cols-4 kpi-grid">
+            <div className="kpi-grid-modern">
                 {/* Card: Clima no Galinheiro (Open-Meteo API) */}
                 <WeatherCard />
 
                 {/* KPI: Total de Galinhas */}
-                <Link to="/galinhas" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div className="card kpi-card">
-                        <div className="kpi-chip kpi-chip--blue">
-                            <span>🐔</span>
-                            <span className="kpi-content-title">Plantel do Galinheiro</span>
-                        </div>
-                        <div>
-                            <div className="kpi-content-value">{sumario.galinhas.ativas} Ativas</div>
-                            <div className="kpi-content-subtitle">
-                                {sumario.galinhas.inativas > 0 ? `${sumario.galinhas.inativas} inativas` : 'Todas ativas'} • 
-                                Total: {sumario.galinhas.total}
-                            </div>
-                        </div>
-                        
-                        {/* Seção expandida com detalhes */}
-                        <div className="kpi-detailed-info">
-                            <div className="kpi-detail-item">
-                                <span className="kpi-detail-label">📊 Taxa de Atividade:</span>
-                                <div className="kpi-detail-value" style={{ 
-                                    color: sumario.galinhas.ativas === sumario.galinhas.total ? 'var(--primary)' : 'var(--warning)'
-                                }}>
-                                    {((sumario.galinhas.ativas / sumario.galinhas.total) * 100).toFixed(1)}%
-                                </div>
-                            </div>
-                            <div className="kpi-detail-item">
-                                <span className="kpi-detail-label">🏆 Produtividade Média:</span>
-                                <div className="kpi-detail-value">
-                                    {sumario.ovos.mediaPostura7Dias} ovos/galinha/semana
-                                </div>
-                            </div>
-                            <div className="kpi-detail-item">
-                                <span className="kpi-detail-label">💪 Status de Saúde:</span>
-                                <div className="kpi-detail-value" style={{ 
-                                    color: sumario.saudeGeral.cor === 'green' ? 'var(--primary)' : 
-                                           sumario.saudeGeral.cor === 'red' ? 'var(--danger)' : 'var(--warning)' 
-                                }}>
-                                    {sumario.saudeGeral.status} ({sumario.saudeGeral.pontuacao}/100)
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div className="kpi-content-link">Gerenciar Plantel →</div>
+                <Link to="/galinhas" className="kpi-card-modern">
+                    <div className="kpi-card-header">
+                        <span className="kpi-icon">🐔</span>
+                        <span className="kpi-label">Plantel</span>
                     </div>
+                    <div className="kpi-main">
+                        <div className="kpi-value">{sumario.galinhas.ativas}</div>
+                        <div className="kpi-unit">Galinhas ativas</div>
+                    </div>
+                    <div className="kpi-footer">
+                        <div className="kpi-metric">
+                            <span className="kpi-metric-icon">📊</span>
+                            <span>
+                                {((sumario.galinhas.ativas / sumario.galinhas.total) * 100).toFixed(0)}% ativas
+                            </span>
+                        </div>
+                        {sumario.galinhas.inativas > 0 && (
+                            <div className="kpi-metric kpi-metric--muted">
+                                <span>{sumario.galinhas.inativas} inativas</span>
+                            </div>
+                        )}
+                    </div>
+                    <div className="kpi-cta">Ver plantel →</div>
                 </Link>
 
                 {/* KPI: Produção de Ovos (7 dias) */}
-                <Link to="/historico" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div className="card kpi-card">
-                        <div className="kpi-chip kpi-chip--primary">
-                            <span>🥚</span>
-                            <span className="kpi-content-title">Produção de Ovos</span>
-                        </div>
-                        <div>
-                            <div className="kpi-content-value">{sumario.ovos.ultimos7Dias} ovos</div>
-                            <div className="kpi-content-subtitle">
-                                Últimos 7 dias • {sumario.ovos.mediaPostura7Dias}/galinha
-                            </div>
-                        </div>
-                        
-                        {/* Seção expandida com detalhes */}
-                        <div className="kpi-detailed-info">
-                            <div className="kpi-detail-item">
-                                <span className="kpi-detail-label">📈 Produção Mensal:</span>
-                                <div className="kpi-detail-value">{sumario.ovos.ultimos30Dias} ovos (30d)</div>
-                            </div>
-                            <div className="kpi-detail-item">
-                                <span className="kpi-detail-label">📊 Tendência:</span>
-                                <div className="kpi-detail-value" style={{ 
-                                    color: sumario.ovos.mediaPostura7Dias >= sumario.ovos.mediaPostura30Dias ? 'var(--primary)' : 'var(--warning)'
-                                }}>
-                                    {sumario.ovos.mediaPostura7Dias >= sumario.ovos.mediaPostura30Dias ? '↗️ Crescendo' : '↘️ Declinando'}
-                                </div>
-                            </div>
-                            {sumario.ovos.topProducers.length > 0 && (
-                                <div className="kpi-detail-item">
-                                    <span className="kpi-detail-label">🏆 Melhor Produtora:</span>
-                                    <div className="kpi-detail-value">
-                                        {sumario.ovos.topProducers[0].nome} • {sumario.ovos.topProducers[0].total} ovos
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                        
-                        <div className="kpi-content-link">Histórico Completo →</div>
+                <Link to="/historico" className="kpi-card-modern">
+                    <div className="kpi-card-header">
+                        <span className="kpi-icon">🥚</span>
+                        <span className="kpi-label">Produção</span>
                     </div>
+                    <div className="kpi-main">
+                        <div className="kpi-value">{sumario.ovos.ultimos7Dias}</div>
+                        <div className="kpi-unit">Ovos (7 dias)</div>
+                    </div>
+                    <div className="kpi-footer">
+                        <div className="kpi-metric">
+                            <span className="kpi-metric-icon">
+                                {sumario.ovos.mediaPostura7Dias >= sumario.ovos.mediaPostura30Dias ? '↗️' : '↘️'}
+                            </span>
+                            <span>{sumario.ovos.mediaPostura7Dias} ovos/galinha</span>
+                        </div>
+                        <div className="kpi-metric kpi-metric--muted">
+                            <span>30d: {sumario.ovos.ultimos30Dias}</span>
+                        </div>
+                    </div>
+                    <div className="kpi-cta">Ver histórico →</div>
                 </Link>
 
                 {/* KPI: Tratamentos Ativos */}
-                <Link to="/tratamentos" style={{ textDecoration: 'none', color: 'inherit' }}>
-                    <div className={`card kpi-card ${sumario.tratamentos.vencidos > 0 ? 'kpi-card--alert' : ''}`}>
-                        <div className="kpi-chip kpi-chip--treatment">
-                            <span>💊</span>
-                            <span className="kpi-content-title">Saúde & Tratamentos</span>
+                <Link to="/tratamentos" className={`kpi-card-modern ${sumario.tratamentos.vencidos > 0 ? 'kpi-card-modern--alert' : ''}`}>
+                    <div className="kpi-card-header">
+                        <span className="kpi-icon">💊</span>
+                        <span className="kpi-label">Saúde</span>
+                        {sumario.tratamentos.vencidos > 0 && (
+                            <span className="kpi-badge-alert">!</span>
+                        )}
+                    </div>
+                    <div className="kpi-main">
+                        <div className="kpi-value">
+                            {sumario.tratamentos.ativos === 0 ? 'Nenhum' : sumario.tratamentos.ativos}
                         </div>
-                        <div>
-                            <div className="kpi-content-value">
-                                {sumario.tratamentos.ativos} ativos
-                                {sumario.tratamentos.vencidos > 0 && (
-                                    <span className="kpi-alert-badge">!</span>
-                                )}
-                            </div>
-                            <div className="kpi-content-subtitle">
-                                {sumario.tratamentos.emAlerta > 0 ? `⚠️ ${sumario.tratamentos.emAlerta} necessitam atenção` : '✅ Todos em dia'}
-                            </div>
+                        <div className="kpi-unit">
+                            {sumario.tratamentos.ativos === 0 ? 'Tratamento ativo' : 
+                             sumario.tratamentos.ativos === 1 ? 'Tratamento ativo' : 'Tratamentos ativos'}
                         </div>
-                        
-                        {/* Seção expandida com detalhes */}
-                        <div className="kpi-detailed-info">
-                            <div className="kpi-detail-item">
-                                <span className="kpi-detail-label">✅ Concluídos:</span>
-                                <div className="kpi-detail-value">{sumario.tratamentos.concluidos} tratamentos</div>
+                    </div>
+                    <div className="kpi-footer">
+                        {sumario.tratamentos.vencidos > 0 ? (
+                            <div className="kpi-metric kpi-metric--danger">
+                                <span className="kpi-metric-icon">🚨</span>
+                                <span>{sumario.tratamentos.vencidos} vencido(s)</span>
                             </div>
-                            {sumario.tratamentos.vencidos > 0 && (
-                                <div className="kpi-detail-item">
-                                    <span className="kpi-detail-label">🚨 Vencidos:</span>
-                                    <div className="kpi-detail-value" style={{ color: 'var(--danger)', fontWeight: 700 }}>
-                                        {sumario.tratamentos.vencidos} urgentes
-                                    </div>
-                                </div>
-                            )}
-                            <div className="kpi-detail-item">
-                                <span className="kpi-detail-label">📊 Cobertura:</span>
-                                <div className="kpi-detail-value">
-                                    {sumario.galinhas.ativas > 0 
-                                        ? `${((sumario.tratamentos.ativos / sumario.galinhas.ativas) * 100).toFixed(0)}% do plantel`
-                                        : 'Nenhuma galinha'
-                                    }
-                                </div>
+                        ) : sumario.tratamentos.emAlerta > 0 ? (
+                            <div className="kpi-metric kpi-metric--warning">
+                                <span className="kpi-metric-icon">⚠️</span>
+                                <span>{sumario.tratamentos.emAlerta} em alerta</span>
                             </div>
-                        </div>
-                        
-                        <div className="kpi-content-link">
-                            {sumario.tratamentos.vencidos > 0 ? 'Ação Urgente →' : 'Gerenciar Saúde →'}
-                        </div>
+                        ) : (
+                            <div className="kpi-metric kpi-metric--success">
+                                <span className="kpi-metric-icon">✅</span>
+                                <span>Todos em dia</span>
+                            </div>
+                        )}
+                        {sumario.tratamentos.concluidos > 0 && (
+                            <div className="kpi-metric kpi-metric--muted">
+                                <span>{sumario.tratamentos.concluidos} concluídos</span>
+                            </div>
+                        )}
+                    </div>
+                    <div className="kpi-cta">
+                        {sumario.tratamentos.vencidos > 0 ? 'Urgente →' : 'Ver tratamentos →'}
                     </div>
                 </Link>
             </div>
+
+            {/* Status Reprodutivo/Fisiológico (Choco/Muda) */}
+            {galinhas.length > 0 && (
+                <ReproductiveStatusWidget galinhas={galinhas} />
+            )}
 
             {/* Série temporal de postura */}
             <div className="card timeseries-card">
@@ -445,20 +473,29 @@ const DashboardPage = () => {
 
             {/* Seção: Top Performers */}
             {sumario.ovos.topProducers.length > 0 && (
-                <div>
-                    <h2 className="top-performers-title">🏆 Top Produtoras (últimos 7 dias)</h2>
-                    <div className="grid grid-cols-3 top-performers-grid">
+                <div className="section-container">
+                    <div className="section-header">
+                        <h2 className="section-title">
+                            <span className="section-icon">🏆</span>
+                            Top Produtoras
+                        </h2>
+                        <span className="section-subtitle">Últimos 7 dias</span>
+                    </div>
+                    <div className="top-performers-grid">
                         {sumario.ovos.topProducers.map((galinha, index) => (
-                            <div key={index} className="card top-performer-card">
-                                <div className="avatar" style={{ backgroundColor: getAvatarColor(galinha.nome) }}>
+                            <div key={index} className={`top-performer-card ${index === 0 ? 'top-performer-card--gold' : index === 1 ? 'top-performer-card--silver' : index === 2 ? 'top-performer-card--bronze' : ''}`}>
+                                <div className="top-performer-rank-badge">
+                                    {index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : `#${index + 1}`}
+                                </div>
+                                <div className="top-performer-avatar" style={{ backgroundColor: getAvatarColor(galinha.nome) }}>
                                     {getInitial(galinha.nome)}
                                 </div>
-                                <div className="top-performer-info">
-                                    <div className="top-performer-header">
-                                        <h4 className="top-performer-name">{galinha.nome}</h4>
-                                        <span className="top-performer-rank">#{index + 1}</span>
+                                <div className="top-performer-content">
+                                    <h4 className="top-performer-name">{galinha.nome}</h4>
+                                    <div className="top-performer-stats">
+                                        <span className="top-performer-value">{galinha.total}</span>
+                                        <span className="top-performer-unit">ovos</span>
                                     </div>
-                                    <p className="top-performer-total">{galinha.total} ovos</p>
                                 </div>
                             </div>
                         ))}

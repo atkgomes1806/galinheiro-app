@@ -10,7 +10,11 @@ class Galinha {
     raca = '',
     dataAquisicao = null,
     statusProducao = 'ativa',
-    dataMorte = null
+    dataMorte = null,
+    // 🆕 Status Reprodutivo
+    statusReprodutivo = 'laying',
+    dataInicioStatus = null,
+    notasStatus = ''
   } = {}) {
     this.id = id;
     this.nome = nome;
@@ -19,6 +23,10 @@ class Galinha {
     this.dataAquisicao = dataAquisicao;
     this.statusProducao = statusProducao;
     this.dataMorte = dataMorte;
+    // 🆕 Status Reprodutivo
+    this.statusReprodutivo = statusReprodutivo;
+    this.dataInicioStatus = dataInicioStatus;
+    this.notasStatus = notasStatus;
   }
 
   toDTO() {
@@ -29,7 +37,11 @@ class Galinha {
       raca: this.raca,
       dataAquisicao: this.dataAquisicao,
       statusProducao: this.statusProducao,
-      dataMorte: this.dataMorte
+      dataMorte: this.dataMorte,
+      // 🆕 Status Reprodutivo
+      statusReprodutivo: this.statusReprodutivo,
+      dataInicioStatus: this.dataInicioStatus,
+      notasStatus: this.notasStatus
     };
   }
 }

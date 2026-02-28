@@ -4,6 +4,8 @@ Este projeto é uma aplicação React chamada "galinheiro-app", que consome dado
 
 ## ✨ Destaques Recentes
 
+- ✅ **Dashboard 2.0 - Etapa 1 (Fevereiro 2026)**: Hero section com saudação dinâmica, KPIs modernizados e alertas hierarquizados
+- ✅ **Status Reprodutivo (Fevereiro 2026)**: Controle de postura/choco/muda no cadastro de galinhas + widget de acompanhamento no dashboard
 - ✅ **Correções Arquiteturais (Dezembro 2025)**: DashboardService Facade + Domínio enriquecido + Tema centralizado
 - ✅ **Gráficos de Séries Temporais (Dezembro 2025)**: Dashboard com visualização de produção mensal/anual
 - ✅ **Heatmap Mensal (Dezembro 2025)**: Calendário com cores baseadas em % de galinhas produzindo
@@ -57,6 +59,7 @@ galinheiro-app
 │   ├── FINAL-REPORT.md             # Relatório final das correções
 │   ├── NEXT-STEPS.md               # Roadmap de próximos passos
 │   ├── REFACTORING_PLAN.md         # Plano detalhado da refatoração
+│   ├── GALINHAS2.0.md              # Planejamento UX/UI por etapas (Dashboard, Galinhas, Histórico, Tratamentos)
 │   ├── GPS-INTEGRATION.md          # Documentação da funcionalidade GPS
 │   ├── ICONS-IMPLEMENTATION.md     # Documentação dos ícones e PWA
 │   ├── CODE-STUDY.md               # Estudos e análises do código
@@ -98,6 +101,8 @@ galinheiro-app
   │   │   ├── TimeSeriesChart.jsx
   │   │   ├── CalendarHeatmap.jsx
   │   │   ├── WeatherCard.jsx
+  │   │   ├── ChickenStatusSelector.jsx
+  │   │   ├── ReproductiveStatusWidget.jsx
   │   │   ├── GalinhasList.jsx
   │   │   ├── GalinhaForm.jsx
   │   │   ├── TratamentosList.jsx
@@ -501,6 +506,43 @@ O projeto utiliza um sistema de CSS centralizado para garantir consistência vis
 Para mais detalhes sobre a refatoração, consulte `docs/REFACTORING_PLAN.md`.
 
 ## 📊 Melhorias do Dashboard - Dezembro 2025
+
+## 🆕 Atualizações - Fevereiro 2026
+
+### Dashboard 2.0 (Etapa 1)
+- Hero section com saudação contextual (bom dia / boa tarde / boa noite)
+- KPIs redesenhados com melhor hierarquia visual e CTAs mais claros
+- Alertas em níveis (crítico, atenção e informativo)
+- Seção de top produtoras com ranking visual (🥇🥈🥉)
+- Melhorias visuais no widget de status reprodutivo
+
+### Status Reprodutivo das Galinhas
+- Novo campo de status no cadastro de galinhas:
+  - `laying` (em postura)
+  - `broody` (em choco)
+  - `molting` (em muda)
+- Campos adicionais para acompanhamento:
+  - `data_inicio_status`
+  - `notas_status`
+- Widget no dashboard para acompanhamento rápido do plantel por fase reprodutiva
+
+### Migração de banco (Supabase)
+Para usar o status reprodutivo em produção, aplique no Supabase:
+
+```sql
+ALTER TABLE galinhas
+ADD COLUMN IF NOT EXISTS status_reprodutivo VARCHAR(20) DEFAULT 'laying',
+ADD COLUMN IF NOT EXISTS data_inicio_status DATE,
+ADD COLUMN IF NOT EXISTS notas_status TEXT;
+
+UPDATE galinhas
+SET status_reprodutivo = 'laying'
+WHERE status_reprodutivo IS NULL;
+```
+
+### Documentação relacionada
+- Planejamento UX/UI: `docs/GALINHAS2.0.md`
+- Resumo técnico das correções: `docs/CORRECTIONS-SUMMARY.md`
 
 ### Gráficos de Série Temporal
 O dashboard agora exibe a **evolução da postura das galinhas** com dois modos de visualização:

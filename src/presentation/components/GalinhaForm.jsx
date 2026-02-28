@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react';
 import { criarGalinha } from '../../application/use-cases/criarGalinha';
 import { atualizarGalinha } from '../../application/use-cases/atualizarGalinha';
+import ChickenStatusSelector from './ChickenStatusSelector';
 
 const RACAS_GALINHAS = [
     'Rhode Island Red',
@@ -23,6 +24,10 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
     const [nome, setNome] = useState('');
     const [raca, setRaca] = useState('');
     const [dataNascimento, setDataNascimento] = useState('');
+    // 🆕 Status Reprodutivo
+    const [statusReprodutivo, setStatusReprodutivo] = useState('laying');
+    const [dataInicioStatus, setDataInicioStatus] = useState('');
+    const [notasStatus, setNotasStatus] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -30,6 +35,10 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
             setNome(galinhaParaEditar.nome || '');
             setRaca(galinhaParaEditar.raca || '');
             setDataNascimento(galinhaParaEditar.data_nascimento || '');
+            // 🆕 Status Reprodutivo
+            setStatusReprodutivo(galinhaParaEditar.status_reprodutivo || 'laying');
+            setDataInicioStatus(galinhaParaEditar.data_inicio_status || '');
+            setNotasStatus(galinhaParaEditar.notas_status || '');
         } else {
             limparFormulario();
         }
@@ -39,6 +48,10 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
         setNome('');
         setRaca('');
         setDataNascimento('');
+        // 🆕 Status Reprodutivo
+        setStatusReprodutivo('laying');
+        setDataInicioStatus('');
+        setNotasStatus('');
     };
 
     const handleSubmit = async (e) => {
@@ -48,7 +61,11 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
         const dados = {
             nome,
             raca,
-            data_nascimento: dataNascimento
+            data_nascimento: dataNascimento,
+            // 🆕 Status Reprodutivo
+            status_reprodutivo: statusReprodutivo,
+            data_inicio_status: dataInicioStatus || null,
+            notas_status: notasStatus
         };
 
         try {
@@ -130,6 +147,16 @@ const GalinhaForm = ({ galinhaParaEditar, onGalinhaCriada, onGalinhaAtualizada, 
                         onChange={(e) => setDataNascimento(e.target.value)}
                     />
                 </div>
+
+                {/* 🆕 Status Reprodutivo */}
+                <ChickenStatusSelector
+                    value={statusReprodutivo}
+                    onStatusChange={setStatusReprodutivo}
+                    startDate={dataInicioStatus}
+                    onStartDateChange={setDataInicioStatus}
+                    notes={notasStatus}
+                    onNotesChange={setNotasStatus}
+                />
 
                 <div className="form-actions">
                     <button 
